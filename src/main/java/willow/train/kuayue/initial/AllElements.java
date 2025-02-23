@@ -24,6 +24,7 @@ import willow.train.kuayue.initial.ore.FeaturesInit;
 import willow.train.kuayue.systems.device.AllDeviceItems;
 import willow.train.kuayue.initial.recipe.AllRecipes;
 import willow.train.kuayue.systems.device.EntityTrackingListener;
+import willow.train.kuayue.systems.overhead_line.OverheadLineSystem;
 
 public class AllElements {
 
@@ -69,6 +70,7 @@ public class AllElements {
         AllRecipes.invoke();
         AllEntities.invoke();
         AllOres.invoke();
+        OverheadLineSystem.invoke();
 //        FluidsInit.register(testRegistry.eventBus);
 //        FluidTypesInit.register(testRegistry.eventBus);
         FeaturesInit.register(testRegistry.eventBus);
