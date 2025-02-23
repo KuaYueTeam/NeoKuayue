@@ -1,0 +1,7 @@
+{
+  "parent": "block/block",
+  "loader": "forge:obj",
+  "flip_v": true,
+  "render_type": "translucent",
+  "model": "kuayue:models/block/bogey/ss8/ss8_wheel.obj"
+}

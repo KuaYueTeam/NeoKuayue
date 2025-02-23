@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "axis=z,waterlogged=false": {
+      "model": "kuayue:block/bogey/ss8/ss8_top",
+      "y": 270
+    },
+    "axis=x,waterlogged=false": {
+      "model": "kuayue:block/bogey/ss8/ss8_top",
+      "y": 180
+    },
+    "axis=z,waterlogged=true": {
+      "model": "kuayue:block/bogey/ss8/ss8_top",
+      "y": 270
+    },
+    "axis=x,waterlogged=true": {
+      "model": "kuayue:block/bogey/ss8/ss8_top",
+      "y": 180
+    }
+  }
+}

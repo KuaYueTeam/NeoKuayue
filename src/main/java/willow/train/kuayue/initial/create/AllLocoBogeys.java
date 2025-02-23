@@ -55,6 +55,14 @@ public class AllLocoBogeys {
             .size(0.915F / 2F)
             .submit(testRegistry);
 
+    public static final BogeySizeReg ss8 = new BogeySizeReg("ss8")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+
+    public static final BogeySizeReg ss8Backward = new BogeySizeReg("ss8_backward")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+
     public static final BogeyGroupReg locoBogeyGroup = new BogeyGroupReg("loco", "kuayue_bogey")
             .bogey(df11g.getSize(), DF11GRenderer::new, testRegistry.asResource("df11g_bogey"))
             .bogey(df11gBackward.getSize(), DF11GRenderer.Backward::new, testRegistry.asResource("df11g_backward_bogey"))
@@ -63,6 +71,8 @@ public class AllLocoBogeys {
             .bogey(ss3Backward.getSize(), SS3Renderer.Backward::new, testRegistry.asResource("ss3_backward_bogey"))
             .bogey(hxd3d.getSize(), HXD3DRenderer::new, testRegistry.asResource("hxd3d_bogey"))
             .bogey(hxd3dBackward.getSize(), HXD3DRenderer.Backward::new, testRegistry.asResource("hxd3d_backward_bogey"))
+            .bogey(ss8.getSize(), SS8Renderer::new, testRegistry.asResource("ss8_bogey"))
+            .bogey(ss8Backward.getSize(), SS8Renderer.Backward::new, testRegistry.asResource("ss8_backward_bogey"))
             .translationKey("loco_group")
             .submit(testRegistry);
 
@@ -148,7 +158,27 @@ public class AllLocoBogeys {
                     .property(properties -> properties.strength(2.0f, 3.0f))
                     .size(hxd3dBackward)
                     .submit(testRegistry);
+    public static final BogeyBlockReg<LocoBogeyBlock> ss8Bogey =
+            new BogeyBlockReg<LocoBogeyBlock>("ss8_bogey")
+                    .block(LocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("ss8_bogey")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(ss8)
+                    .submit(testRegistry);
 
+    public static final BogeyBlockReg<LocoBogeyBlock> ss8BackwardBogey =
+            new BogeyBlockReg<LocoBogeyBlock>("ss8_backward_bogey")
+                    .block(LocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("ss8_backward_bogey")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(ss8Backward)
+                    .submit(testRegistry);
     public static final BlockEntityReg<LocoBogeyEntity> locoBogeyEntity =
             new BlockEntityReg<LocoBogeyEntity>("loco_bogey_entity")
                     .blockEntityType(LocoBogeyEntity::new)
@@ -159,6 +189,8 @@ public class AllLocoBogeys {
                     .addBlock(() -> ss3BackwardBogey.getEntry().get())
                     .addBlock(() -> hxd3dBogey.getEntry().get())
                     .addBlock(() -> hxd3dBackwardBogey.getEntry().get())
+                    .addBlock(() -> ss8Bogey.getEntry().get())
+                    .addBlock(() -> ss8BackwardBogey.getEntry().get())
                     .withRenderer(() -> BogeyBlockEntityRenderer::new)
                     .submit(testRegistry);
 

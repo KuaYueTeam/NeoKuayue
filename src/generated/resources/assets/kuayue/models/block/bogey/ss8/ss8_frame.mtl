@@ -1,0 +1,8 @@
+# Made in Blockbench 4.12.2
+newmtl m_2ff57b33-7c01-0564-cf54-3085fb25cd11
+map_Kd kuayue:block/bogey/ss8/ss8_bogey_frame
+newmtl m_4106efea-0127-f989-664c-a8474663d9a6
+map_Kd kuayue:block/bogey/ss8/ss8_bogey_motor
+newmtl m_ccfa7a64-2ea7-bc79-50dc-23a102b8495b
+map_Kd kuayue:block/bogey/ss8/ss8_bogey_hang
+newmtl none
