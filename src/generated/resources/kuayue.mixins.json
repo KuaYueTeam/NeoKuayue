@@ -9,6 +9,7 @@
     "AccessorPlayerAdvancement",
     "MixinAbstractContraptionEntity",
     "MixinSimpleBlockMovingInteraction",
+    "MixinTrackTargetingBlockItem",
     "client.MixinBlockReg"
   ],
   "client": [
