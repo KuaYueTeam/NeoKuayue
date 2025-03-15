@@ -1,0 +1,98 @@
+{
+	"format_version": "1.21.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "all_grid",
+					"pivot": [-8, 8, 8]
+				},
+				{
+					"name": "grid",
+					"parent": "all_grid",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "poles",
+					"parent": "grid",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [12.9, 3.45, 8], "size": [1.2, 1.55, 0], "uv": [0, 7]},
+						{"origin": [-23.95, 18.45, 8], "size": [1.7, 1.55, 0], "pivot": [-23.5, 18.225, 8], "rotation": [0, 0, 110], "uv": [16, 7]},
+						{"origin": [-24, 1.775, 7.5], "size": [41, 2, 1], "uv": [0, 32]},
+						{"origin": [-22.75, 16.875, 7.75], "size": [38.25, 1, 0.5], "pivot": [-22.25, 17.275, 8], "rotation": [0, 0, 20], "uv": [0, 40]},
+						{"origin": [-10.95, -2.75, 8], "size": [9.1, 1, 0], "pivot": [-2, 0.25, 8], "rotation": [0, 0, 30], "uv": [0, 15], "mirror": true},
+						{
+							"origin": [-4.16282, -0.35449, 7.65],
+							"size": [14.55, 1.1, 0.7],
+							"pivot": [6.36218, -0.55449, 8],
+							"rotation": [0, 0, -12.5],
+							"uv": {
+								"north": {"uv": [46, 34], "uv_size": [14, 1]},
+								"east": {"uv": [46, 34], "uv_size": [0, 1]},
+								"south": {"uv": [60, 34], "uv_size": [-14, 0]},
+								"west": {"uv": [60, 34], "uv_size": [0, 1]},
+								"up": {"uv": [46, 34], "uv_size": [14, 0]},
+								"down": {"uv": [46, 34], "uv_size": [14, 0]}
+							}
+						},
+						{"origin": [9.65, -0.55, 8], "size": [2.05, 3.05, 0], "uv": [14, 19], "mirror": true},
+						{"origin": [9.5, 1.7, 7.3], "size": [1.7, 2, 1.4], "uv": [0, 46], "mirror": true}
+					]
+				},
+				{
+					"name": "insulator2",
+					"parent": "grid",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-31, 1.83148, 7.00036], "size": [6.5, 2, 2], "uv": [0, 11]},
+						{"origin": [-32, 1.45, 6.7], "size": [1.7, 2.6, 2.6], "uv": [7, 21]},
+						{
+							"origin": [-25, 1.45, 6.7],
+							"size": [1.7, 2.6, 2.6],
+							"uv": {
+								"north": {"uv": [20, 9], "uv_size": [1, 2]},
+								"east": {"uv": [20, 9], "uv_size": [2, 2]},
+								"south": {"uv": [23, 9], "uv_size": [1, 2]},
+								"west": {"uv": [21, 9], "uv_size": [2, 2]},
+								"up": {"uv": [20, 7], "uv_size": [1, 2]},
+								"down": {"uv": [21, 9], "uv_size": [1, -2]}
+							}
+						}
+					]
+				},
+				{
+					"name": "insulator",
+					"parent": "grid",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-30.75, 19.08148, 7.00036], "size": [6.5, 2, 2], "pivot": [-29.75, 20.58148, 8.00036], "rotation": [0, 0, 20], "uv": [0, 7]},
+						{"origin": [-32, 19.2, 6.7], "size": [1.7, 2.6, 2.6], "uv": [0, 16]},
+						{
+							"origin": [-24.25, 16.95, 6.7],
+							"size": [1.7, 2.6, 2.6],
+							"pivot": [-24.15, 20.5, 8],
+							"rotation": [0, 0, 20],
+							"uv": {
+								"north": {"uv": [17, 15], "uv_size": [1, 2]},
+								"east": {"uv": [17, 15], "uv_size": [2, 2]},
+								"south": {"uv": [20, 15], "uv_size": [1, 2]},
+								"west": {"uv": [18, 15], "uv_size": [2, 2]},
+								"up": {"uv": [17, 13], "uv_size": [1, 2]},
+								"down": {"uv": [18, 15], "uv_size": [1, -2]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
