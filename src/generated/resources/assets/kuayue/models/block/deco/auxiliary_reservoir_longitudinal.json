@@ -1,0 +1,6 @@
+{
+  "loader": "forge:obj",
+  "render_type": "cutout_mipped",
+  "model": "kuayue:models/block/deco/auxiliary_reservoir_longitudinal.obj",
+  "flip_v": true
+}

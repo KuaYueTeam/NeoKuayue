@@ -101,6 +101,30 @@ public class AllLocoBogeys {
     public static final BogeySizeReg qjMainAndesite = new BogeySizeReg("qj_main_a")
             .size(0.915F / 2F)
             .submit(testRegistry);
+
+    public static final BogeySizeReg dfh21 = new BogeySizeReg("dfh21")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+    public static final BogeySizeReg dfh21Backward = new BogeySizeReg("dfh21_backward")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+
+    public static final BogeySizeReg dfh21Standard = new BogeySizeReg("dfh21_s")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+
+    public static final BogeySizeReg dfh21BackwardStandard = new BogeySizeReg("dfh21_backward_s")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+
+    public static final BogeySizeReg dfh21Andesite = new BogeySizeReg("dfh21_a")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+
+    public static final BogeySizeReg dfh21BackwardAndesite = new BogeySizeReg("dfh21_backward_a")
+            .size(0.915F / 2F)
+            .submit(testRegistry);
+
     public static final BogeyGroupReg locoBogeyGroup = new BogeyGroupReg("loco", "kuayue_bogey")
             .bogey(df11g.getSize(), DF11GRenderer::new, testRegistry.asResource("df11g_bogey"))
             .bogey(df11gBackward.getSize(), DF11GRenderer.Backward::new, testRegistry.asResource("df11g_backward_bogey"))
@@ -111,12 +135,16 @@ public class AllLocoBogeys {
             .bogey(hxd3dBackward.getSize(), HXD3DRenderer.Backward::new, testRegistry.asResource("hxd3d_backward_bogey"))
             .bogey(ss8.getSize(), SS8Renderer::new, testRegistry.asResource("ss8_bogey"))
             .bogey(ss8Backward.getSize(), SS8Renderer.Backward::new, testRegistry.asResource("ss8_backward_bogey"))
+            .bogey(dfh21Standard.getSize(), DFH21Renderer.Standard::new, testRegistry.asResource("dfh21_bogey_s"))
+            .bogey(dfh21BackwardStandard.getSize(), DFH21Renderer.Standard.Backward::new, testRegistry.asResource("dfh21_backward_bogey_s"))
             .translationKey("loco_group")
             .submit(testRegistry);
 
     public static final BogeyGroupReg meterLocoBogeyGroup = new BogeyGroupReg("meter_loco", "kuayue_bogey_2")
             .bogey(df21.getSize(), DF21Renderer::new, testRegistry.asResource("df21_bogey"))
             .bogey(df21Backward.getSize(), DF21Renderer.Backward::new, testRegistry.asResource("df21_backward_bogey"))
+            .bogey(dfh21.getSize(), DFH21Renderer::new, testRegistry.asResource("dfh21_bogey"))
+            .bogey(dfh21Backward.getSize(), DFH21Renderer.Backward::new, testRegistry.asResource("dfh21_backward_bogey"))
             .translationKey("meter_loco_group")
             .submit(testRegistry);
 
@@ -130,6 +158,8 @@ public class AllLocoBogeys {
             .bogey(qjMainAndesite.getSize(), QJMainRenderer.Andesite::new, testRegistry.asResource("qj_bogey_a"))
             .bogey(hxd3dAndesite.getSize(), HXD3DRenderer.Andesite::new, testRegistry.asResource("hxd3d_bogey_a"))
             .bogey(hxd3dBackwardAndesite.getSize(), HXD3DRenderer.Andesite.Backward::new, testRegistry.asResource("hxd3d_backward_bogey_a"))
+            .bogey(dfh21Andesite.getSize(), DFH21Renderer.Andesite::new, testRegistry.asResource("dfh21_bogey_a"))
+            .bogey(dfh21BackwardAndesite.getSize(), DFH21Renderer.Andesite.Backward::new, testRegistry.asResource("dfh21_backward_bogey_a"))
             .translationKey("andesite_loco_group")
             .submit(AllElements.createRegistry);
     public static final BogeyBlockReg<LocoBogeyBlock> df11gBogey =
@@ -229,6 +259,28 @@ public class AllLocoBogeys {
                     .property(properties -> properties.strength(2.0f, 3.0f))
                     .size(ss8Backward)
                     .submit(testRegistry);
+
+    public static final BogeyBlockReg<LocoBogeyBlock> dfh21BogeyStandard =
+            new BogeyBlockReg<LocoBogeyBlock>("dfh21_bogey_s")
+                    .block(LocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("dfh21_bogey_s")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(dfh21Standard)
+                    .submit(testRegistry);
+
+    public static final BogeyBlockReg<LocoBogeyBlock> dfh21BackwardBogeyStandard =
+            new BogeyBlockReg<LocoBogeyBlock>("dfh21_backward_bogey_s")
+                    .block(LocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("dfh21_backward_bogey_s")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(dfh21BackwardStandard)
+                    .submit(testRegistry);
     public static final BlockEntityReg<LocoBogeyEntity> locoBogeyEntity =
             new BlockEntityReg<LocoBogeyEntity>("loco_bogey_entity")
                     .blockEntityType(LocoBogeyEntity::new)
@@ -241,6 +293,8 @@ public class AllLocoBogeys {
                     .addBlock(() -> hxd3dBackwardBogey.getEntry().get())
                     .addBlock(() -> ss8Bogey.getEntry().get())
                     .addBlock(() -> ss8BackwardBogey.getEntry().get())
+                    .addBlock(() -> dfh21BogeyStandard.getEntry().get())
+                    .addBlock(() -> dfh21BackwardBogeyStandard.getEntry().get())
                     .withRenderer(() -> BogeyBlockEntityRenderer::new)
                     .submit(testRegistry);
 
@@ -266,11 +320,35 @@ public class AllLocoBogeys {
                     .size(df21Backward)
                     .submit(testRegistry);
 
+    public static final BogeyBlockReg<MeterLocoBogeyBlock> dfh21Bogey =
+            new BogeyBlockReg<MeterLocoBogeyBlock>("dfh21_bogey")
+                    .block(MeterLocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("dfh21_bogey")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(dfh21)
+                    .submit(testRegistry);
+
+    public static final BogeyBlockReg<MeterLocoBogeyBlock> dfh21BackwardBogey =
+            new BogeyBlockReg<MeterLocoBogeyBlock>("dfh21_backward_bogey")
+                    .block(MeterLocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("dfh21_backward_bogey")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(dfh21Backward)
+                    .submit(testRegistry);
+
     public static final BlockEntityReg<MeterLocoBogeyEntity> meterLocoBogeyEntity =
             new BlockEntityReg<MeterLocoBogeyEntity>("meter_loco_bogey_entity")
                     .blockEntityType(MeterLocoBogeyEntity::new)
                     .addBlock(() -> df21Bogey.getEntry().get())
                     .addBlock(() -> df21BackwardBogey.getEntry().get())
+                    .addBlock(() -> dfh21Bogey.getEntry().get())
+                    .addBlock(() -> dfh21BackwardBogey.getEntry().get())
                     .withRenderer(() -> BogeyBlockEntityRenderer::new)
                     .submit(testRegistry);
 
@@ -372,6 +450,28 @@ public class AllLocoBogeys {
                     .property(properties -> properties.strength(2.0f, 3.0f))
                     .size(qjMainAndesite)
                     .submit(testRegistry);
+
+    public static final BogeyBlockReg<AndesiteLocoBogeyBlock> dfh21BogeyAndesite =
+            new BogeyBlockReg<AndesiteLocoBogeyBlock>("dfh21_bogey_a")
+                    .block(AndesiteLocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("dfh21_bogey_a")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(dfh21Andesite)
+                    .submit(testRegistry);
+
+    public static final BogeyBlockReg<AndesiteLocoBogeyBlock> dfh21BackwardBogeyAndesite =
+            new BogeyBlockReg<AndesiteLocoBogeyBlock>("dfh21_backward_bogey_a")
+                    .block(AndesiteLocoBogeyBlock::new)
+                    .material(Material.METAL)
+                    .materialColor(MaterialColor.PODZOL)
+                    .translationKey("dfh21_backward_bogey_a")
+                    .property(BlockBehaviour.Properties::requiresCorrectToolForDrops)
+                    .property(properties -> properties.strength(2.0f, 3.0f))
+                    .size(dfh21BackwardAndesite)
+                    .submit(testRegistry);
     public static final BlockEntityReg<AndesiteLocoBogeyEntity> andesiteLocoBogeyEntity =
             new BlockEntityReg<AndesiteLocoBogeyEntity>("andesite_loco_bogey_entity")
                     .blockEntityType(AndesiteLocoBogeyEntity::new)
@@ -384,6 +484,8 @@ public class AllLocoBogeys {
                     .addBlock(() -> df11gBogeyAndesite.getEntry().get())
                     .addBlock(() -> df11gBackwardBogeyAndesite.getEntry().get())
                     .addBlock(() -> qjMainBogeyAndesite.getEntry().get())
+                    .addBlock(() -> dfh21BogeyAndesite.getEntry().get())
+                    .addBlock(() -> dfh21BackwardBogeyAndesite.getEntry().get())
                     .withRenderer(() -> BogeyBlockEntityRenderer::new)
                     .submit(testRegistry);
 

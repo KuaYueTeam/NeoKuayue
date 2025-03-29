@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "kuayue:item/auxiliary_reservoir_longitudinal"
+  }
+}

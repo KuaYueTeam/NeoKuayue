@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"36": "kuayue:block/bogey/dfh21/dfh21_top",
+		"particle": "create:block/bogey/particle"
+	},
+	"elements": [
+		{
+			"from": [0, 8, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 14, 15]},
+			"faces": {
+				"north": {"uv": [8, 0, 16, 4], "texture": "#36"},
+				"east": {"uv": [8, 4, 16, 8], "texture": "#36"},
+				"south": {"uv": [8, 8, 16, 12], "texture": "#36"},
+				"west": {"uv": [8, 12, 16, 16], "texture": "#36"},
+				"up": {"uv": [8, 8, 0, 0], "texture": "#36"},
+				"down": {"uv": [8, 8, 0, 16], "texture": "#36"}
+			}
+		}
+	]
+}

@@ -1,0 +1,12 @@
+# Made in Blockbench 4.12.3
+newmtl m_552383d9-3aa1-fdd8-09ab-27080b9ce397
+map_Kd kuayue:block/bogey/dfh21/dfh21_frame
+newmtl m_d1aacc85-d362-0ec1-e7df-d2af15d0dd6b
+map_Kd kuayue:block/bogey/dfh21/dfh21_power
+newmtl m_376cee19-a4e9-a8fb-49b5-ca505cdd87ce
+map_Kd kuayue:block/bogey/dfh21/dfh21_brake
+newmtl m_e2c97540-d6c2-d636-ac2b-58c8ad18266f
+map_Kd kuayue:block/bogey/dfh21/dfh21_hang
+newmtl m_6ca2c9bd-4367-7d01-c4f2-2af00a4cfcac
+map_Kd kuayue:block/bogey/dfh21/dfh21_cowcatcher
+newmtl none

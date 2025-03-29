@@ -1,0 +1,7 @@
+
+{
+  "loader": "forge:obj",
+  "render_type": "cutout_mipped",
+  "model": "kuayue:models/block/deco/carriage_brake_cylinder.obj",
+  "flip_v": true
+}

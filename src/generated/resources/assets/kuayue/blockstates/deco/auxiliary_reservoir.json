@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "kuayue:block/deco/auxiliary_reservoir",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "kuayue:block/deco/auxiliary_reservoir",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "kuayue:block/deco/auxiliary_reservoir",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "kuayue:block/deco/auxiliary_reservoir",
+      "y": 270
+    }
+  }
+}

@@ -916,6 +916,10 @@
  "block.kuayue.hxd3d_panel_middle": "HXD3D Middle Panel",
  "block.kuayue.hxd3d_pantograph": "HXD3D Pantograph",
  "block.kuayue.hxd3d_underbody_equip": "HXD3D Underbody Equip",
+ "block.kuayue.carriage_brake_cylinder": "carriage brake cylinder",
+ "block.kuayue.carriage_battery": "carriage battery",
+ "block.kuayue.auxiliary_reservoir_longitudinal": "carriage auxiliary reservoir (longitudinal)",
+ "block.kuayue.auxiliary_reservoir": "carriage auxiliary reservoir",
 
  "tips.tech_tree": "--------------------------------all tech tree items below here-------------------------------------------",
  "tech_tree.kuayue.exp_unlock_true": "Fulfill level requirements.",

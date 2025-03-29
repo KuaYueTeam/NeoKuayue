@@ -1,0 +1,6 @@
+{
+  "parent": "block/block",
+  "loader": "forge:obj",
+  "flip_v": true,
+  "model": "kuayue:models/block/bogey/dfh21/dfh21_main.obj"
+}

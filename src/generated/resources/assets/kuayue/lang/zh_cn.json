@@ -921,6 +921,11 @@
   "block.kuayue.hxd3d_panel_middle": "HXD3D上厢板",
   "block.kuayue.hxd3d_pantograph": "HXD3D受电弓",
   "block.kuayue.hxd3d_underbody_equip": "HXD3D车底设备",
+  "block.kuayue.carriage_brake_cylinder": "客车制动风缸",
+  "block.kuayue.carriage_battery": "客车蓄电池",
+  "block.kuayue.auxiliary_reservoir_longitudinal": "客车副风缸(纵向）",
+  "block.kuayue.auxiliary_reservoir": "客车副风缸",
+
 
   "tips.tech_tree": "--------------------------------以下是科技树部件-------------------------------------------",
   "tech_tree.kuayue.exp_unlock_true": "满足等级条件",
