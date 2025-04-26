@@ -45,6 +45,11 @@ public class OverheadLineRendererSystem {
         return RENDERERS.get(type);
     }
 
+    public static void clearLevel() {
+        OVERHEAD_LINES.clear();
+        LOCK.clear();
+    }
+
 
     public static record OverheadLineLocator(
             ResourceKey<Level> level,
