@@ -359,4 +359,8 @@ public class OverheadLineSupportBlockEntity extends SmartBlockEntity {
         return new AABB(getBlockPos().offset(-200000, -200000,-200000), getBlockPos().offset(200000,200000,200000));
     }
 
+
+    public boolean hasConnectionTo(OverheadLineSupportBlockEntity clickedSupport) {
+        return this.connections.parallelStream().anyMatch((connection)->connection.absolutePos == clickedSupport.getBlockPos());
+    }
 }

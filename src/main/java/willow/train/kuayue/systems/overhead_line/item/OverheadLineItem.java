@@ -151,6 +151,11 @@ public class OverheadLineItem extends Item {
             return false;
         }
 
+        if(clickedSupport.hasConnectionTo(targetSupport) || targetSupport.hasConnectionTo(clickedSupport)) {
+            ComponentTranslationTool.showError(player, "overhead_line_target_duplicated", true);
+            return false;
+        }
+
         clickedSupport.addConnection(targetPos, itemType, index, previousIndex, targetSupport);
         targetSupport.addConnection(clickedPos, itemType, previousIndex, index, clickedSupport);
         return true;
