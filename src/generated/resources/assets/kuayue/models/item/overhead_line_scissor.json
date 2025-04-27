@@ -1,0 +1,8 @@
+{
+    "render_type":  "translucent",
+    "loader":  "kasuga_lib:bedrock_animated",
+    "geometry":  "geometry.unknown",
+    "identifier":  "kuayue:item/overhead_line_scissor",
+    "model":  "kuayue:item/overhead_line_scissor",
+    "texture":  "kuayue:item/overhead_line_scissor"
+}
