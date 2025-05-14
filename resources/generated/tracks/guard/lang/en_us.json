@@ -1,4 +1,4 @@
 {
-  "block.kuayue.guard_track": "标准轨距护轮轨",
-  "item.kuayue.incomplete_guard_track": "标准轨距护轮轨（半成品）"
+  "block.kuayue.guard_track": "Guard rail Track",
+  "item.kuayue.incomplete_guard_track": "Incomplete Guard Track"
 }
