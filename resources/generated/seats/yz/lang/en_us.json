@@ -1,12 +1,12 @@
 {
-  "block.kuayue.yz_seat_blue": "blue hard seat",
-  "block.kuayue.yz_seat_black": "black hard seat",
-  "block.kuayue.yz_seat_green": "green hard seat",
-  "block.kuayue.yz_seat_red": "red hard seat",
-  "block.kuayue.yz_seat_yellow": "yellow hard seat",
-  "block.kuayue.yz_seat_cyan": "cyan hard seat",
-  "block.kuayue.yz_seat_gray": "gray hard seat",
-  "block.kuayue.yz_seat_22": "hard seat (cart type 22)",
-  "block.kuayue.yz_table": "Hard seat cart small table board",
-  "container.kuayue.carriage_type_sign_edit_menu.random_tooltip_yz": "YZ -> hard seat cart -> 300000 - 399999"
+  "block.kuayue.yz_seat_blue": "蓝色硬座",
+  "block.kuayue.yz_seat_black": "黑色硬座",
+  "block.kuayue.yz_seat_green": "绿色硬座",
+  "block.kuayue.yz_seat_red": "红色硬座",
+  "block.kuayue.yz_seat_yellow": "黄色硬座",
+  "block.kuayue.yz_seat_cyan": "青色硬座",
+  "block.kuayue.yz_seat_gray": "灰色硬座",
+  "block.kuayue.yz_seat_22": "22型车厢硬座",
+  "block.kuayue.yz_table": "硬座车小桌板",
+  "container.kuayue.carriage_type_sign_edit_menu.random_tooltip_yz": "YZ -> 硬座车 -> 300000 - 399999"
 }
