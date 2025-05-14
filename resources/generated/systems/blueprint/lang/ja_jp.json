@@ -1,0 +1,15 @@
+{
+  "block.kuayue.blueprint_table": "蓝图桌",
+  "item.kuayue.carriage_marshalled_blueprint": "统型车厢 总体设计图",
+  "item.kuayue.circuit_motherboard": "电路基板",
+  "tech_tree.kuayue.group.carriage_blueprint.name": "列车总体设计图组",
+  "tech_tree.kuayue.group.carriage_blueprint.description": "推进科技树以获取各型列车的总体设计图",
+  "tech_tree.kuayue.group.carriage_blueprint.unlock": "解锁列车总体设计图组",
+  "tech_tree.kuayue.group.carriage_marshalled_blueprint.name": "统型车厢总体设计图",
+  "tech_tree.kuayue.group.carriage_marshalled_blueprint.description": "全都可以刷绿！刷绿以获取统型车厢总体设计图",
+  "tech_tree.kuayue.group.circuit_blueprint.name": "列车电路板蓝图组",
+  "tech_tree.kuayue.group.circuit_blueprint.description": "推进科技树以获取各型列车的电路板蓝图",
+  "tech_tree.kuayue.group.circuit_blueprint.unlock": "解锁列车电路板蓝图",
+  "tech_tree.kuayue.group.circuit_motherboard.name": "电路基板",
+  "tech_tree.kuayue.group.circuit_motherboard.description": "合成电路基板"
+}
