@@ -1,5 +1,5 @@
 {
-  "block.kuayue.platform_line_block": "Platform Line Block",
-  "block.kuayue.platform_door": "Platform door",
-  "block.kuayue.platform_wall": "Platform Shield Wall"
+  "block.kuayue.platform_line_block": "月台",
+  "block.kuayue.platform_door": "站台屏蔽门",
+  "block.kuayue.platform_wall": "站台屏蔽墙"
 }
