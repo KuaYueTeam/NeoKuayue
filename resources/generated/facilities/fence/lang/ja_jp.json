@@ -1,0 +1,7 @@
+{
+  "block.kuayue.green_fence": "绿色隔离栅栏",
+  "block.kuayue.green_fence_45": "绿色隔离栅栏(45度)",
+  "item.kuayue.electric_fence_door_block": "电动围栏门",
+  "block.kuayue.electric_fence_wall_block": "电动围栏",
+  "item.kuayue.electric_fence_wall_tooltip": "使用扳手改变样式"
+}
