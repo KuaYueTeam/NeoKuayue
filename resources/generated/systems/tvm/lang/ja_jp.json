@@ -1,0 +1,10 @@
+{
+  "block.kuayue.ticket_vendor": "售票机",
+  "item.kuayue.ticket": "乘车报销凭证",
+  "item.kuayue.red_ticket": "火车票",
+  "tooltip.kuayue.ticket.valid": "有效票",
+  "tooltip.kuayue.ticket.exited": "已出站",
+  "tooltip.kuayue.ticket.in_valid": "无效票",
+  "tooltip.kuayue.ticket.station_in": "进站 : ",
+  "tooltip.kuayue.ticket.station_out": "出站 : "
+}
