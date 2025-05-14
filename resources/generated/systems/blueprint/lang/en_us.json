@@ -1,15 +1,15 @@
 {
-  "block.kuayue.blueprint_table": "蓝图桌",
-  "item.kuayue.carriage_marshalled_blueprint": "统型车厢 总体设计图",
-  "item.kuayue.circuit_motherboard": "电路基板",
-  "tech_tree.kuayue.group.carriage_blueprint.name": "列车总体设计图组",
-  "tech_tree.kuayue.group.carriage_blueprint.description": "推进科技树以获取各型列车的总体设计图",
-  "tech_tree.kuayue.group.carriage_blueprint.unlock": "解锁列车总体设计图组",
-  "tech_tree.kuayue.group.carriage_marshalled_blueprint.name": "统型车厢总体设计图",
-  "tech_tree.kuayue.group.carriage_marshalled_blueprint.description": "全都可以刷绿！刷绿以获取统型车厢总体设计图",
-  "tech_tree.kuayue.group.circuit_blueprint.name": "列车电路板蓝图组",
-  "tech_tree.kuayue.group.circuit_blueprint.description": "推进科技树以获取各型列车的电路板蓝图",
-  "tech_tree.kuayue.group.circuit_blueprint.unlock": "解锁列车电路板蓝图",
-  "tech_tree.kuayue.group.circuit_motherboard.name": "电路基板",
-  "tech_tree.kuayue.group.circuit_motherboard.description": "合成电路基板"
+  "block.kuayue.blueprint_table": "Blueprint Table",
+  "item.kuayue.carriage_marshalled_blueprint": "Carriage Marshalled Blueprint",
+  "item.kuayue.circuit_motherboard": "Circuit Motherboard",
+  "tech_tree.kuayue.group.carriage_blueprint.name": "Carriage Blueprint Group",
+  "tech_tree.kuayue.group.carriage_blueprint.description": "Advance the technology tree to obtain the overall design drawings of all types of trains.",
+  "tech_tree.kuayue.group.carriage_blueprint.unlock": "Unlock Carriage Blueprint",
+  "tech_tree.kuayue.group.carriage_marshalled_blueprint.name": "Carriage Marshalled Blueprint",
+  "tech_tree.kuayue.group.carriage_marshalled_blueprint.description": "All can be painted green! Obtain the design drawings of Carriage Marshalled.",
+  "tech_tree.kuayue.group.circuit_blueprint.name": "Carriage Circuit Blueprint Group",
+  "tech_tree.kuayue.group.circuit_blueprint.description": "Advance the technology tree to unlock all train circuit board design drawings.",
+  "tech_tree.kuayue.group.circuit_blueprint.unlock": "Unlock Carriage Circuit Blueprint",
+  "tech_tree.kuayue.group.circuit_motherboard.name": "Circuit Motherboard",
+  "tech_tree.kuayue.group.circuit_motherboard.description": "Synthesized Circuit Motherboard"
 }
