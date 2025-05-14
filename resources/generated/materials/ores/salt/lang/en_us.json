@@ -1,7 +1,7 @@
 {
-  "item.kuayue.salt_baked_drumsticks": "盐焗鸡腿",
-  "item.kuayue.salt": "盐",
-  "block.kuayue.salt_ore": "盐矿石",
-  "block.kuayue.deepslate_salt_ore": "深层盐矿石",
-  "block.kuayue.salt_block": "盐块"
+  "item.kuayue.salt_baked_drumsticks": "Salt Baked Chicken Leg",
+  "item.kuayue.salt": "Salt",
+  "block.kuayue.salt_ore": "Salt Ore",
+  "block.kuayue.deepslate_salt_ore": "Deepslate Salt Ore",
+  "block.kuayue.salt_block": "Salt Block"
 }
