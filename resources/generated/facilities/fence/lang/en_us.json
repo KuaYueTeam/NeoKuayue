@@ -1,7 +1,7 @@
 {
-  "block.kuayue.green_fence": "Green Fence",
-  "block.kuayue.green_fence_45": "Green Fence 45°",
-  "item.kuayue.electric_fence_door_block": "Electric Railing Door",
-  "block.kuayue.electric_fence_wall_block": "Electric Railing Wall",
-  "item.kuayue.electric_fence_wall_tooltip": "Use wrench to change type"
+  "block.kuayue.green_fence": "绿色隔离栅栏",
+  "block.kuayue.green_fence_45": "绿色隔离栅栏(45度)",
+  "item.kuayue.electric_fence_door_block": "电动围栏门",
+  "block.kuayue.electric_fence_wall_block": "电动围栏",
+  "item.kuayue.electric_fence_wall_tooltip": "使用扳手改变样式"
 }
