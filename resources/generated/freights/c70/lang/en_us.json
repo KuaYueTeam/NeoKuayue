@@ -1,11 +1,11 @@
 {
-  "block.kuayue.freight_c70_end_face": "C70 End Face",
-  "block.kuayue.freight_c70_slab_bottom": "C70 Bottom Slab",
-  "block.kuayue.freight_c70_slab_top": "C70 Top Slab",
-  "block.kuayue.freight_c70_door": "C70 Side Door",
-  "item.kuayue.freight_c70_blueprint": "Freight C70 Blueprint",
-  "item.kuayue.freight_c70_mould": "Freight C70 Mould",
-  "item.kuayue.freight_c70_mould_constructing": "Freight C70 Mould (Assembling)",
-  "tech_tree.kuayue.group.freight_c70_blueprint.name": "Freight C70 Blueprint",
-  "tech_tree.kuayue.group.freight_c70_blueprint.description": "Design and prototype Freight C70. Be able to obtain the design drawings of Freight C70."
+  "block.kuayue.freight_c70_end_face": "C70敞车端面",
+  "block.kuayue.freight_c70_slab_bottom": "C70敞车下厢板",
+  "block.kuayue.freight_c70_slab_top": "C70敞车上厢板",
+  "block.kuayue.freight_c70_door": "C70敞车侧门",
+  "item.kuayue.freight_c70_blueprint": "C70型敞车 总体设计图",
+  "item.kuayue.freight_c70_mould": "C70敞车 模具",
+  "item.kuayue.freight_c70_mould_constructing": "C70敞车 模具 (装配中)",
+  "tech_tree.kuayue.group.freight_c70_blueprint.name": "C70型敞车总体设计图",
+  "tech_tree.kuayue.group.freight_c70_blueprint.description": "设计并试制C70型敞车以获取C70型敞车总体设计图"
 }
