@@ -1,0 +1,12 @@
+{
+  "block.kuayue.yz_seat_blue": "蓝色硬座",
+  "block.kuayue.yz_seat_black": "黑色硬座",
+  "block.kuayue.yz_seat_green": "绿色硬座",
+  "block.kuayue.yz_seat_red": "红色硬座",
+  "block.kuayue.yz_seat_yellow": "黄色硬座",
+  "block.kuayue.yz_seat_cyan": "青色硬座",
+  "block.kuayue.yz_seat_gray": "灰色硬座",
+  "block.kuayue.yz_seat_22": "22型车厢硬座",
+  "block.kuayue.yz_table": "硬座车小桌板",
+  "container.kuayue.carriage_type_sign_edit_menu.random_tooltip_yz": "YZ -> 硬座车 -> 300000 - 399999"
+}
