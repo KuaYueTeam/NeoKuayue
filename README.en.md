@@ -29,14 +29,14 @@ WIP, When the mod is released, please uncomment the following lines
 
 ## Introduction
 
-跨越是一个国铁风格的机械动力附属铁路模组。
+KuaYue is a CR-Style Railway add-ons for Create.
 
-作为装饰性模组和功能性模组，跨越为机械动力的铁路系统添加了国铁正在使用或已被淘汰的机车、客车、货车、车载和地面设备，并计划根据国铁规范实现一套功能玩法（如调度，驾驶等）。
+As both a decorative and functional mod, KuaYue adds the locomotive, carriages, and ground equipment which currently in use or retired by CR to the Create's Railway system. And we plan to implement features like driving and scheduling based on CR specifications.
 
-## 截图
+## Snapshot
 
-## 进度
+## Roadmap
 
 ## 开发组
 
-## 特别鸣谢
+## Acknowledgment
