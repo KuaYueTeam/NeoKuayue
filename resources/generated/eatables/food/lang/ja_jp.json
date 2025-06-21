@@ -33,5 +33,6 @@
   "item.kuayue.tooltip.restores_saturation": "回复%s点饱和度",
   "effect.kuayue.warm": "温暖",
   "msg.kuayue.jump_with_soaked_instant_noodles": "辊斤拷烫烫烫！",
-  "msg.kuayue.step_on_soaked_instant_noodles": "这个不能用来泡脚！"
+  "msg.kuayue.step_on_soaked_instant_noodles": "这个不能用来泡脚！",
+  "msg.kuayue.destroy_soaked_instant_noodles": "铸币 泡面打泼了！"
 }
