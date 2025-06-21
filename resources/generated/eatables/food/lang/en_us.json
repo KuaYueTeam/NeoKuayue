@@ -33,5 +33,6 @@
   "item.kuayue.tooltip.restores_saturation": "Saturability recovery: %s",
   "effect.kuayue.warm": "Warm",
   "msg.kuayue.jump_with_soaked_instant_noodles": "So fxxking hot!!!",
-  "msg.kuayue.step_on_soaked_instant_noodles": "Why stand on top of it!?"
+  "msg.kuayue.step_on_soaked_instant_noodles": "Why stand on top of it!?",
+  "msg.kuayue.destroy_soaked_instant_noodles": "铸币 泡面打泼了！"
 }
