@@ -1,4 +1,8 @@
 {
   "container.kuayue.inventory.loco.button.jy290": "JY290",
-  "block.kuayue.jy290_head_2": "金鹰290车头(II端)"
+  "block.kuayue.jy290_head_2": "金鹰290车头(II端)",
+  "block.kuayue.jy290_head_1": "金鹰290车头(I端)",
+  "block.kuayue.jy290_floor": "金鹰290地板",
+  "block.kuayue.jy290_floor_ladder": "金鹰290地板(含梯子)",
+  "block.kuayue.jy290_cowcatcher": "金鹰290排障器"
 }
