@@ -4,5 +4,9 @@
   "block.kuayue.jy290_head_1": "金鹰290车头(I端)",
   "block.kuayue.jy290_floor": "金鹰290地板",
   "block.kuayue.jy290_floor_ladder": "金鹰290地板(含梯子)",
-  "block.kuayue.jy290_cowcatcher": "金鹰290排障器"
+  "block.kuayue.jy290_cowcatcher": "金鹰290排障器",
+  "block.kuayue.jy290_carport": "金鹰290车顶",
+  "block.kuayue.jy290_equipment": "金鹰290车底设备",
+  "block.kuayue.jy290_panel": "金鹰290厢板",
+  "block.kuayue.jy290_ac": "金鹰290空调"
 }
