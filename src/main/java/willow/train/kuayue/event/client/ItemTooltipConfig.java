@@ -27,8 +27,8 @@ public class ItemTooltipConfig {
 
     static {
         // Use translation keys instead of specific tooltip texts
-        addItemTooltip("ss8_head", "tooltip.willow.train.kuayue.ss8_head", ChatFormatting.GREEN);
-        addItemTooltip("ss3_head", "tooltip.willow.train.kuayue.ss3_head", ChatFormatting.GREEN);
+        addItemTooltip("ss8_head", "tip.kuayue.ss8_head", ChatFormatting.GREEN);
+        addItemTooltip("ss3_head", "tip.kuayue.ss3_head", ChatFormatting.GREEN);
     }
 
     private static void addItemTooltip(String itemId, String translationKey, ChatFormatting color) {
