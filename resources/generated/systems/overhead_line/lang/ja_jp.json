@@ -16,5 +16,21 @@
   "msg.kuayue.overhead_line_target_unavailable": "无法连接到选中的接触网架",
   "msg.kuayue.overhead_line_target_set": "已选中当前接触网架，请点击另一接触网架建立连接",
   "msg.kuayue.overhead_line_same_support": "不能连接同一个接触网架",
-  "msg.kuayue.overhead_line_incompatible_block": "不支持的方块"
+  "msg.kuayue.overhead_line_incompatible_block": "不支持的方块",
+  "block.kuayue.overhead_pillar_concrete": "等距圆支柱 ",
+  "block.kuayue.overhead_pillar_concrete_truss_a": "等距圆支柱连接架A型",
+  "block.kuayue.overhead_pillar_concrete_truss_b": "等距圆支柱连接架B型",
+  "block.kuayue.overhead_pillar_steel": "矩形格构钢柱",
+  "block.kuayue.overhead_square_pillar_concrete_punching": "矩形横腹板支柱",
+  "block.kuayue.overhead_square_pillar_steel": "H型钢柱",
+  "block.kuayue.overhead_triangle_truss_steel_ad": "钢管硬横跨连接架",
+  "block.kuayue.overhead_truss_concrete": "等距圆硬横跨",
+  "block.kuayue.overhead_truss_double": "角钢硬横跨",
+  "block.kuayue.overhead_truss_double_ad": "角钢硬横跨连接架",
+  "block.kuayue.overhead_truss_single_a": "单层钢管硬横跨A型",
+  "block.kuayue.overhead_truss_single_b": "单层钢管硬横跨B型",
+  "block.kuayue.overhead_truss_single_c": "单层钢管硬横跨C型",
+  "block.kuayue.overhead_truss_single_ad": "单层钢管硬横跨连接架",
+  "block.kuayue.truss_hanger_double": "双硬横跨倒立柱",
+  "block.kuayue.truss_hanger_single": "单硬横跨倒立柱"
 }
