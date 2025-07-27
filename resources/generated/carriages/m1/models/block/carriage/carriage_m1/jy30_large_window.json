@@ -48,7 +48,7 @@
 		},
 		{
 			"from": [8.5, 11, 15.45],
-			"to": [9.5, 19, 16.45],
+			"to": [9.5, 19, 17.45],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8.5, 11, 16.45]},
 			"faces": {
 				"north": {"uv": [2.25, 5.125, 2.125, 6.125], "texture": "#35"},
@@ -61,7 +61,7 @@
 		},
 		{
 			"from": [-9.5, 11, 15.45],
-			"to": [-8.5, 19, 16.45],
+			"to": [-8.5, 19, 17.45],
 			"rotation": {"angle": 0, "axis": "y", "origin": [-9.5, 11, 16.45]},
 			"faces": {
 				"north": {"uv": [2.125, 5.125, 2.25, 6.125], "texture": "#35"},
@@ -244,35 +244,41 @@
 	],
 	"display": {
 		"thirdperson_righthand": {
-			"rotation": [0, -180, 0],
-			"translation": [-3, 0.75, 3],
-			"scale": [0.375, 0.375, 0.375]
+			"translation": [0, 0, 1.5],
+			"scale": [0.25, 0.25, 0.25]
 		},
 		"thirdperson_lefthand": {
-			"rotation": [0, -180, 0],
-			"translation": [-3, 0.75, 3],
-			"scale": [0.375, 0.375, 0.375]
+			"rotation": [4, 0, 0],
+			"translation": [0, 0, 1.5],
+			"scale": [0.25, 0.25, 0.25]
 		},
 		"firstperson_righthand": {
-			"rotation": [0, 180, 0],
-			"translation": [2.5, -0.5, 0],
-			"scale": [0.375, 0.375, 0.375]
+			"rotation": [0, -180, 0],
+			"translation": [3, -0.25, 1.5],
+			"scale": [0.25, 0.25, 0.25]
 		},
 		"firstperson_lefthand": {
-			"rotation": [0, 180, 0],
-			"translation": [2.5, -0.5, 0],
-			"scale": [0.375, 0.375, 0.375]
+			"rotation": [0, -180, 0],
+			"translation": [-1.25, -0.25, 1.5],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"ground": {
+			"scale": [0.25, 0.25, 0.25]
 		},
 		"gui": {
-			"rotation": [30, -150, 0],
-			"translation": [-0.75, -4.75, 0],
-			"scale": [0.375, 0.375, 0.375]
+			"rotation": [22, -140, 0],
+			"translation": [0.5, -1, 1.5],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"fixed": {
+			"translation": [-1, -1.75, 1.75],
+			"scale": [0.25, 0.25, 0.25]
 		}
 	},
 	"groups": [
 		{
-			"name": "group",
-			"origin": [8, 8, 8],
+			"name": "group38",
+			"origin": [0, 14.54167, 0.4],
 			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 		}
