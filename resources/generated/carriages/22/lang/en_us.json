@@ -1,0 +1,18 @@
+{
+  "container.kuayue.inventory.button.c22": "22",
+  "block.kuayue.22_floor": "22客车地板",
+  "block.kuayue.22_floor_center": "22客车中部地板",
+  "block.kuayue.22_air_vent": "22客车通风口",
+  "block.kuayue.22_carport_panel_top": "22客车车顶",
+  "block.kuayue.22_carport_panel_top_lamp": "22客车车顶(带席别灯)",
+  "block.kuayue.22_coupler": "22客车车钩",
+  "block.kuayue.22_door": "22客车车门",
+  "block.kuayue.22_end_face": "22客车端面",
+  "block.kuayue.22_ladder": "22客车登车梯",
+  "block.kuayue.22_double_small_window": "22客车双小窗",
+  "block.kuayue.22_large_window": "22客车大窗",
+  "block.kuayue.22_small_window": "22客车小窗",
+  "block.kuayue.22_window": "22客车窗",
+  "block.kuayue.22_panel_bottom": "22客车下箱板",
+  "block.kuayue.22_panel_middle": "22客车中箱板"
+}
