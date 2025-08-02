@@ -350,7 +350,7 @@ publishing {
                 properties.putAll(pomEntries);
                 if(ci_type) {
                     ciManagement {
-                        name = ci_type
+                        system = ci_type
                         url = ci_url
                     }
                 }
