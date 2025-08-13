@@ -17,6 +17,8 @@
   "msg.kuayue.overhead_line_target_set": "已选中当前接触网架，请点击另一接触网架建立连接",
   "msg.kuayue.overhead_line_same_support": "不能连接同一个接触网架",
   "msg.kuayue.overhead_line_incompatible_block": "不支持的方块",
+  "msg.kuayue.overhead_line_max_connections_reached": "已达到最大连接数",
+  "msg.kuayue.overhead_line_duplicate_connection": "不能重复连接两个接触网架",
   "block.kuayue.overhead_pillar_concrete": "等距圆支柱 ",
   "block.kuayue.overhead_pillar_concrete_truss_a": "等距圆支柱连接架A型",
   "block.kuayue.overhead_pillar_concrete_truss_b": "等距圆支柱连接架B型",
