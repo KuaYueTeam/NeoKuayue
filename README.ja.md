@@ -40,3 +40,13 @@ WIP, When the mod is released, please uncomment the following lines
 ## 开发组
 
 ## 特别鸣谢
+
+## 许可证
+
+本项目的代码使用 MIT 许可证。
+
+本项目的美术资产和配方文件以 CC-BY-SA 协议进行许可，使用本模组制作视频等用途，请在较为显著的位置（如视频本体、简介、评论区；独立游戏、软件请放置于开源授权部分及README底部等）标注本模组，推荐引用 Github 链接。
+
+[Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
+
+[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
