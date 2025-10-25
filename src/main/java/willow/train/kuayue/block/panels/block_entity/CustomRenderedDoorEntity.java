@@ -34,6 +34,10 @@ public class CustomRenderedDoorEntity extends SmartBlockEntity implements IContr
             this.isSlideDoor = block.isSlideDoor();
             this.offset = block.getOffset();
             this.openoffset = block.getOpenOffset();
+            Boolean value = pBlockState.getValue(DoorBlock.OPEN);
+            if(value != null) {
+                this.open = value;
+            }
         }
     }
 
