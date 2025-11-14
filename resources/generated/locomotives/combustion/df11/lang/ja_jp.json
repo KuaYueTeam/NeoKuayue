@@ -76,8 +76,11 @@
   "block.kuayue.df11_equip_room_window_2": "DF11设备间窗户2",
   "block.kuayue.df11_chimney": "DF11烟囱",
   "container.kuayue.inventory.loco.button.df11": "DF11",
-  "tech_tree.kuayue.group.head_df11g_blueprint.name": "DF11G车头总体设计图",
-  "tech_tree.kuayue.group.head_df11g_blueprint.description": "设计并试制DF11G车头以获取DF11G车头总体设计图",
-  "tech_tree.kuayue.group.head_df11g_circuit_blueprint.name": "DF11G车头电路板设计图",
-  "tech_tree.kuayue.group.head_df11g_circuit_blueprint.description": "研发DF11G车头电路板"
+  "tech_tree.kuayue.group.head_df11g_blueprint.name": "DF11G总体设计图",
+  "tech_tree.kuayue.group.head_df11g_blueprint.description": "设计并试制DF11G以获取DF11G总体设计图",
+  "item.kuayue:head_df11_blueprint": "DF11总体设计图",
+  "tech_tree.kuayue.group.head_df11_blueprint.name": "DF11总体设计图",
+  "tech_tree.kuayue.group.head_df11_blueprint.description": "设计并试制DF11以获取DF11总体设计图",
+  "tech_tree.kuayue.group.head_df11g_circuit_blueprint.name": "DF11G电路板设计图",
+  "tech_tree.kuayue.group.head_df11g_circuit_blueprint.description": "研发DF11G电路板"
 }
