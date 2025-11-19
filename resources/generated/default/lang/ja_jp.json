@@ -234,5 +234,7 @@
   "msg.bogey.style.changed.block.kuayue.ss8_bogey_a": "当前转向架: 韶山8",
   "msg.bogey.style.changed.block.kuayue.ss8_backward_bogey_a": "当前转向架: 韶山8(反向)",
   "msg.bogey.style.changed.block.kuayue.dfh21_bogey_a": "当前转向架: 东方红21",
-  "msg.bogey.style.changed.block.kuayue.dfh21_backward_bogey_a": "当前转向架: 东方红21(反向)"
+  "msg.bogey.style.changed.block.kuayue.dfh21_backward_bogey_a": "当前转向架: 东方红21(反向)",
+  "msg.train_extension.crash.overweight": "因车辆 %s 轴重过大, 无法继续行驶。",
+  "msg.train_extension.crash.assemble": "因车辆 %s 轴重过大, 无法组装。"
 }
