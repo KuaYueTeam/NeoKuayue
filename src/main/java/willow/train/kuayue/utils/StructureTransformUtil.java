@@ -15,8 +15,8 @@ public class StructureTransformUtil {
     }
 
     public static CompoundTag getTransformedBlockEntityNbt(CompoundTag nbt, StructureTransform transform) {
-        if(nbt == null || transform == null) return null;
-        if(!nbt.contains("x")) return null;
+        if(nbt == null || transform == null) return nbt;
+        if(!nbt.contains("x")) return nbt;
         BlockPos pos = new BlockPos(
                 nbt.getInt("x"),
                 nbt.getInt("y"),
