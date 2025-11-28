@@ -30,6 +30,9 @@
   "block.kuayue.df5_panel_bottom": "DF5下厢板",
   "block.kuayue.df5_panel_top": "DF5上厢板",
   "block.kuayue.df5_radiator_grid": "DF5散热格栅",
-  "block.kuayue.df5_transit_floor": "DF5过渡地板"
+  "block.kuayue.df5_transit_floor": "DF5过渡地板",
+  "tech_tree.kuayue.group.head_df5_blueprint.name": "DF5总体设计图",
+  "tech_tree.kuayue.group.head_df5_blueprint.description": "设计并试制DF5以获取DF5总体设计图",
+  "item.kuayue.head_df5_blueprint": "DF5总体设计图"
 }
 
