@@ -18,5 +18,8 @@
   "block.kuayue.ss3_roof_vent": "SS3 Roof vent",
   "block.kuayue.ss3_transformer": "SS3 Underbody Transformer",
   "tip.kuayue.ss3_head": "Use wrench and right-click to switch (SS3 head with external air conditioner/SS3 head with integrated air conditioner)",
-  "block.kuayue.panel_top_ss3": "SS3上厢板"
+  "block.kuayue.panel_top_ss3": "SS3上厢板",
+  "item.kuayue.head_ss3_blueprint": "SS3总体设计图",
+  "tech_tree.kuayue.group.head_ss3_blueprint.name": "SS3总体设计图",
+  "tech_tree.kuayue.group.head_ss3_blueprint.description": "设计并试制SS3以获取SS3总体设计图"
 }
