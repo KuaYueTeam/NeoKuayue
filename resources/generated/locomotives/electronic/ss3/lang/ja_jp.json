@@ -18,5 +18,8 @@
   "block.kuayue.ss3_roof_vent": "SS3车顶进气窗",
   "block.kuayue.ss3_transformer": "SS3车底变压器",
   "tip.kuayue.ss3_head": "使用扳手右键切换(ss3外挂空调车头/ss3集成空调车头)",
-  "block.kuayue.panel_top_ss3": "SS3上厢板"
+  "block.kuayue.panel_top_ss3": "SS3上厢板",
+  "item.kuayue.head_ss3_blueprint": "SS3总体设计图",
+  "tech_tree.kuayue.group.head_ss3_blueprint.name": "SS3总体设计图",
+  "tech_tree.kuayue.group.head_ss3_blueprint.description": "设计并试制SS3以获取SS3总体设计图"
 }
