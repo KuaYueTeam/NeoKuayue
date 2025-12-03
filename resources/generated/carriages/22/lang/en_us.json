@@ -16,5 +16,9 @@
   "block.kuayue.22_window": "22客车窗",
   "block.kuayue.22_panel_bottom": "22客车下厢板",
   "block.kuayue.22_panel_middle": "22客车中厢板",
-  "item.kuayue.carriage_22_blueprint": "22客车蓝图"
+  "item.kuayue.carriage_22_blueprint": "22客车蓝图",
+  "tech_tree.kuayue.group.carriage_22_blueprint.name": "22型客车总体设计图",
+  "tech_tree.kuayue.group.carriage_22_blueprint.description": "设计并试制22型客车以获取22型客车总体设计图",
+  "tech_tree.kuayue.group.carriage_22_circuit_blueprint.name": "22型客车电路板设计图",
+  "tech_tree.kuayue.group.carriage_22_circuit_blueprint.description": "研发22型客车电路板"
 }
