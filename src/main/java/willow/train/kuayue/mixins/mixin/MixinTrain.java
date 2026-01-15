@@ -2,26 +2,37 @@ package willow.train.kuayue.mixins.mixin;
 
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.content.trains.entity.TravellingPoint;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
+import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.foundation.utility.Pair;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import willow.train.kuayue.event.server.TrainCrashEvent;
 import willow.train.kuayue.systems.train_extension.ExtensionHelper;
 import willow.train.kuayue.systems.train_extension.TrainExtensionConstants;
 import willow.train.kuayue.systems.train_extension.conductor.ConductorHelper;
+import willow.train.kuayue.systems.train_extension.conductor.schedule_handle.ScheduleHandlerProvider;
+import willow.train.kuayue.systems.train_extension.conductor.schedule_handle.ScheduleTracker;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Mixin(Train.class)
-public abstract class MixinTrain {
+public abstract class MixinTrain implements ScheduleTracker {
+
+    @Unique
+    private int neoKuayue$scheduleHolderIndex = -1;
 
     @Shadow
     protected abstract void collideWithOtherTrains(Level level, Carriage carriage);
@@ -115,5 +126,29 @@ public abstract class MixinTrain {
         ));
 
         ci.cancel();
+    }
+
+    @Inject(method = "write", at = @At("RETURN"), remap = false)
+    public void afterWrite(DimensionPalette dimensions, CallbackInfoReturnable<CompoundTag> cir) {
+        CompoundTag tag = cir.getReturnValue();
+
+        ScheduleHandlerProvider.get().saveScheduleHolder((Train) (Object) this, tag);
+    }
+
+    @Inject(method = "read", at = @At("RETURN"), remap = false)
+    private static void afterRead(CompoundTag tag, Map<UUID, TrackGraph> trackNetworks, DimensionPalette dimensions, CallbackInfoReturnable<Train> cir) {
+        Train train = cir.getReturnValue();
+
+        ScheduleHandlerProvider.get().readScheduleHolder(train, tag);
+    }
+
+    @Override
+    public void neoKuayue$setScheduleOwnerIndex(int index) {
+        this.neoKuayue$scheduleHolderIndex = index;
+    }
+
+    @Override
+    public int neoKuayue$getScheduleOwnerIndex() {
+        return this.neoKuayue$scheduleHolderIndex;
     }
 }

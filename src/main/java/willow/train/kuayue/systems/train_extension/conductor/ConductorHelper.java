@@ -6,7 +6,9 @@ import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.entity.*;
 import com.simibubi.create.foundation.utility.Couple;
+import kasuga.lib.core.util.Envs;
 import kasuga.lib.core.util.data_type.Pair;
+import lombok.Getter;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +16,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -32,6 +33,7 @@ import willow.train.kuayue.systems.train_extension.CarriageAdditionalData;
 import willow.train.kuayue.systems.train_extension.TrainAdditionalData;
 import willow.train.kuayue.systems.train_extension.TrainExtensionSystem;
 import willow.train.kuayue.systems.train_extension.conductor.registry.ConductorCandidateRegistry;
+import willow.train.kuayue.systems.train_extension.conductor.schedule_handle.ScheduleHandlerProvider;
 
 import java.util.*;
 
@@ -84,12 +86,119 @@ public class ConductorHelper {
             int carriageIndex
     ) {}
 
-    public record TrainMergeContext(
+    public record MergeEventContext(
         UUID locoId,
         UUID carriageId,
         boolean isLocoHead,
         boolean isCarriageTail,
         float spacing
+    ) {}
+
+    @Getter
+    public static class MergeContext {
+        final Train loco;
+        final Train carriages;
+        final boolean isLocoHead;
+        final boolean isCarriageTail;
+        final boolean isClientSide;
+        final float spacing;
+        final Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> locoConductors;
+        final Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> carriageConductors;
+
+        final Vec3 effectPos;
+        final float oldLocoSpeed;
+        final float oldCarriageSpeed;
+
+        MergeContext(
+                Train loco,
+                Train carriages,
+                boolean isLocoHead,
+                boolean isCarriageTail,
+                boolean isClientSide,
+                float spacing,
+                final Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> locoConductors,
+                final Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> carriageConductors
+        ) {
+            this.loco = loco;
+            this.carriages = carriages;
+            this.isLocoHead = isLocoHead;
+            this.isCarriageTail = isCarriageTail;
+            this.isClientSide = isClientSide;
+            this.spacing = spacing;
+            this.locoConductors = locoConductors;
+            this.carriageConductors = carriageConductors;
+
+            this.oldLocoSpeed = (float) loco.speed;
+            this.oldCarriageSpeed = (float) carriages.speed;
+
+            if (isLocoHead) {
+                effectPos = locoConductors.getFirst().getSecond();
+            } else {
+                effectPos = locoConductors.getSecond().getSecond();
+            }
+        }
+    }
+
+    private record MergeResult(
+            List<Carriage> carriages,
+            List<Integer> spacing,
+            double[] stress,
+            boolean doubleEnded,
+            float newSpeed,
+            Map<Integer, Boolean> carriageRemapStatus
+    ) {}
+
+    @Getter
+    public static class DivideContext {
+        final Train train;
+        final UUID newTrain;
+        final int carriageIndex;
+        final boolean isClientSide;
+
+        //server side only
+        Conductable locoTail = null;
+        Conductable carriageHead = null;
+        Vec3 locoTailPos = null;
+        Vec3 carriageHeadPos = null;
+
+        DivideContext(
+                Train train,
+                UUID newTrain,
+                int carriageIndex,
+                boolean isClientSide
+        ) {
+            this.train = train;
+            this.newTrain = newTrain;
+            this.carriageIndex = carriageIndex;
+            this.isClientSide = isClientSide;
+
+            initConductable();
+        }
+
+        void initConductable() {
+            if(this.isClientSide) return;
+            TrainAdditionalData locoData = Kuayue.TRAIN_EXTENSION.get(train.id);
+            if(locoData == null) return;
+            locoTail = locoData.getConductorAt(new ConductorLocation(train.id, carriageIndex, false));
+            carriageHead = locoData.getConductorAt(new ConductorLocation(train.id, carriageIndex + 1, true));
+            locoTailPos = getConductorPosition(train.carriages.get(carriageIndex), locoTail, false);
+            carriageHeadPos = getConductorPosition(train.carriages.get(carriageIndex + 1), carriageHead, true);
+        }
+
+        boolean hasValidConductable() {
+            return locoTail != null && carriageHead != null;
+        }
+    }
+
+    private record DivideResult(
+            List<Carriage> locoCarts,
+            List<Integer> locoSpacing,
+            List<Carriage> carriageCarts,
+            List<Integer> carriageSpacing,
+            double[] locoStress,
+            double[] carriageStress,
+            float newLocoSpeed,
+            float newCarriageSpeed
     ) {}
 
     // ------------------------------- functions ---------------------------------
@@ -369,134 +478,178 @@ public class ConductorHelper {
             Train loco, Train carriages,
             boolean isCarriageTail,
             boolean isLocoHead, float spacing,
-            boolean clientSide
+            boolean isClientSide
     ) {
-        Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> locoConductors = getConductorPosition(loco);
-        Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> carriageConductors = getConductorPosition(carriages);
-        Vec3 effectPos = Vec3.ZERO;
+        try {
+            MergeContext context = new MergeContext(
+                    loco,
+                    carriages,
+                    isLocoHead,
+                    isCarriageTail,
+                    isClientSide,
+                    spacing,
+                    getConductorPosition(loco),
+                    getConductorPosition(carriages)
+            );
+            MergeEventContext eventContext = new MergeEventContext(loco.id, carriages.id, isLocoHead, isCarriageTail, spacing);
 
-        float oldLocoSpeed = (float) loco.speed;
-        float oldCarriageSpeed = (float) carriages.speed;
-
-        if(!clientSide) {
-            TrainCouplerPreMergeEvent preEvent = new TrainCouplerPreMergeEvent(
-                    new TrainMergeContext(loco.id, carriages.id, isLocoHead, isCarriageTail, spacing),
-                    Pair.of(isLocoHead ? locoConductors.getFirst() : locoConductors.getSecond(),
-                            isCarriageTail ? carriageConductors.getSecond() : carriageConductors.getFirst()),
-                    oldLocoSpeed,
-                    oldCarriageSpeed);
-            MinecraftForge.EVENT_BUS.post(preEvent);
-            if(preEvent.isCanceled()) {
-                return false;
+            if(!isClientSide) {
+                boolean shouldContinue = broadcastPreMerge(context, eventContext);
+                if(!shouldContinue) return false;
             }
 
-            Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> conductorPos = getConductorPosition(loco);
-            if (isLocoHead) {
-                effectPos = conductorPos.getFirst().getSecond();
-            } else {
-                effectPos = conductorPos.getSecond().getSecond();
+            MergeResult result = calculateMergeResult(context);
+
+            commitMergeState(context, result);
+
+            postProcessMerge(context, loco, carriages);
+
+            if(!isClientSide) {
+                broadcastPostMerge(context, eventContext);
             }
+
+            return true;
+        } catch (Exception e) {
+            Kuayue.LOGGER.error("Error while merging trains: locoId={}, carriageId={}", loco.id, carriages.id, e);
+            e.printStackTrace();
+            return false;
         }
+    }
 
-        // 获取参数
-        List<Carriage> locoCarriages = loco.carriages;
-        List<Integer> locoSpacing = loco.carriageSpacing;
+    private static MergeResult calculateMergeResult(MergeContext context) {
+        Train loco = context.loco;
+        Train carriages = context.carriages;
+
+        List<Carriage> locoCarts = new ArrayList<>(loco.carriages);
+        List<Integer> locoSpacing = new ArrayList<>(loco.carriageSpacing);
+        List<Carriage> carriageCarts = new ArrayList<>(carriages.carriages);
+        List<Integer> cartSpacing = new ArrayList<>(carriages.carriageSpacing);
+
         double[] locoStress = ((AccessorTrain) loco).getStress();
-
-        List<Carriage> carriageCarts = carriages.carriages;
-        List<Integer> cartSpacing = carriages.carriageSpacing;
         double[] cartStress = ((AccessorTrain) carriages).getStress();
-
         double[] neoStress = new double[locoStress.length + cartStress.length + 1];
 
+        Map<Integer, Boolean> carriageRemapStatus = new HashMap<>();
+
         //头-头或尾-尾情况需要反转
-        if(isLocoHead ^ isCarriageTail) {
+        if(context.isLocoHead ^ context.isCarriageTail) {
             carriageCarts.forEach(c -> {
-                if(clientSide) {
+                if (context.isClientSide) {
                     CarriageContraptionEntity cce = c.anyAvailableEntity();
-                    if(cce == null) return; // carriage is out of view
+                    if (cce == null) return; // carriage is out of view
                 }
                 reverseBogeys(c);
-                boolean success = remapCarriage(c, clientSide);
-                if(!clientSide && !success){
-                    TrainAdditionalData trainAdditionalData = Kuayue.TRAIN_EXTENSION.get(carriages.id);
-                    if(trainAdditionalData != null){
-                        int index = carriageCarts.indexOf(c);
-                        if(index >= 0 && index < trainAdditionalData.getCarriages().size()){
-                            CarriageAdditionalData carriageAdditionalData = trainAdditionalData.getCarriages().get(index);
-                            carriageAdditionalData.shouldRemap = true;
-                        }
-                    }
-                }
+                boolean success = remapCarriage(c, context.isClientSide);
+                carriageRemapStatus.put(c.id, success);
             });
             Collections.reverse(carriageCarts);
             Collections.reverse(cartSpacing);
         }
-        if (isLocoHead) {
-            locoCarriages.addAll(0, carriageCarts);
+
+        if (context.isLocoHead) {
+            locoCarts.addAll(0, carriageCarts);
             locoSpacing.addAll(0, cartSpacing);
-            locoSpacing.add(cartSpacing.size(), (int) Math.floor(spacing));
+            locoSpacing.add(cartSpacing.size(), (int) Math.floor(context.spacing));
             copyStress(cartStress, locoStress, neoStress);
         } else {
-            locoCarriages.addAll(carriageCarts);
-            locoSpacing.add((int) Math.floor(spacing));
+            locoCarts.addAll(carriageCarts);
+            locoSpacing.add((int) Math.floor(context.spacing));
             locoSpacing.addAll(cartSpacing);
             copyStress(locoStress, cartStress, neoStress);
         }
-        loco.doubleEnded = loco.doubleEnded || carriages.doubleEnded;
-
-        ((AccessorTrain) loco).setStress(neoStress);
-
-        Carriage c;
-        for (int i = 0; i < locoCarriages.size(); i++) {
-            c = locoCarriages.get(i);
-            c.setTrain(loco);
-            CarriageContraptionEntity entity = c.anyAvailableEntity();
-            if (entity != null) {
-                entity.trainId = loco.id;
-                entity.carriageIndex = i;
-                entity.setCarriage(c);
-
-            }
-            c.presentConductors = Couple.create(i > 0, i < locoCarriages.size() - 1);
-        }
 
         // 处理列车连接后的速度
-        Pair<Float, Float> newSpeed = momentumExchange(loco, carriages, 0f);
-        loco.speed = newSpeed != null ? newSpeed.getFirst() : oldLocoSpeed;
+        Pair<Float, Float> speedPair = momentumExchange(loco, carriages, 0f);
+        float newSpeed = speedPair != null ? speedPair.getFirst() : context.oldLocoSpeed;
 
-        if (clientSide) {
+        boolean doubleEnded = loco.doubleEnded || carriages.doubleEnded;
+
+        return new MergeResult(
+                locoCarts,
+                locoSpacing,
+                neoStress,
+                doubleEnded,
+                newSpeed,
+                carriageRemapStatus
+        );
+    }
+
+    private static void commitMergeState(MergeContext context, MergeResult result) {
+        Train loco = context.loco;
+        Train carriages = context.carriages;
+
+        loco.carriages = result.carriages;
+        loco.carriageSpacing = result.spacing;
+        ((AccessorTrain) loco).setStress(result.stress);
+        loco.doubleEnded = result.doubleEnded;
+        loco.speed = result.newSpeed;
+
+        if(!context.isClientSide) {
+            TrainAdditionalData trainAdditionalData = Kuayue.TRAIN_EXTENSION.get(carriages.id);
+            if(trainAdditionalData != null) {
+                for(int i = 0; i < carriages.carriages.size(); i++) {
+                    Carriage c = carriages.carriages.get(i);
+                    CarriageAdditionalData carriageAdditionalData = trainAdditionalData.getCarriages().get(i);
+                    carriageAdditionalData.shouldRemap = result.carriageRemapStatus.getOrDefault(c.id, false);
+                }
+            }
+        }
+
+        updateCarriageReferences(loco);
+    }
+
+    private static void postProcessMerge(MergeContext context, Train loco, Train carriages) {
+        if (context.isClientSide) {
             CreateClient.RAILWAYS.removeTrain(carriages.id);
         } else {
-            mergeTrainExtensionData(loco, carriages, isCarriageTail, isLocoHead);
+            ScheduleHandlerProvider.get().handleMerge(context);
+            mergeTrainExtensionData(loco, carriages, context.isCarriageTail, context.isLocoHead);
             Create.RAILWAYS.removeTrain(carriages.id);
+            Entity entity = loco.carriages.get(0).anyAvailableEntity();
+            playEffects(context.effectPos, entity);
         }
 
         loco.collectInitiallyOccupiedSignalBlocks();
+    }
 
-        if(!clientSide) {
-            // effects
-            SoundEvent sound = AllSounds.TRAIN_COUPLER_SOUND.getSoundEvent();
-            Entity entity = loco.carriages.get(0).anyAvailableEntity();
-            if(entity != null && effectPos != Vec3.ZERO) {
-                entity.level().playSound(null, BlockPos.containing(effectPos), sound, entity.getSoundSource(), 0.2f, 1.0f);
-                ((ServerLevel) entity.level()).sendParticles(ParticleTypes.CRIT, effectPos.x, effectPos.y, effectPos.z,
-                        20, 0.2, 0.2, 0.2,0.8);
+    private static void updateCarriageReferences(Train train) {
+        for (int i = 0; i < train.carriages.size(); i++) {
+            Carriage c = train.carriages.get(i);
+            c.setTrain(train);
+            CarriageContraptionEntity entity = c.anyAvailableEntity();
+            if (entity != null) {
+                entity.trainId = train.id;
+                entity.carriageIndex = i;
+                entity.setCarriage(c);
             }
-
-            //post event
-            MinecraftForge.EVENT_BUS.post(new TrainCouplerPostMergeEvent(
-                    new TrainMergeContext(loco.id, carriages.id, isLocoHead, isCarriageTail, spacing),
-                    Pair.of(isLocoHead ? locoConductors.getFirst() : locoConductors.getSecond(),
-                            isCarriageTail ? carriageConductors.getSecond() : carriageConductors.getFirst()
-                    ),
-                    oldLocoSpeed,
-                    oldCarriageSpeed,
-                    (float) loco.speed
-            ));
+            c.presentConductors = Couple.create(i > 0, i < train.carriages.size() - 1);
         }
+    }
 
-        return true;
+    //boolean: continue
+    private static boolean broadcastPreMerge(MergeContext context, MergeEventContext eventContext) {
+        if(context.isClientSide) return true;
+        TrainCouplerPreMergeEvent preEvent = new TrainCouplerPreMergeEvent(
+                eventContext,
+                Pair.of(context.isLocoHead ? context.locoConductors.getFirst() : context.locoConductors.getSecond(),
+                        context.isCarriageTail ? context.carriageConductors.getSecond() : context.carriageConductors.getFirst()),
+                context.oldLocoSpeed,
+                context.oldCarriageSpeed);
+
+        MinecraftForge.EVENT_BUS.post(preEvent);
+        return !preEvent.isCanceled();
+    }
+
+    private static void broadcastPostMerge(MergeContext context, MergeEventContext eventContext) {
+        if(context.isClientSide) return;
+        MinecraftForge.EVENT_BUS.post(new TrainCouplerPostMergeEvent(
+                eventContext,
+                Pair.of(context.isLocoHead ? context.locoConductors.getFirst() : context.locoConductors.getSecond(),
+                        context.isCarriageTail ? context.carriageConductors.getSecond() : context.carriageConductors.getFirst()),
+                context.oldLocoSpeed,
+                context.oldCarriageSpeed,
+                (float) context.loco.speed
+        ));
     }
 
     // here carriageIndex represents the carriage that coupler is on
@@ -521,129 +674,159 @@ public class ConductorHelper {
         }
     }
 
-    public static void divideTrains(
+    //规定：主车在前，从车在后，从index车厢后方分开
+    public static boolean divideTrains(
             Train loco,
             UUID newTrainUUID,
             int carriageIndex,
-            boolean clientSide
+            boolean isClientSide
     ) {
-        if(loco == null) return;
-        if(carriageIndex < 0 || carriageIndex >= loco.carriages.size() - 1) return;
+        if(loco == null) return false;
+        if(carriageIndex < 0 || carriageIndex >= loco.carriages.size() - 1) return false;
 
-        Conductable locoTail = null;
-        Conductable carriageHead = null;
-        Vec3 locoTailPos = null;
-        Vec3 carriageHeadPos = null;
-
-        //pre event
-        if(!clientSide) {
-            TrainAdditionalData locoData = Kuayue.TRAIN_EXTENSION.get(loco.id);
-            if(locoData == null) return;
-            locoTail = locoData.getConductorAt(
-                    new ConductorLocation(loco.id, carriageIndex, false)
-            );
-            carriageHead = locoData.getConductorAt(
-                    new ConductorLocation(loco.id, carriageIndex + 1, true)
-            );
-            locoTailPos = getConductorPosition(
-                    loco.carriages.get(carriageIndex), locoTail, false);
-            carriageHeadPos = getConductorPosition(
-                    loco.carriages.get(carriageIndex + 1), carriageHead, true);
-            if(locoTailPos == null || carriageHeadPos == null) return;
-
-            TrainCouplerPreDivideEvent event = new TrainCouplerPreDivideEvent(
-                    loco.id,
-                    carriageIndex,
-                    (float) loco.speed,
-                    Pair.of(
-                            Pair.of(locoTail, locoTailPos),
-                            Pair.of(carriageHead, carriageHeadPos)
-                    )
-            );
-            MinecraftForge.EVENT_BUS.post(event);
-            if(event.isCanceled()) return;
-        }
-
-
-        //规定：主车在前，从车在后，从index车厢后方分开
-        List<Carriage> locoCarts = loco.carriages;
-        List<Integer> locoSpacing = loco.carriageSpacing;
-        double[] locoStress = ((AccessorTrain) loco).getStress();
-
-        List<Carriage> newLocoCarts = new ArrayList<>(locoCarts.subList(0, carriageIndex + 1));
-        List<Carriage> newCarriageCarts = new ArrayList<>(locoCarts.subList(carriageIndex + 1, locoCarts.size()));
-
-        List<Integer> newLocoSpacing = new ArrayList<>(locoSpacing.subList(0, carriageIndex));
-        List<Integer> newCarriageSpacing = new ArrayList<>(locoSpacing.subList(carriageIndex + 1, locoSpacing.size()));
-
-        double[] newLocoStress = new double[carriageIndex];
-        double[] newCarriageStress = new double[locoStress.length - carriageIndex - 1];
-        for(int i = 0; i < locoStress.length; i++){
-            if(i < carriageIndex){
-                newLocoStress[i] = locoStress[i];
-            } else if(i > carriageIndex){
-                newCarriageStress[i - carriageIndex - 1] = locoStress[i];
-            }
-        }
-
-        loco.doubleEnded = isDoubleEnded(newLocoCarts);
-        loco.carriages = newLocoCarts;
-        loco.carriageSpacing = newLocoSpacing;
-        ((AccessorTrain) loco).setStress(newLocoStress);
-
-        Train carriage = new Train(
-                newTrainUUID,
-                loco.owner,
-                loco.graph,
-                newCarriageCarts,
-                newCarriageSpacing,
-                isDoubleEnded(newCarriageCarts)
-        );
-        ((AccessorTrain) carriage).setStress(newCarriageStress);
-
-        Carriage c;
-        for(int i = 0; i < newCarriageCarts.size(); i++){
-            c = newCarriageCarts.get(i);
-            c.setTrain(carriage);
-            CarriageContraptionEntity entity = c.anyAvailableEntity();
-            if(entity != null){
-                entity.trainId = carriage.id;
-                entity.carriageIndex = i;
-                entity.setCarriage(c);
-            }
-        }
-        carriage.speed = loco.speed;
-
-        loco.collectInitiallyOccupiedSignalBlocks();
-        carriage.collectInitiallyOccupiedSignalBlocks();
-
-        if(clientSide) {
-            CreateClient.RAILWAYS.addTrain(carriage);
-        } else {
-            Create.RAILWAYS.addTrain(carriage);
-            divideTrainExtensionData(loco, carriage, carriageIndex);
-
-            TrainExtensionSystem.ConductorCDInfo info = new TrainExtensionSystem.ConductorCDInfo(locoTail, carriageHead);
-            Kuayue.TRAIN_EXTENSION.conductorsCoolingDown.put(
-                    Couple.create(locoTail.getLoc(), carriageHead.getLoc()), info
-            );
-
-            //post event
-            TrainCouplerPostDivideEvent event = new TrainCouplerPostDivideEvent(
-                    loco.id,
+        try {
+            DivideContext context = new DivideContext(
+                    loco,
                     newTrainUUID,
                     carriageIndex,
-                    (float) loco.speed,
-                    Pair.of(
-                            Pair.of(locoTail, locoTailPos),
-                            Pair.of(carriageHead, carriageHeadPos)
-                    )
+                    isClientSide
             );
-            MinecraftForge.EVENT_BUS.post(event);
+            //pre event
+            if(!isClientSide) {
+                if(!context.hasValidConductable()) return false;
+                boolean shouldContinue = broadcastPreDivide(context);
+                if(!shouldContinue) return true;
+            }
+
+            DivideResult result = calculateDivideResult(context);
+
+            Train carriages = commitDivideState(context, result);
+
+            updateCarriageReferences(loco);
+            updateCarriageReferences(carriages);
+
+            if(isClientSide) {
+                CreateClient.RAILWAYS.addTrain(carriages);
+            } else {
+                Create.RAILWAYS.addTrain(carriages);
+            }
+
+            postProcessDivide(context, loco, carriages);
+
+            if(!isClientSide) {
+                broadcastPostDivide(context);
+            }
+
+            return true;
+        } catch (Exception e) {
+            Kuayue.LOGGER.error("Error while dividing train: locoId={}, carriageIndex={}", loco.id, carriageIndex, e);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //boolean: shouldContinue
+    private static boolean broadcastPreDivide(DivideContext context) {
+        if(context.isClientSide) return true;
+        TrainCouplerPreDivideEvent event = new TrainCouplerPreDivideEvent(
+                context.train.id,
+                context.carriageIndex,
+                (float) context.train.speed,
+                Pair.of(
+                        Pair.of(context.locoTail, context.locoTailPos),
+                        Pair.of(context.carriageHead, context.carriageHeadPos)
+                )
+        );
+        MinecraftForge.EVENT_BUS.post(event);
+        return !event.isCanceled();
+    }
+
+    private static void broadcastPostDivide(DivideContext context) {
+        if(context.isClientSide) return;
+        TrainCouplerPostDivideEvent event = new TrainCouplerPostDivideEvent(
+                context.train.id,
+                context.newTrain,
+                context.carriageIndex,
+                (float) context.train.speed,
+                Pair.of(
+                        Pair.of(context.locoTail, context.locoTailPos),
+                        Pair.of(context.carriageHead, context.carriageHeadPos)
+                )
+        );
+        MinecraftForge.EVENT_BUS.post(event);
+    }
+
+    private static DivideResult calculateDivideResult(DivideContext context) {
+        Train train = context.train;
+        int carriageIndex = context.carriageIndex;
+
+        List<Carriage> locoCarts = new ArrayList<>(train.carriages.subList(0, carriageIndex + 1));
+        List<Carriage> carriageCarts = new ArrayList<>(train.carriages.subList(carriageIndex + 1, train.carriages.size()));
+        List<Integer> locoSpacing = new ArrayList<>(train.carriageSpacing.subList(0, carriageIndex));
+        List<Integer> carriageSpacing = new ArrayList<>(train.carriageSpacing.subList(carriageIndex + 1, train.carriageSpacing.size()));
+
+        double[] locoStress = new double[carriageIndex];
+        double[] carriageStress = new double[train.carriages.size() - carriageIndex - 1];
+        double[] fullStress = ((AccessorTrain) train).getStress();
+
+        for(int i = 0; i < fullStress.length; i++){
+            if(i < carriageIndex){
+                locoStress[i] = fullStress[i];
+            } else if(i > carriageIndex){
+                carriageStress[i - carriageIndex - 1] = fullStress[i];
+            }
+        }
+
+        float newLocoSpeed = (float) train.speed;
+        float newCarriageSpeed = (float) train.speed;
+
+        return new DivideResult(
+                locoCarts,
+                locoSpacing,
+                carriageCarts,
+                carriageSpacing,
+                locoStress,
+                carriageStress,
+                newLocoSpeed,
+                newCarriageSpeed
+        );
+    }
+
+    private static Train commitDivideState(DivideContext context, DivideResult result) {
+        Train loco = context.train;
+        loco.doubleEnded = isDoubleEnded(result.locoCarts);
+        loco.carriages = result.locoCarts;
+        loco.carriageSpacing = result.locoSpacing;
+        ((AccessorTrain) loco).setStress(result.locoStress);
+
+        Train carriages = new Train(
+                context.newTrain,
+                loco.owner,
+                loco.graph,
+                result.carriageCarts,
+                result.carriageSpacing,
+                isDoubleEnded(result.carriageCarts)
+        );
+        ((AccessorTrain) carriages).setStress(result.carriageStress);
+
+        carriages.speed = loco.speed;
+        carriages.throttle = loco.throttle;
+
+        return carriages;
+    }
+
+    private static void postProcessDivide(DivideContext context, Train loco, Train carriages) {
+        if(!context.isClientSide) {
+            ScheduleHandlerProvider.get().handleDivide(context);
+            divideTrainExtensionData(loco, carriages, context.carriageIndex);
+            TrainExtensionSystem.ConductorCDInfo info = new TrainExtensionSystem.ConductorCDInfo(context.locoTail, context.carriageHead);
+            Kuayue.TRAIN_EXTENSION.conductorsCoolingDown.put(
+                    Couple.create(context.locoTail.getLoc(), context.carriageHead.getLoc()), info
+            );
         }
 
         loco.collectInitiallyOccupiedSignalBlocks();
-        carriage.collectInitiallyOccupiedSignalBlocks();
+        carriages.collectInitiallyOccupiedSignalBlocks();
     }
 
     private static void copyStress(double[] locoStress, double[] cartStress, double[] neoStress) {
@@ -652,6 +835,16 @@ public class ConductorHelper {
         for (int i = 0; i < cartStress.length; i++) {
             neoStress[locoStress.length + 1 + i] = cartStress[i];
         }
+    }
+
+    public static void playEffects(Vec3 effectPos, Entity entity) {
+        if(entity == null || effectPos == null) return;
+        if(effectPos.equals(Vec3.ZERO)) return;
+
+        SoundEvent sound = AllSounds.TRAIN_COUPLER_SOUND.getSoundEvent();
+        entity.level().playSound(null, BlockPos.containing(effectPos), sound, entity.getSoundSource(), 0.2f, 1.0f);
+        ((ServerLevel) entity.level()).sendParticles(ParticleTypes.CRIT, effectPos.x, effectPos.y, effectPos.z,
+                20, 0.2, 0.2, 0.2,0.8);
     }
 
     public static void mergeTrainExtensionData(

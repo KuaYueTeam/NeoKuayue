@@ -1,5 +1,6 @@
 package willow.train.kuayue.mixins.mixin;
 
+import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.MountedFluidStorage;
 import com.simibubi.create.content.contraptions.MountedStorage;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
@@ -24,4 +25,7 @@ public interface AccessorMountedStorageManager {
 
     @Accessor("fluidStorage")
     void setFluidStorage(Map<BlockPos, MountedFluidStorage> fluidStorage);
+
+    @Accessor("inventory")
+    Contraption.ContraptionInvWrapper getInventory();
 }

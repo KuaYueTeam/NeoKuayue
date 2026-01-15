@@ -9,19 +9,19 @@ import willow.train.kuayue.systems.train_extension.conductor.ConductorHelper;
 
 @Getter
 public class TrainCouplerPostMergeEvent extends Event {
-    ConductorHelper.TrainMergeContext trainMergeContext;
+    ConductorHelper.MergeEventContext mergeEventContext;
     public final Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> conductors;
     public final float locoBeforeSpeed;
     public final float carriageBeforeSpeed;
     public final float locoAfterSpeed;
 
     public TrainCouplerPostMergeEvent(
-            ConductorHelper.TrainMergeContext trainMergeContext,
+            ConductorHelper.MergeEventContext mergeEventContext,
             Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> conductors,
             float locoBeforeSpeed,
             float carriageBeforeSpeed,
             float locoAfterSpeed) {
-        this.trainMergeContext = trainMergeContext;
+        this.mergeEventContext = mergeEventContext;
         this.conductors = conductors;
         this.locoBeforeSpeed = locoBeforeSpeed;
         this.carriageBeforeSpeed = carriageBeforeSpeed;

@@ -8,22 +8,20 @@ import net.minecraftforge.eventbus.api.Event;
 import willow.train.kuayue.systems.train_extension.conductor.Conductable;
 import willow.train.kuayue.systems.train_extension.conductor.ConductorHelper;
 
-import java.util.UUID;
-
 @Getter
 @Cancelable
 public class TrainCouplerPreMergeEvent extends Event {
-    public final ConductorHelper.TrainMergeContext trainMergeContext;
+    public final ConductorHelper.MergeEventContext mergeEventContext;
     public final Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> conductors;
     public final float locoBeforeSpeed;
     public final float carriageBeforeSpeed;
 
     public TrainCouplerPreMergeEvent(
-            ConductorHelper.TrainMergeContext trainMergeContext,
+            ConductorHelper.MergeEventContext mergeEventContext,
             Pair<Pair<Conductable, Vec3>, Pair<Conductable, Vec3>> conductors,
             float locoBeforeSpeed,
             float carriageBeforeSpeed) {
-        this.trainMergeContext = trainMergeContext;
+        this.mergeEventContext = mergeEventContext;
         this.conductors = conductors;
         this.locoBeforeSpeed = locoBeforeSpeed;
         this.carriageBeforeSpeed = carriageBeforeSpeed;

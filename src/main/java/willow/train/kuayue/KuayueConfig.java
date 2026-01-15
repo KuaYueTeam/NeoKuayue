@@ -32,6 +32,8 @@ public class KuayueConfig {
             .rangedIntConfig("TECH_TREE_TRANSMISSION_RETRY_TIMES",
                     "the retry times of the transmission of tech tree packets from server to client (times)",
                     10, 0, 100)
+            .boolConfig("BOGEY_WEIGHT_SYS_ENABLE",
+                    "Would the bogey weight system work.", false)
             .registerConfigs();
 
     public static void invoke(){}

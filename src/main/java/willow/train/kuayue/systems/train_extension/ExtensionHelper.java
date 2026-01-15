@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import willow.train.kuayue.Kuayue;
+import willow.train.kuayue.KuayueConfig;
 import willow.train.kuayue.mixins.mixin.AccessorCarriageBogey;
 import willow.train.kuayue.systems.train_extension.bogey_weight.BogeyAdditionalData;
 import willow.train.kuayue.systems.train_extension.bogey_weight.BogeyExtensionSystem;
@@ -46,6 +47,7 @@ public class ExtensionHelper {
                                                  Carriage carriage,
                                                  int carriageIndex,
                                                  boolean hasSecondBogey) {
+        if (!KuayueConfig.CONFIG.getBoolValue("BOGEY_WEIGHT_SYS_ENABLE")) return false;
         UUID trainId = train.id;
         BogeyAdditionalData firstBogey = ExtensionHelper.getDataForBogey(carriage, true);
         BogeyAdditionalData secondBogey =

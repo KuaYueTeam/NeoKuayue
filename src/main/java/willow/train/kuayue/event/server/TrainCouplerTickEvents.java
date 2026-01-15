@@ -126,6 +126,9 @@ public class TrainCouplerTickEvents {
                 boolean isAHead = conductorPair.isAHead();
                 boolean isBHead = conductorPair.isBHead();
 
+                if(conductorA.carriage() < 0 || conductorA.carriage() >= train.carriages.size()) continue;
+                if(conductorB.carriage() < 0 || conductorB.carriage() >= t2.carriages.size()) continue;
+
                 Carriage carriageA = train.carriages.get(conductorA.carriage());
                 Carriage carriageB = t2.carriages.get(conductorB.carriage());
 

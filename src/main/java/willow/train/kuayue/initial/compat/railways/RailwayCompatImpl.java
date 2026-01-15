@@ -4,6 +4,8 @@ import com.railwayteam.railways.content.buffer.headstock.CopycatHeadstockBlock;
 import com.railwayteam.railways.content.buffer.headstock.HeadstockBlock;
 import com.railwayteam.railways.content.buffer.headstock.HeadstockStyle;
 import com.railwayteam.railways.content.buffer.single_deco.LinkPinBlock;
+import com.railwayteam.railways.mixin_interfaces.IIndexedSchedule;
+import com.simibubi.create.content.trains.entity.Train;
 import net.minecraft.world.level.block.Block;
 import willow.train.kuayue.systems.train_extension.conductor.providers.*;
 import willow.train.kuayue.systems.train_extension.conductor.registry.ConductorCandidateRegistry;
@@ -71,5 +73,57 @@ public class RailwayCompatImpl implements RailwayCompat{
                 },
                 ScrewLinkConductorProvider.INSTANCE
         );
+    }
+
+    @Override
+    public void attachScheduleToCarriage(Train train, int carriageIndex) {
+        if(train == null) return;
+
+        IIndexedSchedule indexedSchedule = getIndexedSchedule(train);
+        if(indexedSchedule != null) {
+            indexedSchedule.railways$setIndex(carriageIndex);
+        }
+    }
+
+    @Override
+    public int getScheduleOwner(Train train) {
+        if(train == null) return -1;
+
+        IIndexedSchedule indexedSchedule = getIndexedSchedule(train);
+        if(indexedSchedule != null) {
+            return indexedSchedule.railways$getIndex();
+        }
+        return -1;
+    }
+
+    @Override
+    public void detachSchedule(Train train) {
+        if(train == null) return;
+
+        IIndexedSchedule indexedSchedule = getIndexedSchedule(train);
+        if(indexedSchedule != null) {
+            indexedSchedule.railways$setIndex(-1);
+        }
+    }
+
+    @Override
+    public boolean isScheduleAttached(Train train) {
+        return getScheduleOwner(train) != -1;
+    }
+
+    @Override
+    public void transferSchedule(Train from, Train to, int targetCarriageIndex) {
+        if(from == null || to == null) return;
+
+        to.runtime.read(from.runtime.write());
+        attachScheduleToCarriage(to, targetCarriageIndex);
+        detachSchedule(from);
+    }
+
+    private IIndexedSchedule getIndexedSchedule(Train train) {
+        if (train instanceof IIndexedSchedule indexedSchedule) {
+            return indexedSchedule;
+        }
+        return null;
     }
 }

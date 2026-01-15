@@ -2,5 +2,7 @@
   "gui.kuayue.coupler.can_divide": "可以从此处解挂",
   "gui.kuayue.coupler.cannot_divide": "无法从此处解挂",
   "msg.kuayue.coupler.divide_success": "解挂成功",
-  "msg.kuayue.coupler.cannot_divide": "无法从此处解挂列车"
+  "msg.kuayue.coupler.cannot_divide": "无法从此处解挂列车",
+  "msg.kuayue.coupler.schedule_saved": "被合并列车的时刻表已保存到列车存储中",
+  "msg.kuayue.coupler.schedule_ejected": "被合并列车的时刻表已弹出至世界中"
 }
