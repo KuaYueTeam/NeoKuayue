@@ -62,7 +62,7 @@ public class TrainClientTickEvents {
             return;
         }
 
-        BlockState blockState = cc.getBlocks().get(localPos).state;
+        BlockState blockState = cc.getBlocks().get(localPos).state();
 
         TrainOverlayContext context = new TrainOverlayContext(
                 player,

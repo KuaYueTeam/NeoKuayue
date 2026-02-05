@@ -26,7 +26,7 @@ public class EndfaceMovementBehaviour extends TrapdoorMovingInteraction {
     @Override
     public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos, AbstractContraptionEntity contraptionEntity) {
         if(AllItems.WRENCH.isIn(player.getItemInHand(activeHand))) {
-            if(player.level.isClientSide) return true;
+            if(player.level().isClientSide) return true;
 
             return handleWrenchInteraction(player, activeHand, localPos, contraptionEntity);
         }
