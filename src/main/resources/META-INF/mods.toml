@@ -44,7 +44,7 @@ description='''
 [[dependencies.kuayue]]
     modId="create"
     mandatory=true
-    versionRange="[0.5.1.e,)"
+    versionRange="[0.5.1.e,6.0.0)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.kuayue]]
