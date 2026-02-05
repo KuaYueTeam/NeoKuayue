@@ -103,7 +103,7 @@ public abstract class MixinTrain implements ScheduleTracker {
         float otherSpeed = (float) other.speed;
         float deltaSpeed = (float) Math.abs(train.speed - other.speed);
         float reverseCoefficient = Math.max(Math.min(
-                0.1f / deltaSpeed, 1f), 0f);
+                0.4f / deltaSpeed, 1f), 0f);
         System.out.println("collide speed: " + deltaSpeed +
                 ", rC: " + reverseCoefficient);
         kasuga.lib.core.util.data_type.Pair<Float, Float> speedAfterCrash =

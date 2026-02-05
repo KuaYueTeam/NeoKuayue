@@ -88,6 +88,7 @@ public class RailwayCompatImpl implements RailwayCompat{
     @Override
     public int getScheduleOwner(Train train) {
         if(train == null) return -1;
+        if(train.runtime.getSchedule() == null) return -1;
 
         IIndexedSchedule indexedSchedule = getIndexedSchedule(train);
         if(indexedSchedule != null) {
@@ -108,7 +109,8 @@ public class RailwayCompatImpl implements RailwayCompat{
 
     @Override
     public boolean isScheduleAttached(Train train) {
-        return getScheduleOwner(train) != -1;
+        if(train == null) return false;
+        return getScheduleOwner(train) != -1 && train.runtime.getSchedule() != null;
     }
 
     @Override

@@ -16,6 +16,7 @@ public class DefaultScheduleHandlerImpl implements ScheduleHandler{
     @Override
     public int getScheduleOwner(Train train) {
         if(train == null) return -1;
+        if(train.runtime.getSchedule() == null) return -1;
         ScheduleTracker tracker = (ScheduleTracker) train;
         return tracker.neoKuayue$getScheduleOwnerIndex();
     }
@@ -30,7 +31,7 @@ public class DefaultScheduleHandlerImpl implements ScheduleHandler{
     @Override
     public boolean isScheduleAttached(Train train) {
         if(train == null) return false;
-        return getScheduleOwner(train) > -1;
+        return getScheduleOwner(train) != -1 && train.runtime.getSchedule() != null;
     }
 
 

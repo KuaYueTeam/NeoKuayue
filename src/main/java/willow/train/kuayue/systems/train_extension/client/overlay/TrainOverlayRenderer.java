@@ -1,7 +1,6 @@
-package willow.train.kuayue.systems.train_extension.client;
+package willow.train.kuayue.systems.train_extension.client.overlay;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -20,16 +19,35 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CouplerOverlayRenderer {
-    public static Boolean canDivide = null;
-    public static Boolean lastCanDivide = null;
-    public static int hoverTicks = 0;
+public class TrainOverlayRenderer {
+    private static int hoverTicks = 0;
+    private static boolean stateChanged = false;
 
-    public static IGuiOverlay OVERLAY = CouplerOverlayRenderer::render;
+    public static IGuiOverlay OVERLAY = TrainOverlayRenderer::render;
+
+    public static boolean visible = false;
+    public static ItemStack icon = ItemStack.EMPTY;
+    public static Component message = Component.empty();
+
+    public static void setVisible(boolean visible) {
+        TrainOverlayRenderer.visible = visible;
+    }
+
+    public static void setShowInfo(ItemStack icon, Component message) {
+        if(icon == null || message == null) return;
+
+        TrainOverlayRenderer.icon = icon;
+        TrainOverlayRenderer.message = message;
+    }
+
+    public static void clearShowInfo() {
+        TrainOverlayRenderer.visible = false;
+        TrainOverlayRenderer.icon = ItemStack.EMPTY;
+        TrainOverlayRenderer.message = Component.empty();
+    }
 
     public static void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height) {
-        if(canDivide == null) {
-            lastCanDivide = null;
+        if (!visible || message.equals(Component.empty())) {
             hoverTicks = 0;
             return;
         }
@@ -41,19 +59,16 @@ public class CouplerOverlayRenderer {
         if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
             return;
 
-        boolean stateChanged = !canDivide.equals(lastCanDivide);
         if(stateChanged) {
             hoverTicks = 1;
-            lastCanDivide = canDivide;
+            stateChanged = false;
         } else {
             hoverTicks++;
         }
 
-        Component component = canDivide ?
-                Component.literal("    ").append(Component.translatable("gui.kuayue.coupler.can_divide")) :
-                Component.literal("    ").append(Component.translatable("gui.kuayue.coupler.cannot_divide"));
-
-        ItemStack item = AllItems.WRENCH.asStack();
+        Component component = icon.equals(ItemStack.EMPTY) ?
+                message :
+                Component.literal("    ").append(message);
 
         poseStack.pushPose();
 
@@ -89,7 +104,7 @@ public class CouplerOverlayRenderer {
         RemovedGuiUtils.drawHoveringText(guiGraphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
-        GuiGameElement.of(item)
+        GuiGameElement.of(icon)
                 .at(posX + 10, posY - 16, 450)
                 .render(guiGraphics);
 

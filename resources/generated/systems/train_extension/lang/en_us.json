@@ -1,4 +1,6 @@
 {
+  "gui.kuayue.pantograph.open": "Pantograph Status: Raised",
+  "gui.kuayue.pantograph.closed": "Pantograph Status: Lowered",
   "gui.kuayue.coupler.can_divide": "Can be uncoupled here",
   "gui.kuayue.coupler.cannot_divide": "Cannot be uncoupled here",
   "msg.kuayue.coupler.divide_success": "Successfully uncoupled",

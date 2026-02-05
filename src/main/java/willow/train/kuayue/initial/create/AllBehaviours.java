@@ -8,6 +8,7 @@ import willow.train.kuayue.behaviour.*;
 import willow.train.kuayue.block.panels.block_entity.IContraptionMovementBlockEntity;
 import willow.train.kuayue.block.panels.carport.DF11GChimneyBlock;
 import willow.train.kuayue.block.panels.carport.DF5ChimneyBlock;
+import willow.train.kuayue.block.panels.end_face.CustomRenderedEndfaceBlock;
 import willow.train.kuayue.block.seat.YZSeatBlock;
 import willow.train.kuayue.initial.AllBlocks;
 import willow.train.kuayue.initial.AllElements;
@@ -68,7 +69,18 @@ public class AllBehaviours {
     public static final InteractionReg<CouplerInteractionBehaviour> COUPLER_INTERACTION_BEHAVIOUR =
             new InteractionReg<CouplerInteractionBehaviour>("coupler_interaction_behaviour")
                     .behaviour(new CouplerInteractionBehaviour())
-                    .statePredicate(blockState -> ConductorCandidateRegistry.getProvider(blockState) != null)
+                    .statePredicate(blockState -> {
+                        if(blockState.getBlock() instanceof CustomRenderedEndfaceBlock) return false;
+                        return ConductorCandidateRegistry.getProvider(blockState) != null;
+                    })
+                    .submit(AllElements.testRegistry);
+
+    public static final InteractionReg<EndfaceMovementBehaviour> END_FACE_MOVEMENT_BEHAVIOUR =
+            new InteractionReg<EndfaceMovementBehaviour>("endface_movement_behaviour")
+                    .behaviour(new EndfaceMovementBehaviour())
+                    .statePredicate(
+                            state -> state.getBlock() instanceof CustomRenderedEndfaceBlock
+                    )
                     .submit(AllElements.testRegistry);
 
     public static void invoke(){}

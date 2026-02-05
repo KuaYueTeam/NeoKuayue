@@ -1,8 +1,5 @@
 {
   "values": [
-    "kuayue:df5_engine_access_door",
-    "kuayue:df5_equip_door_1",
-    "kuayue:df5_equip_door_2",
-    "kuayue:df5_cabin_door"
+    "kuayue:df5_head_panel"
   ]
 }

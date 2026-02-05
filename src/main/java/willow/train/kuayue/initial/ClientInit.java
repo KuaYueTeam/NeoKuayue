@@ -12,7 +12,7 @@ import willow.train.kuayue.systems.device.driver.seat.InteractiveScreenTarget;
 import willow.train.kuayue.systems.device.driver.seat.WorldTrainSoundManager;
 import willow.train.kuayue.systems.editable_panel.AllColorTemplates;
 import willow.train.kuayue.systems.editable_panel.overlay.GetShareOverlay;
-import willow.train.kuayue.systems.train_extension.client.CouplerOverlayRenderer;
+import willow.train.kuayue.systems.train_extension.client.overlay.TrainOverlayRenderer;
 
 public class ClientInit {
     public static final AllColorTemplates COLOR_TEMPLATES =
@@ -96,7 +96,7 @@ public class ClientInit {
     @SubscribeEvent
     public static void registerHUDOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("get_template_share_overlay", new GetShareOverlay());
-        event.registerAboveAll("coupler_hover_overlay", CouplerOverlayRenderer.OVERLAY);
+        event.registerAboveAll("coupler_hover_overlay", TrainOverlayRenderer.OVERLAY);
     }
 
     public static void invoke() {

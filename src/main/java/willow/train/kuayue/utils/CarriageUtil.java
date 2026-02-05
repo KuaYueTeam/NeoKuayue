@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.contraptions.actors.psi.PortableFluidInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
+import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
@@ -204,12 +205,13 @@ public class CarriageUtil {
     private static void postProcess(CarriageContraption cc, CarriageContraptionEntity cce, Carriage carriage, RemapContext context) {
         cc.invalidateColliders();
 
-        if (carriage.storage != null) {
-            carriage.storage.createHandlers();
-            ((AccessorTrainCargoManager) carriage.storage).invokeChangeDetected();
-            carriage.storage.resetIdleCargoTracker();
-            cce.syncCarriage();
+        if (carriage.storage == null) {
+            carriage.storage = new TrainCargoManager();
         }
+        carriage.storage.createHandlers();
+        ((AccessorTrainCargoManager) carriage.storage).invokeChangeDetected();
+        carriage.storage.resetIdleCargoTracker();
+        cce.syncCarriage();
 
         if (context.isClientSide) {
             updateClientRenderData(cc, cce, context);

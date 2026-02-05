@@ -14,7 +14,6 @@ import willow.train.kuayue.block.panels.TrainPanelBlock;
 import willow.train.kuayue.block.panels.base.TrainPanelProperties;
 import willow.train.kuayue.block.panels.carport.DF11GChimneyBlock;
 import willow.train.kuayue.block.panels.conductor.DF11GCowCatcherBlock;
-import willow.train.kuayue.block.panels.conductor.DF11GEndFaceBlock;
 import willow.train.kuayue.block.panels.door.CustomRenderedDoorBlock;
 import willow.train.kuayue.block.panels.end_face.CustomRenderedEndfaceBlock;
 import willow.train.kuayue.block.panels.slab.HingeSlabBlock;
@@ -59,10 +58,10 @@ public class I11GPanel {
                     .tab(AllElements.neoKuayueLocoTab)
                     .submit(AllElements.testRegistry);
 
-    public static final PanelRegistration<DF11GEndFaceBlock> END_FACE_DF11G =
-            new PanelRegistration<DF11GEndFaceBlock>("end_face_df11g")
+    public static final PanelRegistration<CustomRenderedEndfaceBlock> END_FACE_DF11G =
+            new PanelRegistration<CustomRenderedEndfaceBlock>("end_face_df11g")
                     .block(properties ->
-                            new DF11GEndFaceBlock(
+                            new CustomRenderedEndfaceBlock(
                                     properties, TrainPanelProperties.DoorType.NO_DOOR,
                                     null,
                                     null,

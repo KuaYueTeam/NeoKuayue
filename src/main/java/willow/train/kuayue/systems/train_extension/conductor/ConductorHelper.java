@@ -131,10 +131,14 @@ public class ConductorHelper {
             this.oldLocoSpeed = (float) loco.speed;
             this.oldCarriageSpeed = (float) carriages.speed;
 
-            if (isLocoHead) {
-                effectPos = locoConductors.getFirst().getSecond();
+            if (isClientSide) {
+                this.effectPos = null;
             } else {
-                effectPos = locoConductors.getSecond().getSecond();
+                if (isLocoHead) {
+                    effectPos = locoConductors.getFirst().getSecond();
+                } else {
+                    effectPos = locoConductors.getSecond().getSecond();
+                }
             }
         }
     }
@@ -488,8 +492,8 @@ public class ConductorHelper {
                     isCarriageTail,
                     isClientSide,
                     spacing,
-                    getConductorPosition(loco),
-                    getConductorPosition(carriages)
+                    isClientSide ? null : getConductorPosition(loco),
+                    isClientSide ? null : getConductorPosition(carriages)
             );
             MergeEventContext eventContext = new MergeEventContext(loco.id, carriages.id, isLocoHead, isCarriageTail, spacing);
 
@@ -511,6 +515,7 @@ public class ConductorHelper {
             return true;
         } catch (Exception e) {
             Kuayue.LOGGER.error("Error while merging trains: locoId={}, carriageId={}", loco.id, carriages.id, e);
+            Kuayue.LOGGER.error("Current side: {}", isClientSide ? "Client" : "Server");
             e.printStackTrace();
             return false;
         }
@@ -540,7 +545,7 @@ public class ConductorHelper {
                 }
                 reverseBogeys(c);
                 boolean success = remapCarriage(c, context.isClientSide);
-                carriageRemapStatus.put(c.id, success);
+                carriageRemapStatus.put(c.id, !success);
             });
             Collections.reverse(carriageCarts);
             Collections.reverse(cartSpacing);

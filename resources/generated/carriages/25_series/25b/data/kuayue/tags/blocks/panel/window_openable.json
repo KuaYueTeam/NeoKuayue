@@ -1,9 +1,10 @@
 {
   "values": [
     "kuayue:window_oc_wide_25b",
-    "kuayue:window_oc_wide_sealed_25b",
     "kuayue:window_oc_toilet_25b",
     "kuayue:window_oc_small_25b",
-    "kuayue:window_oc_25b"
+    "kuayue:window_oc_25b",
+
+    "kuayue:door_25b"
   ]
 }

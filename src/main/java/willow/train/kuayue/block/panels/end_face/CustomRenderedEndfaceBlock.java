@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Couple;
 import kasuga.lib.KasugaLib;
+import lombok.NonNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -22,8 +23,12 @@ import willow.train.kuayue.Kuayue;
 import willow.train.kuayue.block.panels.base.TrainPanelProperties;
 import willow.train.kuayue.block.panels.block_entity.CustomRenderedEndfaceEntity;
 import willow.train.kuayue.initial.AllBlocks;
+import willow.train.kuayue.initial.AllConductorTypes;
+import willow.train.kuayue.systems.train_extension.conductor.Conductable;
+import willow.train.kuayue.systems.train_extension.conductor.ConductorProvider;
+import willow.train.kuayue.systems.train_extension.conductor.ConductorType;
 
-public class CustomRenderedEndfaceBlock extends TrainEndfaceBlock implements IBE<CustomRenderedEndfaceEntity> {
+public class CustomRenderedEndfaceBlock extends TrainEndfaceBlock implements IBE<CustomRenderedEndfaceEntity>, ConductorProvider {
 
     public final Couple<PartialModel> models;
     public final PartialModel frameModel;
@@ -70,5 +75,16 @@ public class CustomRenderedEndfaceBlock extends TrainEndfaceBlock implements IBE
     @Override
     public BlockEntityType<? extends CustomRenderedEndfaceEntity> getBlockEntityType() {
         return AllBlocks.CUSTOM_RENDERED_ENDFACE_ENTITY.getType();
+    }
+
+    @Override
+    public @NonNull ConductorType getType() {
+        return AllConductorTypes.JAN;
+    }
+
+    @Override
+    public @NonNull Conductable modifyConductor(@NonNull Conductable rawConductor) {
+        rawConductor.setOffset(1);
+        return rawConductor;
     }
 }
