@@ -338,11 +338,11 @@ java {
     // withJavadocJar()
     withSourcesJar()
 }
-
+//run reobfJarJar first, then run publish
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
-            artifact tasks.named("jarJar")
+            artifact file("build/reobfJarJar/output.jar")
             artifact sourcesJar
             // artifact javadocJar
             groupId = "willow.train.kuayue"
