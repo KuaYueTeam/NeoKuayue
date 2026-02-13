@@ -3,7 +3,7 @@
   "item.kuayue.carriage_marshalled_blueprint": "Carriage Marshalled Blueprint",
   "item.kuayue.circuit_motherboard": "Circuit Motherboard",
   "item.kuayue.train_moulds": "Train steel plate",
-  "item.kuayue.circuit": "Circuit ",
+  "item.kuayue.circuit_board": "Circuit Board",
   "item.kuayue.circuit_board_constructing": "Circuit(Assembling)",
   "tech_tree.kuayue.group.carriage_blueprint.name": "Carriage Blueprint Group",
   "tech_tree.kuayue.group.carriage_blueprint.description": "Advance the technology tree to obtain the overall design drawings of all types of trains.",
