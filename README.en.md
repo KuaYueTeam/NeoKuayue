@@ -8,11 +8,8 @@
 ![Minecraft Version](https://img.shields.io/badge/Minecraft%20版本-1.19.2%7C1.20.1-success)
 ![Mod Loader Forge](https://img.shields.io/badge/Loader-Forge-red)
 
-<!---
-WIP, When the mod is released, please uncomment the following lines
-![Modrinth Downloads](https://img.shields.io/modrinth/dt/[Modrinth MODID]?logo=modrinth&label=Modrinth%20%E4%B8%8B%E8%BD%BD%E9%87%8F)
-![CurseForge Downloads](https://img.shields.io/curseforge/dt/[CurseForge MODID]?logo=curseforge&label=CurseForge%20%E4%B8%8B%E8%BD%BD%E9%87%8F&color=orange)
--->
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/iErPoO30?logo=modrinth&label=Modrinth%20%E4%B8%8B%E8%BD%BD%E9%87%8F)
+![CurseForge Downloads](https://img.shields.io/curseforge/dt/1458356?logo=curseforge&label=CurseForge%20%E4%B8%8B%E8%BD%BD%E9%87%8F&color=orange)
 
 [![QQ Group](https://img.shields.io/badge/%E4%BA%A4%E6%B5%81%E7%BE%A4-QQ-blue?logo=qq)](https://jq.qq.com/?_wv=1027\&k=CYUl0h1L)
 [![Discord](https://img.shields.io/badge/%E4%BA%A4%E6%B5%81%E7%A4%BE%E5%8C%BA-Discord-blue?logo=discord&color=darkblue)](https://discord.gg/dBvjerpsSy)
