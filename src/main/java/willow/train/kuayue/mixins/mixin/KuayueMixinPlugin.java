@@ -15,7 +15,7 @@ public class KuayueMixinPlugin implements IMixinConfigPlugin {
 
     public KuayueMixinPlugin() {
         mixinConditions.put("MixinRailwaysTrainUtils", v -> AllCompatMods.isRailwaysPresent());
-        mixinConditions.put("MixinScheduleItem", v -> AllCompatMods.isRailwaysPresent());
+        mixinConditions.put("MixinScheduleItem", v -> !AllCompatMods.isRailwaysPresent());
     }
 
     @Override
