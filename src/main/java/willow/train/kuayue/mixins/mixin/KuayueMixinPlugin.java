@@ -4,7 +4,7 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import willow.train.kuayue.initial.AllCompats;
+import willow.train.kuayue.initial.AllCompatMods;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -14,8 +14,8 @@ public class KuayueMixinPlugin implements IMixinConfigPlugin {
     protected final Map<String, Predicate<Void>> mixinConditions = new HashMap<>();
 
     public KuayueMixinPlugin() {
-        mixinConditions.put("MixinRailwaysTrainUtils", v -> AllCompats.RAILWAYS.isPresent());
-        mixinConditions.put("MixinScheduleItem", v -> AllCompats.RAILWAYS.isEmpty());
+        mixinConditions.put("MixinRailwaysTrainUtils", v -> AllCompatMods.isRailwaysPresent());
+        mixinConditions.put("MixinScheduleItem", v -> AllCompatMods.isRailwaysPresent());
     }
 
     @Override
