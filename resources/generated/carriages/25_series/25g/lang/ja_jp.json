@@ -1,7 +1,5 @@
 {
   "item.kuayue.ky_schematic_25g": "旧色 25　G設計図",
-  "kuayue.advancement.25g": "25　Gです！",
-  "kuayue.advancement.25g.desc": "25　G下の車体板を取得します",
   "container.kuayue.inventory.button.25g": "25　G",
   "block.kuayue.end_face_25g": "旧色 25 G車両の端面",
   "block.kuayue.end_face_25g.tooltip": "§7　ぎち～ぎち～",
