@@ -4,11 +4,11 @@
       "item": "kuayue:cr_logo"
     },
     "title": {
-      "translate": "kuayue:advancement.root"
+      "translate": "kuayue.advancement.root"
     },
     "description": {
       "color": "#DBA213",
-      "translate": "kuayue:advancement.root.desc"
+      "translate": "kuayue.advancement.root.desc"
     },
     "frame": "task",
     "show_toast": false,

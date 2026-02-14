@@ -1,5 +1,5 @@
 {
-  "parent": "kuayue:root",
+  "parent": "kuayue:blueprint_table",
   "display": {
     "icon": {
       "item": "kuayue:weathering_resistant_steel_ingot"
@@ -8,7 +8,6 @@
       "translate": "kuayue.advancement.steel"
     },
     "description": {
-      "color": "#DBA213",
       "translate": "kuayue.advancement.steel.desc"
     },
     "frame": "goal",

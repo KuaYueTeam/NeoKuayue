@@ -17,8 +17,8 @@
     "hidden": false
   },
   "criteria": {
-    "1": {
-      "trigger": "minecraft:consume_item",
+    "0": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "item": {
           "items": ["kuayue:train_diet_1"]
@@ -28,7 +28,7 @@
   },
   "requirements": [
     [
-      "1"
+      "0"
     ]
   ]
 }
