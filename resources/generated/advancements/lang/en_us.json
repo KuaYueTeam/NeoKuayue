@@ -1,6 +1,14 @@
 {
-  "kuayue:advancement.root": "KUAYUE",
-  "kuayue:advancement.root.desc": "Thank You For Using KUAYUE",
+  "kuayue.advancement.root": "Kuayue",
+  "kuayue.advancement.root.desc": "Welcome to Kuayue!",
+  "kuayue.advancement.blueprint_table": "Research time",
+  "kuayue.advancement.blueprint_table.desc": "Obtain blueprint table",
   "kuayue.advancement.track": "SHINKANSEN!",
-  "kuayue.advancement.track.desc": "Obtain the Standard Track"
+  "kuayue.advancement.track.desc": "Obtain the Standard Track",
+  "kuayue.advancement.instant_noodles": "The familiar scent",
+  "kuayue.advancement.instant_noodles.desc": "Make a bowl of instant noodles",
+  "kuayue.advancement.laquered_board": "Where are we going to?",
+  "kuayue.advancement.laquered_board.desc": "Obtain lacquered board",
+  "kuayue.advancement.electrical_age": "The Electrical Age",
+  "kuayue.advancement.electrical_age.desc": "Obtain overhead line wire"
 }

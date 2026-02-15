@@ -2,5 +2,13 @@
   "kuayue:advancement.root": "跨越",
   "kuayue:advancement.root.desc": "感谢您使用跨越",
   "kuayue.advancement.track": "SHINKANSEN!",
-  "kuayue.advancement.track.desc": "获得标准轨"
+  "kuayue.advancement.blueprint_table": "是时候开始研究了",
+  "kuayue.advancement.blueprint_table.desc": "制作蓝图台",
+  "kuayue.advancement.track.desc": "获得标准轨",
+  "kuayue.advancement.instant_noodles": "熟悉的香味",
+  "kuayue.advancement.instant_noodles.desc": "泡一碗方便面",
+  "kuayue.advancement.laquered_board": "我们去哪儿啊？",
+  "kuayue.advancement.laquered_board.desc": "获得水牌(列车运行区段指示牌)",
+  "kuayue.advancement.electrical_age": "电气时代",
+  "kuayue.advancement.electrical_age.desc": "制作接触网线"
 }

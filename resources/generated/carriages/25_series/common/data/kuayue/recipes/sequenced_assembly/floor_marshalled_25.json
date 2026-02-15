@@ -1,7 +1,7 @@
 {
   "type": "create:sequenced_assembly",
   "ingredient": {
-    "item": "kuayue:carriage_marshalled_mould"
+    "item": "kuayue:weathering_resistant_steel_pole"
   },
   "loops": 1,
   "results": [
@@ -14,7 +14,7 @@
       "type": "create:deploying",
       "ingredients": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         },
         {
           "item": "kuayue:weathering_resistant_steel_block_0"
@@ -22,7 +22,7 @@
       ],
       "results": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         }
       ]
     },
@@ -30,7 +30,7 @@
       "type": "create:deploying",
       "ingredients": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         },
         {
           "item": "minecraft:green_dye"
@@ -38,7 +38,7 @@
       ],
       "results": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         }
       ]
     },
@@ -46,7 +46,7 @@
       "type": "create:deploying",
       "ingredients": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         },
         {
           "item": "kuayue:green_brush"
@@ -54,7 +54,7 @@
       ],
       "results": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         }
       ]
     },
@@ -62,7 +62,7 @@
       "type": "create:deploying",
       "ingredients": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         },
         {
           "item": "kuayue:color_masterbatch"
@@ -70,7 +70,7 @@
       ],
       "results": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         }
       ]
     },
@@ -78,17 +78,17 @@
       "type": "create:cutting",
       "ingredients": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         }
       ],
       "results": [
         {
-          "item": "kuayue:carriage_marshalled_mould_constructing"
+          "item": "kuayue:weathering_resistant_steel_pole"
         }
       ]
     }
   ],
   "transitionalItem": {
-    "item": "kuayue:carriage_marshalled_mould_constructing"
+    "item": "kuayue:weathering_resistant_steel_pole"
   }
 }
