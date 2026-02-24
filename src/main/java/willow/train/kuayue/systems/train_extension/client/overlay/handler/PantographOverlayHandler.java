@@ -1,7 +1,7 @@
 package willow.train.kuayue.systems.train_extension.client.overlay.handler;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.utility.Components;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import willow.train.kuayue.systems.train_extension.client.overlay.TrainOverlayContext;
 import willow.train.kuayue.systems.train_extension.client.overlay.TrainOverlayRenderer;
@@ -14,9 +14,9 @@ public class PantographOverlayHandler implements IContraptionFocusHandler {
 
         boolean isOpen = context.state().getValue(BlockStateProperties.OPEN);
         if(isOpen) {
-            TrainOverlayRenderer.setShowInfo(AllItems.GOGGLES.asStack(), Components.translatable("gui.kuayue.pantograph.open"));
+            TrainOverlayRenderer.setShowInfo(AllItems.GOGGLES.asStack(), Component.translatable("gui.kuayue.pantograph.open"));
         } else {
-            TrainOverlayRenderer.setShowInfo(AllItems.GOGGLES.asStack(), Components.translatable("gui.kuayue.pantograph.closed"));
+            TrainOverlayRenderer.setShowInfo(AllItems.GOGGLES.asStack(), Component.translatable("gui.kuayue.pantograph.closed"));
         }
         TrainOverlayRenderer.setVisible(true);
         return true;

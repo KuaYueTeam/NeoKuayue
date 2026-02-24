@@ -1,23 +1,23 @@
 package willow.train.kuayue.systems.device.driver.combustion;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import kasuga.lib.core.util.data_type.Pair;
+import net.createmod.catnip.animation.AnimationTickHolder;
+import net.minecraft.client.renderer.LevelRenderer;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import kasuga.lib.core.create.device.TrainDeviceLocation;
 import kasuga.lib.core.create.device.TrainDeviceManager;
 import kasuga.lib.core.menu.base.GuiMenu;
 import kasuga.lib.core.menu.locator.ContraptionBlockMenuLocator;
 import kasuga.lib.core.menu.locator.GuiMenuHolder;
-import kasuga.lib.core.util.data_type.Pair;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 import willow.train.kuayue.initial.AllElements;
 import willow.train.kuayue.systems.device.AllDeviceSystems;
 import willow.train.kuayue.systems.device.AllDevicesMenus;
@@ -123,7 +122,10 @@ public class InternalCombustionDriveControllerMovementBehavior
                 holder,
                 matrices.getModelViewProjection(),
                 buffer,
-                BlockEntityRenderHelper.getCombinedLight(context.world, getLightPos(matrices.getLight(), context.localPos), renderWorld, context.localPos),
+                LevelRenderer.getLightColor(
+                        context.world,
+                        BlockPos.containing(context.position)
+                ),
                 OverlayTexture.NO_OVERLAY,
                 AnimationTickHolder.getPartialTicks()
         );

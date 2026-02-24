@@ -1,8 +1,6 @@
 package willow.train.kuayue.systems.overhead_line.item;
 
-import com.mojang.datafixers.util.Either;
-import com.simibubi.create.content.trains.track.TrackTargetingBlockItem;
-import com.simibubi.create.foundation.utility.NBTHelper;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;

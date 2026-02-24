@@ -78,9 +78,7 @@ public class AllBehaviours {
     public static final InteractionReg<EndfaceMovementBehaviour> END_FACE_MOVEMENT_BEHAVIOUR =
             new InteractionReg<EndfaceMovementBehaviour>("endface_movement_behaviour")
                     .behaviour(new EndfaceMovementBehaviour())
-                    .statePredicate(
-                            state -> state.getBlock() instanceof CustomRenderedEndfaceBlock
-                    )
+                    .statePredicate(state -> state.getBlock() instanceof CustomRenderedEndfaceBlock)
                     .submit(AllElements.testRegistry);
 
     public static void invoke(){}

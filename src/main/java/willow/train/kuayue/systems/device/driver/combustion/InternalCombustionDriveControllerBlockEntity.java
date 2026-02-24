@@ -4,17 +4,12 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import kasuga.lib.core.menu.locator.BlockMenuLocator;
 import kasuga.lib.core.menu.locator.GuiMenuHolder;
-import kasuga.lib.example_env.AllExampleElements;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import willow.train.kuayue.systems.device.AllDeviceBlockEntities;
 import willow.train.kuayue.systems.device.AllDevicesMenus;
-import willow.train.kuayue.systems.device.driver.devices.CIRMenu;
-import willow.train.kuayue.systems.device.driver.devices.LKJ2000Menu;
 
 import javax.swing.text.html.Option;
 import java.util.List;

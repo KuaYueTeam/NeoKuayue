@@ -36,7 +36,7 @@ public class LevelPanelBlock extends TrainPanelBlock implements IWrenchable {
         KineticBlockEntity.switchToBlockState(world, context.getClickedPos(), updateAfterWrenched(rotated, context));
 
         if (world.getBlockState(context.getClickedPos()) != state)
-            playRotateSound(world, context.getClickedPos());
+            IWrenchable.playRotateSound(world, context.getClickedPos());
 
         return InteractionResult.SUCCESS;
     }

@@ -1,6 +1,7 @@
 package willow.train.kuayue.behaviour;
 
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -24,8 +25,5 @@ public class AnimationMovementBehaviour implements MovementBehaviour {
         return true;
     }
 
-    @Override
-    public boolean renderAsNormalBlockEntity() {
-        return true;
-    }
+
 }

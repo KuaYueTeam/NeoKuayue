@@ -10,7 +10,6 @@ import willow.train.kuayue.systems.train_extension.TrainExtensionSystem;
 import willow.train.kuayue.systems.device.graph.KuaYueRailwayManager;
 import willow.train.kuayue.systems.overhead_line.OverheadLineSystem;
 import willow.train.kuayue.systems.tech_tree.server.TechTreeManager;
-import willow.train.kuayue.systems.train_extension.bogey_weight.BogeyExtensionSystem;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Kuayue.MODID)

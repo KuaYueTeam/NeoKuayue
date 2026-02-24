@@ -2,13 +2,11 @@ package willow.train.kuayue.initial.panel;
 
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec2;
-import willow.train.kuayue.block.panels.TrainHingePanelBlock;
 import willow.train.kuayue.block.panels.TrainPanelBlock;
 import willow.train.kuayue.block.panels.base.TrainPanelProperties;
 import willow.train.kuayue.block.panels.conductor.FreightC70EndFaceBlock;
 import willow.train.kuayue.block.panels.conductor.FreightNX70EndFaceBlock;
 import willow.train.kuayue.block.panels.door.DoubleRotateDoorBlock;
-import willow.train.kuayue.block.panels.end_face.CustomRenderedEndfaceBlock;
 import willow.train.kuayue.block.panels.end_face.FreightEndFaceBlock;
 import willow.train.kuayue.block.panels.slab.HingeSlabBlock;
 import willow.train.kuayue.block.panels.slab.TrainSlabBlock;

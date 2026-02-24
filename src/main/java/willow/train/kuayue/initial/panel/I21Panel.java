@@ -1,7 +1,7 @@
 package willow.train.kuayue.initial.panel;
 
-import com.simibubi.create.foundation.utility.Couple;
 import kasuga.lib.registrations.common.BlockReg;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;

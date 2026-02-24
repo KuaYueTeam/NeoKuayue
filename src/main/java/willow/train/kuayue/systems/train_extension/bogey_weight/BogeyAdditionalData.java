@@ -47,7 +47,7 @@ public class BogeyAdditionalData {
         ResourceLocation sizeRl = new ResourceLocation(nbt.getString("size"));
         BogeySizes.BogeySize s1 = null;
         for (BogeySizes.BogeySize s : style.validSizes()) {
-            if (s.location().equals(sizeRl)) {
+            if (s.id().equals(sizeRl)) {
                 s1 = s;
                 break;
             }
@@ -59,8 +59,8 @@ public class BogeyAdditionalData {
     }
 
     public void write(CompoundTag nbt) {
-        nbt.putString("style", style.name.toString());
-        nbt.putString("size", size.location().toString());
+        nbt.putString("style", style.id.toString());
+        nbt.putString("size", size.id().toString());
         nbt.putInt("axle_count", axleCount);
         nbt.putFloat("max_weight_per_axle", maxWeightPerAxle);
     }

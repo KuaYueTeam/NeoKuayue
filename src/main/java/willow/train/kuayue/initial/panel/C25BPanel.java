@@ -1,13 +1,12 @@
 package willow.train.kuayue.initial.panel;
 
-import com.simibubi.create.foundation.utility.Couple;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import willow.train.kuayue.Kuayue;
-import willow.train.kuayue.block.panels.*;
+import willow.train.kuayue.block.panels.TrainHingePanelBlock;
+import willow.train.kuayue.block.panels.TrainPanelBlock;
 import willow.train.kuayue.block.panels.base.TrainPanelProperties;
 import willow.train.kuayue.block.panels.door.CustomRenderedDoorBlock;
 import willow.train.kuayue.block.panels.end_face.CustomRenderedEndfaceBlock;

@@ -2,7 +2,6 @@ package willow.train.kuayue.initial.fluid;
 
 import kasuga.lib.core.base.BucketItem;
 import kasuga.lib.registrations.common.FluidReg;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import willow.train.kuayue.block.food.fluid.BlueBullBlock;

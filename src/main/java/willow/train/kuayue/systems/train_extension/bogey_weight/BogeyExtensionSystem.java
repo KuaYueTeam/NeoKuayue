@@ -93,7 +93,7 @@ public class BogeyExtensionSystem implements ResourceManagerReloadListener {
                         Set<BogeySizes.BogeySize> sizes = style.validSizes();
                         BogeySizes.BogeySize size = null;
                         for (BogeySizes.BogeySize s : sizes) {
-                            if (s.location().equals(sizeLoc)) {
+                            if (s.id().equals(sizeLoc)) {
                                 size = s;
                                 break;
                             }

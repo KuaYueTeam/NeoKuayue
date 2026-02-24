@@ -75,7 +75,7 @@ public class ExtensionHelper {
     public static float getCarriageItemWeight(
             TrainCargoManager cargo) {
         float weight = 0;
-        IItemHandlerModifiable items = cargo.getItems();
+        IItemHandlerModifiable items = cargo.getAllItems();
         if (items == null) return weight;
         int slotSize = items.getSlots();
         for (int i = 0; i < slotSize; i++) {

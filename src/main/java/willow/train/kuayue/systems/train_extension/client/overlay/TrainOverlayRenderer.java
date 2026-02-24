@@ -2,11 +2,10 @@ package willow.train.kuayue.systems.train_extension.client.overlay;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -81,15 +80,15 @@ public class TrainOverlayRenderer {
 
         float fade = Mth.clamp((hoverTicks + partialTicks) / 24f, 0, 1);
         Boolean useCustom = cfg.overlayCustomColor.get();
+        // 手动指定 Vanilla 提示框颜色 (这是 Theme.c 原本返回的默认值)
         Color colorBackground = useCustom ? new Color(cfg.overlayBackgroundColor.get())
-                : Theme.c(Theme.Key.VANILLA_TOOLTIP_BACKGROUND)
-                .scaleAlpha(.75f);
+                : new Color(0xF0100010).scaleAlpha(.75f); // 经典的深紫色背景
+
         Color colorBorderTop = useCustom ? new Color(cfg.overlayBorderColorTop.get())
-                : Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, true)
-                .copy();
+                : new Color(0x505000FF); // 顶部紫色边框
+
         Color colorBorderBot = useCustom ? new Color(cfg.overlayBorderColorBot.get())
-                : Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, false)
-                .copy();
+                : new Color(0x5028007F); // 底部深蓝色边框
 
         if (fade < 1) {
             poseStack.translate(Math.pow(1 - fade, 3) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 8, 0, 0);

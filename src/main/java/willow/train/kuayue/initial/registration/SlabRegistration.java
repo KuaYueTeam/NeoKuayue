@@ -1,7 +1,6 @@
 package willow.train.kuayue.initial.registration;
 
 import kasuga.lib.registrations.BlockEntityRendererBuilder;
-import kasuga.lib.registrations.common.BlockEntityReg;
 import kasuga.lib.registrations.common.BlockReg;
 import kasuga.lib.registrations.common.CreativeTabReg;
 import kasuga.lib.registrations.common.ItemReg;

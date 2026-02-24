@@ -1,169 +1,92 @@
 package willow.train.kuayue.block.bogey.loco.renderer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.mojang.math.Axis;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.create.BogeyDataConstants;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
 import willow.train.kuayue.initial.AllElements;
 import willow.train.kuayue.initial.create.AllLocoBogeys;
 
-public class DF21Renderer extends BogeyRenderer {
+public class DF21Renderer implements BogeyRenderer {
 
     private static ResourceLocation asBlockModelResource(String path) {
         return AllElements.testRegistry.asResource("block/" + path);
     }
 
+    // 漏洞修复 1: 使用 PartialModel.of 处理异步加载
     public static final PartialModel
-            DF21_FRAME = new PartialModel(asBlockModelResource("bogey/df21/df21_bogey_temple")),
-            DF21_WHEEL = new PartialModel(asBlockModelResource("bogey/df21/df21_wheel"));
+            DF21_FRAME = PartialModel.of(asBlockModelResource("bogey/df21/df21_bogey_temple")),
+            DF21_WHEEL = PartialModel.of(asBlockModelResource("bogey/df21/df21_wheel"));
 
+    // 漏洞修复 2: 使用 1.20.1 版本的正确参数列表
     @Override
-    public void initialiseContraptionModelData(
-            MaterialManager materialManager, CarriageBogey carriageBogey) {
-        this.createModelInstance(materialManager, DF21_FRAME);
-        this.createModelInstance(materialManager, DF21_WHEEL, 3);
+    public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                       MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+        renderDF21(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, false);
     }
 
-    @Override
-    public BogeySizes.BogeySize getSize() {
-        return AllLocoBogeys.df21.getSize();
-    }
+    // 统一渲染核心，合并 Forward 和 Backward
+    protected void renderDF21(CompoundTag bogeyData, float wheelAngle, PoseStack ms,
+                              MultiBufferSource bufferSource, int light, int overlay,
+                              boolean inContraption, boolean backward) {
 
-    @Override
-    public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+        var buffer = bufferSource.getBuffer(RenderType.cutoutMipped());
+        var air = Blocks.AIR.defaultBlockState();
 
-        boolean forwards = BogeyDataConstants.isForwards(bogeyData, inContraption);
+        Direction direction = bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
+                ? NBTHelper.readEnum(bogeyData, BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY, Direction.class)
+                : Direction.NORTH;
 
-        Direction direction =
-                bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                        ? NBTHelper.readEnum(
-                        bogeyData,
-                        BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                        Direction.class)
-                        : Direction.NORTH;
+        boolean isPositive = direction.getAxisDirection() == Direction.AxisDirection.POSITIVE;
 
-        boolean inInstancedContraption = vb == null;
+        // 核心异或逻辑：处理组装状态、正反向和南北朝向
+        // DF21 原始逻辑中 !inContraption 会导致 frame 翻转 180，这里予以保留
+        boolean shouldFlip = (isPositive ^ backward ^ !inContraption);
+        float yaw = shouldFlip ? 180 : 0;
+        float angleMultiplier = shouldFlip ? -1 : 1;
 
-        BogeyModelData frame = getTransform(DF21_FRAME, ms, inInstancedContraption);
-        BogeyModelData[] wheels = getTransform(DF21_WHEEL, ms, inInstancedContraption, 3);
+        ms.pushPose();
+        ms.mulPose(Axis.YP.rotationDegrees(yaw));
 
-        if (!inContraption) {
-            frame.rotateY(180).translate(0, 0.225, 0.17).render(ms, light, vb);
+        // --- 1. 渲染架体 ---
+        // 注意：DF21 框架有独特的 Z 轴偏移 0.17
+        ms.pushPose();
+        ms.translate(0, 0.225, 0.17);
+        CachedBuffers.partial(DF21_FRAME, air).light(light).overlay(overlay).renderInto(ms, buffer);
+        ms.popPose();
 
-            for (int side = -1; side < 2; side++) {
-                if (!inInstancedContraption) ms.pushPose();
-                BogeyModelData wheel = wheels[side + 1];
-                wheel.translate(0, 0.88, ((double) side) * 1.805d)
-                        .rotateX(wheelAngle)
-                        .render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-            }
-            return;
-        }
-
-        if (direction == Direction.NORTH || direction == Direction.WEST) {
-            frame.rotateY(180).translate(0, 0.225, 0.17).render(ms, light, vb);
-
-            for (int side = -1; side < 2; side++) {
-                if (!inInstancedContraption) ms.pushPose();
-                BogeyModelData wheel = wheels[side + 1];
-                wheel.translate(0, 0.88, ((double) side) * 1.805d)
-                        .rotateX(wheelAngle)
-                        .render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-            }
-            return;
-        }
-
-        frame.translate(0, 0.225, 0.17).render(ms, light, vb);
-
+        // --- 2. 渲染轮对 (Co-Co 三轴) ---
         for (int side = -1; side < 2; side++) {
-            if (!inInstancedContraption) ms.pushPose();
-            BogeyModelData wheel = wheels[side + 1];
-            wheel.translate(0, 0.88, ((double) side) * 1.805d)
-                    .rotateX(wheelAngle)
-                    .render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
+            ms.pushPose();
+            // DF21 轴距 1.805m, 轮径高度 0.88m
+            ms.translate(0, 0.88, (double) side * 1.805d);
+            ms.mulPose(Axis.XP.rotationDegrees(wheelAngle * angleMultiplier));
+            CachedBuffers.partial(DF21_WHEEL, air).light(light).overlay(overlay).renderInto(ms, buffer);
+            ms.popPose();
+        }
+
+        ms.popPose();
+    }
+
+    // --- 子类：反向渲染器 ---
+    public static class Backward extends DF21Renderer {
+        @Override
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+            super.renderDF21(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, true);
         }
 
     }
 
-    public static class Backward extends BogeyRenderer {
-
-        @Override
-        public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-            this.createModelInstance(materialManager, DF21_FRAME);
-            this.createModelInstance(materialManager, DF21_WHEEL, 3);
-        }
-
-        @Override
-        public BogeySizes.BogeySize getSize() {
-            return AllLocoBogeys.df21Backward.getSize();
-        }
-
-        @Override
-        public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
-            boolean forwards = BogeyDataConstants.isForwards(bogeyData, inContraption);
-
-            Direction direction =
-                    bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                            ? NBTHelper.readEnum(
-                            bogeyData,
-                            BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                            Direction.class)
-                            : Direction.NORTH;
-
-            wheelAngle = -wheelAngle;
-            boolean inInstancedContraption = vb == null;
-
-            BogeyModelData frame = getTransform(DF21_FRAME, ms, inInstancedContraption);
-            BogeyModelData[] wheels = getTransform(DF21_WHEEL, ms, inInstancedContraption, 3);
-
-            if (!inContraption) {
-                frame.translate(0, 0.225, 0.17).render(ms, light, vb);
-                for (int side = -1; side < 2; side++) {
-                    if (!inInstancedContraption) ms.pushPose();
-                    BogeyModelData wheel = wheels[side + 1];
-                    wheel.translate(0, 0.88, ((double) side) * 1.805d)
-                            .rotateX(wheelAngle)
-                            .render(ms, light, vb);
-                    if (!inInstancedContraption) ms.popPose();
-                }
-                return;
-            }
-
-            if (direction == Direction.NORTH || direction == Direction.WEST) {
-                frame.translate(0, 0.225, 0.17).render(ms, light, vb);
-
-                for (int side = -1; side < 2; side++) {
-                    if (!inInstancedContraption) ms.pushPose();
-                    BogeyModelData wheel = wheels[side + 1];
-                    wheel.translate(0, 0.88, ((double) side) * 1.805d)
-                            .rotateX(-wheelAngle)
-                            .render(ms, light, vb);
-                    if (!inInstancedContraption) ms.popPose();
-                }
-                return;
-            }
-
-            frame.rotateY(180).translate(0, 0.225, 0.17).render(ms, light, vb);
-
-            for (int side = -1; side < 2; side++) {
-                if (!inInstancedContraption) ms.pushPose();
-                BogeyModelData wheel = wheels[side + 1];
-                wheel.translate(0, 0.88, ((double) side) * 1.805d)
-                        .rotateX(-wheelAngle)
-                        .render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-            }
-        }
-    }
 }

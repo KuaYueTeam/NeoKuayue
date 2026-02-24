@@ -2,8 +2,8 @@ package willow.train.kuayue.utils.client;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.ContraptionHandlerClient;
-import com.simibubi.create.foundation.utility.Couple;
 import kasuga.lib.core.util.data_type.Pair;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;

@@ -2,7 +2,7 @@ package willow.train.kuayue.mixins.mixin.compat.railways;
 
 import com.railwayteam.railways.content.coupling.TrainUtils;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.foundation.utility.Couple;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;

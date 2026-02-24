@@ -2,7 +2,6 @@ package willow.train.kuayue.block.bogey.carriage;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
@@ -37,8 +36,7 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public class CarriageBogeyBlock extends AbstractBogeyBlock<CarriageBogeyEntity>
         implements IBE<CarriageBogeyEntity>,
-                ProperWaterloggedBlock,
-                ISpecialBlockItemRequirement {
+                ProperWaterloggedBlock{
 
     public CarriageBogeyBlock(Properties props, BogeySizes.BogeySize size) {
         super(props, size);

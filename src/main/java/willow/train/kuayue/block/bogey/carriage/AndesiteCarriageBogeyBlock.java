@@ -2,7 +2,7 @@ package willow.train.kuayue.block.bogey.carriage;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
@@ -18,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,7 +27,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import willow.train.kuayue.block.panels.base.TrainPanelShapes;
 import willow.train.kuayue.initial.create.AllCarriageBogeys;
-import willow.train.kuayue.initial.create.AllTrackMaterial;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -38,8 +36,8 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public class AndesiteCarriageBogeyBlock extends AbstractBogeyBlock<AndesiteCarriageBogeyEntity>
         implements IBE<AndesiteCarriageBogeyEntity>,
-        ProperWaterloggedBlock,
-        ISpecialBlockItemRequirement {
+        ProperWaterloggedBlock
+         {
 
     private boolean halfHeightTop = false;
 

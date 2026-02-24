@@ -1,181 +1,97 @@
 package willow.train.kuayue.block.bogey.loco.renderer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.mojang.math.Axis;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.create.BogeyDataConstants;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
 import willow.train.kuayue.initial.AllElements;
 import willow.train.kuayue.initial.create.AllLocoBogeys;
 
-public class JY290Renderer extends BogeyRenderer {
+public class JY290Renderer implements BogeyRenderer {
 
     private static ResourceLocation asBlockModelResource(String path) {
         return AllElements.testRegistry.asResource("block/" + path);
     }
 
+    // 漏洞修复 1: 使用 PartialModel.of
     public static final PartialModel
-            JY290_FRAME = new PartialModel(asBlockModelResource("bogey/jy290/jy290_frame")),
-            JY290_WHEEL = new PartialModel(asBlockModelResource("bogey/jy290/jy290_wheel"));
+            JY290_FRAME = PartialModel.of(asBlockModelResource("bogey/jy290/jy290_frame")),
+            JY290_WHEEL = PartialModel.of(asBlockModelResource("bogey/jy290/jy290_wheel"));
 
     private static final double FRAME_TRANS_Y = -0.07;
     private static final double WHEEL_TRANS_Y = 0.775;
     private static final double WHEEL_TRANS_Z = 1.195;
 
     @Override
-    public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+    public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                       MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+        renderJY290(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, false);
+    }
 
-        Direction direction =
-                bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                        ? NBTHelper.readEnum(
-                        bogeyData,
-                        BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                        Direction.class)
-                        : Direction.NORTH;
+    // 统一渲染核心逻辑
+    protected void renderJY290(CompoundTag bogeyData, float wheelAngle, PoseStack ms,
+                               MultiBufferSource bufferSource, int light, int overlay,
+                               boolean inContraption, boolean backward) {
 
-        boolean inInstancedContraption = vb == null;
+        var buffer = bufferSource.getBuffer(RenderType.cutoutMipped());
+        var air = Blocks.AIR.defaultBlockState();
 
-        BogeyModelData frame = getTransform(JY290_FRAME, ms, inInstancedContraption);
-        BogeyModelData[] wheels = getTransform(JY290_WHEEL, ms, inInstancedContraption, 2);
+        Direction direction = bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
+                ? NBTHelper.readEnum(bogeyData, BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY, Direction.class)
+                : Direction.NORTH;
 
-        if (!inContraption) {
-            // 正向转向架未组装架体
-            frame.rotateY(180).translate(0, FRAME_TRANS_Y, 0).render(ms, light, vb);
+        boolean isPositive = direction.getAxisDirection() == Direction.AxisDirection.POSITIVE;
 
-            // 正向转向架未组装轮对
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[0].translate(0, WHEEL_TRANS_Y, -WHEEL_TRANS_Z).rotateY(180).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
+        // 核心翻转逻辑：处理南北朝向、正反向挂载、组装状态
+        boolean shouldFlip = (isPositive ^ backward ^ !inContraption);
+        float yaw = shouldFlip ? 180 : 0;
+        float angleMultiplier = shouldFlip ? -1 : 1;
 
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[1].translate(0, WHEEL_TRANS_Y, WHEEL_TRANS_Z).rotateY(180).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
+        ms.pushPose();
+        ms.mulPose(Axis.YP.rotationDegrees(yaw));
 
-            return;
+        // --- 1. 渲染架体 ---
+        ms.pushPose();
+        ms.translate(0, FRAME_TRANS_Y, 0);
+        CachedBuffers.partial(JY290_FRAME, air).light(light).overlay(overlay).renderInto(ms, buffer);
+        ms.popPose();
+
+        // --- 2. 渲染轮对 (双轴) ---
+        // 注意：原代码中轮对相对于 yaw 翻转有特定的平移偏置，这里通过 Iterate.positiveAndNegative 统一
+        for (int side : Iterate.positiveAndNegative) {
+            ms.pushPose();
+            // 保持轴距 1.195d
+            ms.translate(0, WHEEL_TRANS_Y, (double) side * WHEEL_TRANS_Z);
+            ms.mulPose(Axis.XP.rotationDegrees(wheelAngle * angleMultiplier));
+            CachedBuffers.partial(JY290_WHEEL, air).light(light).overlay(overlay).renderInto(ms, buffer);
+            ms.popPose();
         }
 
-        if (direction == Direction.NORTH || direction == Direction.WEST) {
-            // 正向转向架北西方向架体
-            frame.rotateY(180).translate(0, FRAME_TRANS_Y, 0).render(ms, light, vb);
-
-            // 正向转向架北西方向轮对
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[0].translate(0, WHEEL_TRANS_Y, -WHEEL_TRANS_Z).rotateY(180).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[1].translate(0, WHEEL_TRANS_Y, WHEEL_TRANS_Z).rotateY(180).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            return;
-        }
-
-        // 正向转向架南东方向架体
-        frame.translate(0, FRAME_TRANS_Y, 0).render(ms, light, vb);
-
-        // 正向转向架南东方向轮对
-        if (!inInstancedContraption) ms.pushPose();
-        wheels[0].translate(0, WHEEL_TRANS_Y, -WHEEL_TRANS_Z).rotateX(wheelAngle).render(ms, light, vb);
-        if (!inInstancedContraption) ms.popPose();
-
-        if (!inInstancedContraption) ms.pushPose();
-        wheels[1].translate(0, WHEEL_TRANS_Y, WHEEL_TRANS_Z).rotateX(wheelAngle).render(ms, light, vb);
-        if (!inInstancedContraption) ms.popPose();
+        ms.popPose();
     }
 
-    @Override
-    public BogeySizes.BogeySize getSize() {
-        return AllLocoBogeys.jy290.getSize();
-    }
 
-    @Override
-    public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-        this.createModelInstance(materialManager, JY290_FRAME);
-        this.createModelInstance(materialManager, JY290_WHEEL, 2);
-    }
-
-    public static class Backward extends BogeyRenderer {
-
+    // --- 子类：反向渲染器 ---
+    public static class Backward extends JY290Renderer {
         @Override
-        public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
-
-            Direction direction =
-                    bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                            ? NBTHelper.readEnum(
-                            bogeyData,
-                            BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                            Direction.class)
-                            : Direction.NORTH;
-
-            boolean inInstancedContraption = vb == null;
-
-            BogeyModelData frame = getTransform(JY290_FRAME, ms, inInstancedContraption);
-            BogeyModelData[] wheels = getTransform(JY290_WHEEL, ms, inInstancedContraption, 2);
-
-            // 反向转向架未组装
-            if (!inContraption) {
-                // 未组装架体
-                frame.translate(0, FRAME_TRANS_Y, 0).render(ms, light, vb);
-
-                // 未组装轮对
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[0].translate(0, WHEEL_TRANS_Y, WHEEL_TRANS_Z).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[1].translate(0, WHEEL_TRANS_Y, -WHEEL_TRANS_Z).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-
-                return;
-            }
-
-            // 反向转向架北西方向已组装
-            if (direction == Direction.NORTH || direction == Direction.WEST) {
-                // 北西方向已组装架体
-                frame.translate(0, FRAME_TRANS_Y, 0).render(ms, light, vb);
-
-                // 北西方向已组装轮对
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[0].translate(0, WHEEL_TRANS_Y, WHEEL_TRANS_Z).rotateX(wheelAngle).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[1].translate(0, WHEEL_TRANS_Y, -WHEEL_TRANS_Z).rotateX(wheelAngle).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-
-                return;
-            }
-
-            // 反向转向架南东方向已组装
-            // 南东方向已组装架体
-            frame.rotateY(180).translate(0, FRAME_TRANS_Y, 0).render(ms, light, vb);
-
-            // 南东方向已组装轮对
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[0].translate(0, WHEEL_TRANS_Y, WHEEL_TRANS_Z).rotateX(wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[1].translate(0, WHEEL_TRANS_Y, -WHEEL_TRANS_Z).rotateX(wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+            super.renderJY290(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, true);
         }
 
-        @Override
-        public BogeySizes.BogeySize getSize() {
-            return AllLocoBogeys.jy290Backward.getSize();
-        }
-
-        @Override
-        public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-            this.createModelInstance(materialManager, JY290_FRAME);
-            this.createModelInstance(materialManager, JY290_WHEEL, 2);
-        }
     }
+
 }

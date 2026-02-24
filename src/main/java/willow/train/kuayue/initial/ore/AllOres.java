@@ -1,8 +1,6 @@
 package willow.train.kuayue.initial.ore;
 
 import kasuga.lib.registrations.common.BlockReg;
-import kasuga.lib.registrations.common.OreReg;
-import kasuga.lib.registrations.common.PlacedFeatureReg;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DropExperienceBlock;

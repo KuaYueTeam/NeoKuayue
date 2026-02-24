@@ -1,13 +1,10 @@
 package willow.train.kuayue.initial.create;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.create.SimpleTrackBlock;
-import kasuga.lib.registrations.common.SoundReg;
 import kasuga.lib.registrations.create.TrackMaterialReg;
-import kasuga.lib.registrations.registry.CreateRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
-import willow.train.kuayue.Kuayue;
 import willow.train.kuayue.initial.AllElements;
 
 import static willow.train.kuayue.initial.create.AllLocoBogeys.testRegistry;
@@ -26,9 +23,9 @@ public class AllTrackMaterial {
             .trackParticle(new ResourceLocation("minecraft", "block/palettes/stone_types/polished/andesite_cut_polished"))
             .type(AllElements.testRegistry.asResource("standard"), builder::build)
             .customModel(
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/tie")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/tie")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
             )
             .simpleTrackModelOffset(0.755f)
             .sleeper(Blocks.ANDESITE_SLAB)
@@ -40,9 +37,9 @@ public class AllTrackMaterial {
             .trackParticle(new ResourceLocation("minecraft", "block/palettes/stone_types/polished/andesite_cut_polished"))
             .type(AllElements.testRegistry.asResource("tieless"), builder::build)
             .customModel(
-                    () -> new PartialModel(new ResourceLocation("kasuga_lib", "empty_model")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
+                    () -> PartialModel.of(new ResourceLocation("kasuga_lib", "empty_model")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
             )
             .simpleTrackModelOffset(0.755f)
             .sleeper(Blocks.ANDESITE_SLAB)
@@ -54,9 +51,9 @@ public class AllTrackMaterial {
             .trackParticle(new ResourceLocation("minecraft", "block/palettes/stone_types/polished/andesite_cut_polished"))
             .type(AllElements.testRegistry.asResource("ballastless"), builder::build)
             .customModel(
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/ballastless/tie")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/ballastless/tie")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
             )
             .simpleTrackModelOffset(0.755f)
             .sleeper(Blocks.ANDESITE_SLAB)
@@ -68,9 +65,9 @@ public class AllTrackMaterial {
             .trackParticle(new ResourceLocation("minecraft", "block/palettes/stone_types/polished/andesite_cut_polished"))
             .type(AllElements.testRegistry.asResource("meter"), meterBuilder::build)
             .customModel(
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/meter/tie")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
-                    () -> new PartialModel(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/meter/tie")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_left")),
+                    () -> PartialModel.of(AllElements.testRegistry.asResource("block/track/standard/segment_right"))
             )
             .simpleTrackModelOffset(0.525f)
             .sleeper(Blocks.ANDESITE_SLAB)
@@ -82,9 +79,9 @@ public class AllTrackMaterial {
             .trackParticle(new ResourceLocation("minecraft", "block/palettes/stone_types/polished/andesite_cut_polished"))
             .type(testRegistry.asResource("guard"), builder::build)
             .customModel(
-                    () -> new PartialModel(testRegistry.asResource("block/track/guard/tie")),
-                    () -> new PartialModel(testRegistry.asResource("block/track/guard/segment_left")),
-                    () -> new PartialModel(testRegistry.asResource("block/track/guard/segment_right"))
+                    () -> PartialModel.of(testRegistry.asResource("block/track/guard/tie")),
+                    () -> PartialModel.of(testRegistry.asResource("block/track/guard/segment_left")),
+                    () -> PartialModel.of(testRegistry.asResource("block/track/guard/segment_right"))
             )
             .simpleTrackModelOffset(0.755f)
             .sleeper(Blocks.ANDESITE_SLAB)

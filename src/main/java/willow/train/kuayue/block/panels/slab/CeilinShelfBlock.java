@@ -1,5 +1,6 @@
 package willow.train.kuayue.block.panels.slab;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -39,7 +40,7 @@ public class CeilinShelfBlock extends TrainSlabBlock {
         KineticBlockEntity.switchToBlockState(world, context.getClickedPos(), updateAfterWrenched(rotated, context));
 
         if (world.getBlockState(context.getClickedPos()) != state)
-            playRotateSound(world, context.getClickedPos());
+            IWrenchable.playRotateSound(world, context.getClickedPos());
 
         return InteractionResult.SUCCESS;
     }

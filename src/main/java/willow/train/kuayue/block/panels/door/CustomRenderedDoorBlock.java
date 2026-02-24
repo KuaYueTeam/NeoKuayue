@@ -1,8 +1,9 @@
 package willow.train.kuayue.block.panels.door;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.simibubi.create.foundation.block.IBE;
-import com.simibubi.create.foundation.utility.Couple;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -104,7 +105,7 @@ public class CustomRenderedDoorBlock extends TrainDoorBlock implements IBE<Custo
     }
 
     private static PartialModel block(String path) {
-        return new PartialModel(AllElements.testRegistry.asResource("block/" + path));
+        return PartialModel.of(AllElements.testRegistry.asResource("block/" + path));
     }
 
     @Override

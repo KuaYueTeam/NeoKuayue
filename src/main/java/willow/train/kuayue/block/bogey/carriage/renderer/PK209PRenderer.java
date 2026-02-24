@@ -1,258 +1,202 @@
 package willow.train.kuayue.block.bogey.carriage.renderer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
-import com.simibubi.create.content.trains.bogey.BogeySizes;
-import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.create.BogeyDataConstants;
-import kasuga.lib.example_env.AllExampleBogey;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import willow.train.kuayue.initial.create.AllCarriageBogeys;
 import willow.train.kuayue.initial.AllElements;
 
-public class PK209PRenderer extends BogeyRenderer {
+public class PK209PRenderer implements BogeyRenderer {
 
     private static ResourceLocation asBlockModelResource(String path) {
         return AllElements.testRegistry.asResource("block/" + path);
     }
 
-    public static final PartialModel PK209P_MAIN = new PartialModel(asBlockModelResource("bogey/pk209p/pk209p_main"));
-    public static final PartialModel PK209P_WHEEL = new PartialModel(asBlockModelResource("bogey/pk209p/pk209p_wheel"));
-    public static final PartialModel PK209P_WHEEL2 = new PartialModel(asBlockModelResource("bogey/pk209p/pk209p_wheel2"));
-    public static final PartialModel PK209P_MOTORWHEEL = new PartialModel(asBlockModelResource("bogey/pk209p/pk209_motorwheel"));
-    public static final PartialModel PK209P_NO_MOTOR = new PartialModel(asBlockModelResource("bogey/pk209p/pk209_nomotor"));
+    public static final PartialModel PK209P_MAIN = PartialModel.of(asBlockModelResource("bogey/pk209p/pk209p_main"));
+    public static final PartialModel PK209P_WHEEL = PartialModel.of(asBlockModelResource("bogey/pk209p/pk209p_wheel"));
+    public static final PartialModel PK209P_WHEEL2 = PartialModel.of(asBlockModelResource("bogey/pk209p/pk209p_wheel2"));
+    public static final PartialModel PK209P_MOTORWHEEL = PartialModel.of(asBlockModelResource("bogey/pk209p/pk209_motorwheel"));
+    public static final PartialModel PK209P_NO_MOTOR = PartialModel.of(asBlockModelResource("bogey/pk209p/pk209_nomotor"));
+
+
+
+
 
     @Override
-    public void initialiseContraptionModelData(
-            MaterialManager materialManager, CarriageBogey carriageBogey) {
-        this.createModelInstance(
-                materialManager, PK209P_MAIN, PK209P_WHEEL, PK209P_WHEEL2, PK209P_MOTORWHEEL);
-    }
+    public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                       MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
 
-    @Override
-    public BogeySizes.BogeySize getSize() {
-        return AllExampleBogey.pk209p.getSize();
-    }
+        // 1. 获取方向 (保持原逻辑)
+        Direction direction = bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
+                ? NBTHelper.readEnum(bogeyData, BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY, Direction.class)
+                : Direction.NORTH;
 
-    @Override
-    public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms,
-                       int light, VertexConsumer vb, boolean inContraption) {
+        // 2. 准备渲染器
+        // 在接口版中，vb 不再是参数，而是通过 bufferSource 获取
+        VertexConsumer vb = bufferSource.getBuffer(RenderType.cutoutMipped());
+        BlockState air = Blocks.AIR.defaultBlockState();
 
-        Direction direction =
-                bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                        ? NBTHelper.readEnum(
-                        bogeyData,
-                        BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                        Direction.class)
-                        : Direction.NORTH;
+        // 3. 处理方向逻辑
+        boolean shouldFlip = (direction == Direction.SOUTH || direction == Direction.EAST);
 
-        boolean inInstancedContraption = vb == null;
+        ms.pushPose();
 
-        BogeyModelData main = getTransform(PK209P_MAIN, ms, inInstancedContraption);
-
-        BogeyModelData wheel = getTransform(PK209P_WHEEL, ms, inInstancedContraption);
-
-        BogeyModelData wheel2 = getTransform(PK209P_WHEEL2, ms, inInstancedContraption);
-
-        BogeyModelData motorWheel = getTransform(PK209P_MOTORWHEEL, ms, inInstancedContraption);
-
-        if (direction == Direction.SOUTH || direction == Direction.EAST) {
+        if (shouldFlip) {
             if (inContraption) {
-                main.translate(0, 0.91, 0).render(ms, light, vb);
-                wheel.translate(0, 0.8, 1.2).rotateX(wheelAngle).render(ms, light, vb);
-                wheel2.translate(0, 0.8, -1.2).rotateX(wheelAngle).render(ms, light, vb);
-                motorWheel
-                        .translate(1.117, 0.82, 2.165)
-                        .rotateX(wheelAngle * 3.256)
-                        .render(ms, light, vb);
+                // 情况 A: 翻转方向但在结构体中
+                renderPart(ms, vb, air, PK209P_MAIN, 0, 0.91, 0, 0, 0,light);
+                renderWheel(ms, vb, air, PK209P_WHEEL, 0, 0.8, 1.2, wheelAngle, 0,light);
+                renderWheel(ms, vb, air, PK209P_WHEEL2, 0, 0.8, -1.2, wheelAngle, 0,light);
+                renderWheel(ms, vb, air, PK209P_MOTORWHEEL, 1.117, 0.82, 2.165, wheelAngle * 3.256f, 0,light);
             } else {
-                main.rotateY(180).translate(0, 0.91, 0).render(ms, light, vb);
-                wheel.translate(0, 0.8, -1.2)
-                        .rotateY(180)
-                        .rotateX(-wheelAngle)
-                        .render(ms, light, vb);
-                wheel2.translate(0, 0.8, 1.2)
-                        .rotateY(180)
-                        .rotateX(-wheelAngle)
-                        .render(ms, light, vb);
-                motorWheel
-                        .translate(-1.117, 0.82, -2.165)
-                        .rotateY(180)
-                        .rotateX(-wheelAngle * 3.256)
-                        .render(ms, light, vb);
+                // 情况 B: 翻转方向且不在结构体中 (需要 Y 轴旋转 180)
+                renderPart(ms, vb, air, PK209P_MAIN, 0, 0.91, 0, 0, 180,light);
+                renderWheel(ms, vb, air, PK209P_WHEEL, 0, 0.8, -1.2, -wheelAngle, 180,light);
+                renderWheel(ms, vb, air, PK209P_WHEEL2, 0, 0.8, 1.2, -wheelAngle, 180,light);
+                renderWheel(ms, vb, air, PK209P_MOTORWHEEL, -1.117, 0.82, -2.165, -wheelAngle * 3.256f, 180,light);
             }
         } else {
-            main.translate(0, 0.91, 0).render(ms, light, vb);
-            wheel.translate(0, 0.8, 1.2).rotateX(wheelAngle).render(ms, light, vb);
-            wheel2.translate(0, 0.8, -1.2).rotateX(wheelAngle).render(ms, light, vb);
-            motorWheel
-                    .translate(1.117, 0.82, 2.165)
-                    .rotateX(wheelAngle * 3.256)
-                    .render(ms, light, vb);
+            // 情况 C: 默认方向
+            renderPart(ms, vb, air, PK209P_MAIN, 0, 0.91, 0, 0, 0,light);
+            renderWheel(ms, vb, air, PK209P_WHEEL, 0, 0.8, 1.2, wheelAngle, 0,light);
+            renderWheel(ms, vb, air, PK209P_WHEEL2, 0, 0.8, -1.2, wheelAngle, 0,light);
+            renderWheel(ms, vb, air, PK209P_MOTORWHEEL, 1.117, 0.82, 2.165, wheelAngle * 3.256f, 0,light);
         }
+
+        ms.popPose();
+    }
+    /**
+     * 替代旧版 BogeyModelData 的渲染工具方法
+     */
+    private static void renderComponent(PoseStack ms, VertexConsumer vb, PartialModel model,
+                                        double x, double y, double z,
+                                        float rotationX, float rotationY,
+                                        int light, int overlay) {
+        ms.pushPose();
+        ms.translate(x, y, z);
+        if (rotationY != 0) ms.mulPose(com.mojang.math.Axis.YP.rotationDegrees(rotationY));
+        if (rotationX != 0) ms.mulPose(com.mojang.math.Axis.XP.rotationDegrees(rotationX));
+
+        CachedBuffers.partial(model, Blocks.AIR.defaultBlockState())
+                .light(light)
+                .overlay(overlay)
+                .renderInto(ms, vb);
+        ms.popPose();
     }
 
-    public static class Backward extends BogeyRenderer {
-        @Override
-        public void initialiseContraptionModelData(
-                MaterialManager materialManager, CarriageBogey carriageBogey) {
-            this.createModelInstance(
-                    materialManager, PK209P_MAIN, PK209P_WHEEL, PK209P_WHEEL2, PK209P_MOTORWHEEL);
-        }
+    /**
+     * 辅助方法：渲染静态部件
+     */
+    private void renderPart(PoseStack ms, VertexConsumer vb, BlockState state, PartialModel model,
+                            double x, double y, double z, float rotateX, float rotateY,int light) {
+        ms.pushPose();
+        ms.translate(x, y, z);
+        if (rotateY != 0) ms.mulPose(com.mojang.math.Axis.YP.rotationDegrees(rotateY));
+        if (rotateX != 0) ms.mulPose(com.mojang.math.Axis.XP.rotationDegrees(rotateX));
+
+        CachedBuffers.partial(model, state)
+                .light(light) // 注意：这里的 light 需要从 render 参数传入
+                .renderInto(ms, vb);
+        ms.popPose();
+    }
+
+    /**
+     * 辅助方法：渲染轮对（带旋转）
+     */
+    private void renderWheel(PoseStack ms, VertexConsumer vb, BlockState state, PartialModel model,
+                             double x, double y, double z, float wheelAngle, float rotateY,int light) {
+        ms.pushPose();
+        ms.translate(x, y, z);
+        if (rotateY != 0) ms.mulPose(com.mojang.math.Axis.YP.rotationDegrees(rotateY));
+        ms.mulPose(com.mojang.math.Axis.XP.rotationDegrees(wheelAngle));
+
+        CachedBuffers.partial(model, state)
+                .light(light)
+                .renderInto(ms, vb);
+        ms.popPose();
+    }
+
+    public static class Backward implements BogeyRenderer {
 
         @Override
-        public BogeySizes.BogeySize getSize() {
-            return AllCarriageBogeys.pk209pNoMotor.getSize();
-        }
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
 
-        @Override
-        public void render(
-                CompoundTag bogeyData,
-                float wheelAngle,
-                PoseStack ms,
-                int light,
-                VertexConsumer vb,
-                boolean inContraption) {
+            Direction direction = bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
+                    ? NBTHelper.readEnum(bogeyData, BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY, Direction.class)
+                    : Direction.NORTH;
 
-            boolean forwards = BogeyDataConstants.isForwards(bogeyData, inContraption);
+            VertexConsumer vb = bufferSource.getBuffer(RenderType.cutoutMipped());
+            BlockState air = Blocks.AIR.defaultBlockState();
 
-            Direction direction =
-                    bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                            ? NBTHelper.readEnum(
-                            bogeyData,
-                            BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                            Direction.class)
-                            : Direction.NORTH;
+            boolean shouldFlip = (direction == Direction.SOUTH || direction == Direction.EAST);
 
-            boolean inInstancedContraption = vb == null;
-            // 转向架架体
-            BogeyModelData main = getTransform(PK209P_MAIN, ms, inInstancedContraption);
-            // 发电轮对
-            BogeyModelData wheel = getTransform(PK209P_WHEEL, ms, inInstancedContraption);
-            // 普通轮对
-            BogeyModelData wheel2 = getTransform(PK209P_WHEEL2, ms, inInstancedContraption);
-            // 发电机小轮
-            BogeyModelData motorWheel = getTransform(PK209P_MOTORWHEEL, ms, inInstancedContraption);
+            // 逻辑判断：如果 flip 且 inContraption，或者是默认方向（else 分支逻辑其实一样）
+            // 这里简化了你原始代码中的 if-else 嵌套逻辑
+            boolean isReversedMode = shouldFlip ? !inContraption : true;
 
-            // 反方向渲染
-            if (direction == Direction.SOUTH || direction == Direction.EAST) {
-                if (inContraption) {
-                    main.rotateY(180).translate(0, 0.91, 0).render(ms, light, vb);
-                    wheel.translate(0, 0.8, -1.2)
-                            .rotateY(180)
-                            .rotateX(-wheelAngle)
-                            .render(ms, light, vb);
-                    wheel2.translate(0, 0.8, 1.2)
-                            .rotateY(180)
-                            .rotateX(-wheelAngle)
-                            .render(ms, light, vb);
-                    motorWheel
-                            .translate(-1.117, 0.82, -2.165)
-                            .rotateY(180)
-                            .rotateX(-wheelAngle * 3.256)
-                            .render(ms, light, vb);
-                } else {
-                    main.translate(0, 0.91, 0).render(ms, light, vb);
-                    wheel.translate(0, 0.8, 1.2).rotateX(wheelAngle).render(ms, light, vb);
-                    wheel2.translate(0, 0.8, -1.2).rotateX(wheelAngle).render(ms, light, vb);
-                    motorWheel
-                            .translate(1.117, 0.82, 2.165)
-                            .rotateX(wheelAngle * 3.256)
-                            .render(ms, light, vb);
-                }
+            if (isReversedMode) {
+                // 反方向渲染逻辑 (main rotateY 180)
+                renderComponent(ms, vb, PK209P_MAIN, 0, 0.91, 0, 0, 180, light, overlay);
+                renderComponent(ms, vb, PK209P_WHEEL, 0, 0.8, -1.2, -wheelAngle, 180, light, overlay);
+                renderComponent(ms, vb, PK209P_WHEEL2, 0, 0.8, 1.2, -wheelAngle, 180, light, overlay);
+                renderComponent(ms, vb, PK209P_MOTORWHEEL, -1.117, 0.82, -2.165, -wheelAngle * 3.256f, 180, light, overlay);
             } else {
-                main.rotateY(180).translate(0, 0.91, 0).render(ms, light, vb);
-                wheel.translate(0, 0.8, -1.2)
-                        .rotateY(180)
-                        .rotateX(-wheelAngle)
-                        .render(ms, light, vb);
-                wheel2.translate(0, 0.8, 1.2)
-                        .rotateY(180)
-                        .rotateX(-wheelAngle)
-                        .render(ms, light, vb);
-                motorWheel
-                        .translate(-1.117, 0.82, -2.165)
-                        .rotateY(180)
-                        .rotateX(-wheelAngle * 3.256)
-                        .render(ms, light, vb);
+                // 正方向渲染逻辑
+                renderComponent(ms, vb, PK209P_MAIN, 0, 0.91, 0, 0, 0, light, overlay);
+                renderComponent(ms, vb, PK209P_WHEEL, 0, 0.8, 1.2, wheelAngle, 0, light, overlay);
+                renderComponent(ms, vb, PK209P_WHEEL2, 0, 0.8, -1.2, wheelAngle, 0, light, overlay);
+                renderComponent(ms, vb, PK209P_MOTORWHEEL, 1.117, 0.82, 2.165, wheelAngle * 3.256f, 0, light, overlay);
             }
         }
     }
 
-    public static class NoMotor extends BogeyRenderer {
+    public static class NoMotor implements BogeyRenderer {
         @Override
-        public void initialiseContraptionModelData(
-                MaterialManager materialManager, CarriageBogey carriageBogey) {
-            this.createModelInstance(materialManager, PK209P_NO_MOTOR);
-            this.createModelInstance(materialManager, PK209P_WHEEL2, 2);
-        }
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
 
-        @Override
-        public BogeySizes.BogeySize getSize() {
-            return AllCarriageBogeys.pk209pNoMotor.getSize();
-        }
+            VertexConsumer vb = bufferSource.getBuffer(RenderType.cutoutMipped());
 
-        @Override
-        public void render(
-                CompoundTag bogeyData,
-                float wheelAngle,
-                PoseStack ms,
-                int light,
-                VertexConsumer vb,
-                boolean inContraption) {
+            // 渲染主体
+            renderComponent(ms, vb, PK209P_NO_MOTOR, 0, 0.91, 0, 0, 0, light, overlay);
 
-            boolean inInstancedContraption = vb == null;
-            // 无发电机转向架架体
-            BogeyModelData main = getTransform(PK209P_NO_MOTOR, ms, inInstancedContraption);
-            // 普通轮对
-            BogeyModelData[] wheel2s = getTransform(PK209P_WHEEL2, ms, inInstancedContraption, 2);
-
-            main.translate(0, 0.91, 0).render(ms, light, vb);
-
+            // 渲染双轮对
             for (int side : Iterate.positiveAndNegative) {
-                if (!inInstancedContraption) ms.pushPose();
-                BogeyModelData wheel = wheel2s[(side + 1) / 2];
-                wheel.translate(0, 0.8, ((double) side) * 1.2d).rotateX(wheelAngle);
-                wheel.render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
+                ms.pushPose();
+                ms.translate(0, 0.8, (double) side * 1.2d);
+                ms.mulPose(com.mojang.math.Axis.XP.rotationDegrees(wheelAngle));
+
+                CachedBuffers.partial(PK209P_WHEEL2, Blocks.AIR.defaultBlockState())
+                        .light(light)
+                        .overlay(overlay)
+                        .renderInto(ms, vb);
+                ms.popPose();
             }
         }
     }
-
     public static class Andesite extends PK209PRenderer {
         @Override
-        public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
             ms.pushPose();
-            ms.scale(1.2F, 1, 1);
-            super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
+            ms.scale(1.2F, 1.0F, 1.0F);
+            // 这里调用你基类的渲染实现
+            super.render(bogeyData, wheelAngle, partialTick, ms, bufferSource, light, overlay, inContraption);
             ms.popPose();
-        }
-
-        public static class Backward extends PK209PRenderer.Backward {
-            @Override
-            public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
-                ms.pushPose();
-                ms.scale(1.2F, 1, 1);
-                super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
-                ms.popPose();
-            }
-        }
-
-        public static class NoMotor extends PK209PRenderer.NoMotor {
-            @Override
-            public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
-                ms.pushPose();
-                ms.scale(1.2F, 1, 1);
-                super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
-                ms.popPose();
-            }
         }
     }
 }

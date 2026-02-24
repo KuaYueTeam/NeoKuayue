@@ -1,18 +1,16 @@
 package willow.train.kuayue.behaviour;
 
+import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
-import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.network.PacketDistributor;
-import willow.train.kuayue.block.seat.SeatBlockEntity;
 import willow.train.kuayue.block.seat.YZSeatBlock;
 import willow.train.kuayue.initial.AllPackets;
 import willow.train.kuayue.initial.AllTags;

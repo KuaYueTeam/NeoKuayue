@@ -1,5 +1,6 @@
 package willow.train.kuayue.block.panels.deco;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,7 +45,7 @@ public class FlourescentLightBlock extends TrainSlabBlock {
 
         if(!pLevel.isClientSide() && pHand == InteractionHand.MAIN_HAND) {
             pLevel.setBlock(pPos, pState.cycle(OPEN),3);
-            playRotateSound(pLevel, pPos);
+            IWrenchable.playRotateSound(pLevel, pPos);
         }
         return InteractionResult.PASS;
     }
