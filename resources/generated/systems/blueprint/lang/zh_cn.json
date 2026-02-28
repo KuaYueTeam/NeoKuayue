@@ -3,7 +3,7 @@
   "item.kuayue.carriage_marshalled_blueprint": "统型车厢 总体设计图",
   "item.kuayue.circuit_motherboard": "电路基板",
   "item.kuayue.train_moulds": "列车钢板",
-  "item.kuayue.circuit": "电力模块",
+  "item.kuayue.circuit_board": "电力模块",
   "item.kuayue.circuit_board_constructing": "电力模块(制造中)",
   "tech_tree.kuayue.group.carriage_blueprint.name": "列车总体设计图组",
   "tech_tree.kuayue.group.carriage_blueprint.description": "推进科技树以获取各型列车的总体设计图",

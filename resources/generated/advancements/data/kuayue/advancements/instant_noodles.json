@@ -1,20 +1,20 @@
 {
-  "parent": "kuayue:get_steel",
   "display": {
     "icon": {
-      "item": "kuayue:standard_track"
+      "item": "kuayue:soaked_instant_noodles"
     },
     "title": {
-      "translate": "kuayue.advancement.track"
+      "translate": "kuayue.advancement.instant_noodles"
     },
     "description": {
-      "translate": "kuayue.advancement.track.desc"
+      "translate": "kuayue.advancement.instant_noodles.desc"
     },
     "frame": "task",
     "show_toast": true,
-    "announce_to_chat": true,
+    "announce_to_chat": false,
     "hidden": false
   },
+  "parent": "kuayue:root",
   "criteria": {
     "0": {
       "trigger": "minecraft:inventory_changed",
@@ -22,7 +22,7 @@
         "items": [
           {
             "items": [
-              "kuayue:standard_track"
+              "kuayue:soaked_instant_noodles"
             ]
           }
         ]

@@ -1,18 +1,19 @@
 {
-  "parent": "kuayue:get_steel",
+  "parent": "kuayue:root",
   "display": {
     "icon": {
-      "item": "kuayue:standard_track"
+      "item": "kuayue:blueprint_table"
     },
     "title": {
-      "translate": "kuayue.advancement.track"
+      "translate": "kuayue.advancement.blueprint_table"
     },
     "description": {
-      "translate": "kuayue.advancement.track.desc"
+      "color": "#DBA213",
+      "translate": "kuayue.advancement.blueprint_table.desc"
     },
     "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
+    "show_toast": false,
+    "announce_to_chat": false,
     "hidden": false
   },
   "criteria": {
@@ -22,7 +23,7 @@
         "items": [
           {
             "items": [
-              "kuayue:standard_track"
+              "kuayue:blueprint_table"
             ]
           }
         ]

@@ -1,11 +1,11 @@
 {
   "values": [
-    "kuayue:window_equip_room_df11g",
+    "kuayue:window_equip_room_df11g_1",
     "kuayue:window_equip_room_df11g_2",
     "kuayue:df11g_windows_ph_eh",
 
     "kuayue:df11_equip_room_window_1",
     "kuayue:df11_equip_room_window_2",
-    "kuayue:df11_equip_small"
+    "kuayue:df11_window_equip_small"
   ]
 }
