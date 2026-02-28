@@ -1,235 +1,113 @@
 package willow.train.kuayue.block.bogey.loco.renderer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.create.BogeyDataConstants;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
 import willow.train.kuayue.initial.AllElements;
 import willow.train.kuayue.initial.create.AllLocoBogeys;
 
-public class HXD3DRenderer extends BogeyRenderer {
+public class HXD3DRenderer implements BogeyRenderer {
 
-
-    private static ResourceLocation asBlockModelResource(String path) {
+    public static ResourceLocation asBlockModelResource(String path) {
         return AllElements.testRegistry.asResource("block/" + path);
     }
 
     public static final PartialModel
-            HXD3D_FRAME = new PartialModel(asBlockModelResource("bogey/hxd3d/hxd3d_frame")),
-            HXD3D_WHEEL = new PartialModel(asBlockModelResource("bogey/hxd3d/hxd3d_wheel"));
+            HXD3D_FRAME = PartialModel.of(asBlockModelResource("bogey/hxd3d/hxd3d_frame")),
+            HXD3D_WHEEL = PartialModel.of(asBlockModelResource("bogey/hxd3d/hxd3d_wheel"));
+
+    // HXD3D 非对称轴距基准值
+    private static final double[] WHEEL_OFFSETS = {0.23, 2.365, -1.69};
 
     @Override
-    public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
-        boolean forwards = BogeyDataConstants.isForwards(bogeyData, inContraption);
-
-        Direction direction =
-                bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                        ? NBTHelper.readEnum(
-                        bogeyData,
-                        BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                        Direction.class)
-                        : Direction.NORTH;
-
-        boolean inInstancedContraption = vb == null;
-
-        BogeyModelData frame = getTransform(HXD3D_FRAME, ms, inInstancedContraption);
-        BogeyModelData[] wheels = getTransform(HXD3D_WHEEL, ms, inInstancedContraption, 3);
-
-        if (!inContraption) {
-            // 正向转向架未组装架体
-            frame.rotateY(180).translate(0, 0.012, 0).render(ms, light, vb);
-
-            // 正向转向架未组装轮对
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[0].translate(0, 0.905, -0.23).rotateY(180).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[1].translate(0, 0.905, 1.69).rotateY(180).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[2].translate(0, 0.905, -2.365).rotateY(180).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            return;
-        }
-
-        if (direction == Direction.NORTH || direction == Direction.WEST) {
-            // 正向转向架北西方向架体
-            frame.rotateY(180).translate(0, 0.012, 0).render(ms, light, vb);
-
-            // 正向转向架北西方向轮对
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[0].translate(0, 0.905, -0.23).rotateY(180).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[1].translate(0, 0.905, 1.69).rotateY(180).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[2].translate(0, 0.905, -2.365).rotateY(180).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            return;
-        }
-
-        // 正向转向架南东方向架体
-        frame.translate(0, 0.012, 0).render(ms, light, vb);
-
-        // 正向转向架南东方向轮对
-        if (!inInstancedContraption) ms.pushPose();
-        wheels[0].translate(0, 0.905, 0.23).rotateX(wheelAngle).render(ms, light, vb);
-        if (!inInstancedContraption) ms.popPose();
-
-        if (!inInstancedContraption) ms.pushPose();
-        wheels[1].translate(0, 0.905, 2.365).rotateX(wheelAngle).render(ms, light, vb);
-        if (!inInstancedContraption) ms.popPose();
-
-        if (!inInstancedContraption) ms.pushPose();
-        wheels[2].translate(0, 0.905, -1.69).rotateX(wheelAngle).render(ms, light, vb);
-        if (!inInstancedContraption) ms.popPose();
+    public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                       MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+        renderHXD3D(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, false, 1.0f);
     }
 
-    @Override
-    public BogeySizes.BogeySize getSize() {
-        return AllLocoBogeys.hxd3d.getSize();
-    }
+    protected void renderHXD3D(CompoundTag bogeyData, float wheelAngle, PoseStack ms,
+                               MultiBufferSource bufferSource, int light, int overlay,
+                               boolean inContraption, boolean backward, float scaleX) {
 
-    @Override
-    public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-        this.createModelInstance(materialManager, HXD3D_FRAME);
-        this.createModelInstance(materialManager, HXD3D_WHEEL, 3);
-    }
+        var buffer = bufferSource.getBuffer(RenderType.cutoutMipped());
+        var air = Blocks.AIR.defaultBlockState();
 
-    public static class Backward extends BogeyRenderer {
+        Direction direction = bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
+                ? NBTHelper.readEnum(bogeyData, BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY, Direction.class)
+                : Direction.NORTH;
 
-        @Override
-        public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
-            boolean forwards = BogeyDataConstants.isForwards(bogeyData, inContraption);
+        boolean isPositive = direction.getAxisDirection() == Direction.AxisDirection.POSITIVE;
 
-            Direction direction =
-                    bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                            ? NBTHelper.readEnum(
-                            bogeyData,
-                            BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                            Direction.class)
-                            : Direction.NORTH;
+        // 核心翻转逻辑：控制架体和轮对位移的整体方向
+        boolean shouldFlip = (isPositive ^ backward ^ !inContraption);
+        float yaw = shouldFlip ? 180 : 0;
 
-            wheelAngle = -wheelAngle;
-            boolean inInstancedContraption = vb == null;
+        // 车轮旋转方向系数
+        float angleMultiplier = (backward ^ shouldFlip) ? -1 : 1;
 
-            BogeyModelData frame = getTransform(HXD3D_FRAME, ms, inInstancedContraption);
-            BogeyModelData[] wheels = getTransform(HXD3D_WHEEL, ms, inInstancedContraption, 3);
+        ms.pushPose();
 
-            // 反向转向架未组装
-            if (!inContraption) {
-                // 未组装架体
-                frame.translate(0, 0.012, 0).render(ms, light, vb);
+        // 处理 Andesite 变体缩放
+        if (scaleX != 1.0f) ms.scale(scaleX, 1.0f, 1.0f);
 
-                // 未组装轮对
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[0].translate(0, 0.905, 0.23).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
+        // 整体转向架偏转
+        ms.mulPose(Axis.YP.rotationDegrees(yaw));
 
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[1].translate(0, 0.905, -1.69).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
+        // --- 1. 渲染架体 ---
+        ms.pushPose();
+        ms.translate(0, 0.012, 0);
+        CachedBuffers.partial(HXD3D_FRAME, air).light(light).overlay(overlay).renderInto(ms, buffer);
+        ms.popPose();
 
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[2].translate(0, 0.905, 2.365).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-                return;
-            }
-
-            // 反向转向架北西方向已组装
-            if (direction == Direction.NORTH || direction == Direction.WEST) {
-                // 北西方向已组装架体
-                frame.translate(0, 0.012, 0).render(ms, light, vb);
-
-                // 北西方向已组装轮对
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[0].translate(0, 0.905, 0.23).rotateX(-wheelAngle).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[1].translate(0, 0.905, -1.69).rotateX(-wheelAngle).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-
-                if (!inInstancedContraption) ms.pushPose();
-                wheels[2].translate(0, 0.905, 2.365).rotateX(-wheelAngle).render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-
-                return;
-            }
-
-            // 反向转向架南东方向已组装
-            // 南东方向已组装架体
-            frame.rotateY(180).translate(0, 0.012, 0).render(ms, light, vb);
-
-            // 南东方向已组装轮对
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[0].translate(0, 0.905, -0.23).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[1].translate(0, 0.905, -2.365).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-
-            if (!inInstancedContraption) ms.pushPose();
-            wheels[2].translate(0, 0.905, 1.685).rotateX(-wheelAngle).render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
-        }
-
-        @Override
-        public BogeySizes.BogeySize getSize() {
-            return AllLocoBogeys.hxd3dBackward.getSize();
-        }
-
-        @Override
-        public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
-            this.createModelInstance(materialManager, HXD3D_FRAME);
-            this.createModelInstance(materialManager, HXD3D_WHEEL, 3);
-        }
-    }
-    public static class Andesite extends HXD3DRenderer {
-        @Override
-        public void render(
-                CompoundTag bogeyData,
-                float wheelAngle,
-                PoseStack ms,
-                int light,
-                VertexConsumer vb,
-                boolean inContraption) {
+        // --- 2. 渲染三对动轮 ---
+        for (double zOffset : WHEEL_OFFSETS) {
             ms.pushPose();
-            ms.scale(1.2F, 1, 1);
-            super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
+            ms.translate(0, 0.905, zOffset);
+            ms.mulPose(Axis.XP.rotationDegrees(wheelAngle * angleMultiplier));
+            CachedBuffers.partial(HXD3D_WHEEL, air).light(light).overlay(overlay).renderInto(ms, buffer);
             ms.popPose();
         }
 
-        public static class Backward extends HXD3DRenderer.Backward {
+        ms.popPose();
+    }
+
+
+    // --- 子类变体：反向版本 ---
+    public static class Backward extends HXD3DRenderer {
+        @Override
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+            super.renderHXD3D(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, true, 1.0f);
+        }
+    }
+
+    // --- 子类变体：Andesite 版本 ---
+    public static class Andesite extends HXD3DRenderer {
+        @Override
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+            super.renderHXD3D(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, false, 1.2f);
+        }
+
+        public static class Backward extends HXD3DRenderer {
             @Override
-            public void render(
-                    CompoundTag bogeyData,
-                    float wheelAngle,
-                    PoseStack ms,
-                    int light,
-                    VertexConsumer vb,
-                    boolean inContraption) {
-                ms.pushPose();
-                ms.scale(1.2F, 1, 1);
-                super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
-                ms.popPose();
+            public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                               MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+                super.renderHXD3D(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, true, 1.2f);
             }
         }
     }
+
 }

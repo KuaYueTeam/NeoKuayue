@@ -1,7 +1,6 @@
 package willow.train.kuayue.systems.overhead_line.block.support;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.ITransformableBlock;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -31,7 +30,7 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 import willow.train.kuayue.systems.overhead_line.OverheadLineSystem;
 
-public abstract class OverheadLineSupportBlock<T extends OverheadLineSupportBlockEntity> extends Block implements IBE<T>, IWrenchable, ITransformableBlock {
+public abstract class OverheadLineSupportBlock<T extends OverheadLineSupportBlockEntity> extends Block implements IBE<T>, IWrenchable{
     public OverheadLineSupportBlock(Properties pProperties) {
         super(pProperties.noOcclusion());
         this.registerDefaultState(getDefaultState());
@@ -103,7 +102,6 @@ public abstract class OverheadLineSupportBlock<T extends OverheadLineSupportBloc
         return InteractionResult.PASS;
     }
 
-    @Override
     public BlockState transform(BlockState state, StructureTransform transform) {
         if (transform.mirror != null) {
             state = state.mirror(transform.mirror);

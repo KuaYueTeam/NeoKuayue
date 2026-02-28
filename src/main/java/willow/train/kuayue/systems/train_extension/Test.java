@@ -2,18 +2,12 @@ package willow.train.kuayue.systems.train_extension;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.entity.*;
 import com.simibubi.create.content.trains.graph.TrackGraph;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.infrastructure.config.AllConfigs;
 import kasuga.lib.core.util.data_type.Pair;
 import lombok.NonNull;
-import net.minecraft.core.Direction;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -21,9 +15,11 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import willow.train.kuayue.Kuayue;
 import willow.train.kuayue.mixins.mixin.AccessorTrain;
-import willow.train.kuayue.systems.train_extension.conductor.ConductorHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Test {
 

@@ -8,8 +8,6 @@ import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -210,7 +208,7 @@ public class AnimatableBlockControllerItem extends Item implements MenuProvider 
     private static boolean onContraptionLocating(AbstractContraptionEntity entity, BlockPos localPos, Player player, InteractionHand hand) {// , ICustomInteraction interaction) {
         Contraption contraption = entity.getContraption();
         StructureTemplate.StructureBlockInfo info = contraption.getBlocks().get(localPos);
-        BlockEntity be = contraption.presentBlockEntities.get(localPos);
+        BlockEntity be = contraption.getBlockEntityClientSide(localPos);
 //        if(interaction.canActive(entity.level, player, hand, entity, localPos, info.state, be)) {
 //            entity.handlePlayerInteraction(player, localPos, Direction.DOWN, hand);
 //            return true;

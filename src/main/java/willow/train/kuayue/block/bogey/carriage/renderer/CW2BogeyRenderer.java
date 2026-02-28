@@ -1,85 +1,82 @@
 package willow.train.kuayue.block.bogey.carriage.renderer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
-import com.simibubi.create.content.trains.bogey.BogeySizes;
-import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.utility.Iterate;
-import kasuga.lib.example_env.AllExampleElements;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import willow.train.kuayue.block.bogey.loco.renderer.HXD3DRenderer;
-import willow.train.kuayue.initial.AllElements;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 
-public class CW2BogeyRenderer extends BogeyRenderer {
+import static willow.train.kuayue.block.bogey.loco.renderer.HXD3DRenderer.asBlockModelResource;
 
-    private static ResourceLocation asBlockModelResource(String path) {
-        return AllElements.testRegistry.asResource("block/" + path);
-    }
+public class CW2BogeyRenderer implements BogeyRenderer {
 
-    public static final PartialModel CW2_FRAME = new PartialModel(asBlockModelResource("bogey/cw2/bogey_cw2_temple"));
-    public static final PartialModel CW2_WHEEL = new PartialModel(asBlockModelResource("bogey/cw2/cw2_wheel"));
+    // 假设你依然使用之前定义的 PartialModel
+    public static final PartialModel CW2_FRAME = PartialModel.of(asBlockModelResource("bogey/cw2/bogey_cw2_temple"));
+    public static final PartialModel CW2_WHEEL = PartialModel.of(asBlockModelResource("bogey/cw2/cw2_wheel"));
 
-    @Override
-    public void initialiseContraptionModelData(
-            MaterialManager materialManager, CarriageBogey carriageBogey) {
-        this.createModelInstance(materialManager, CW2_FRAME);
-        this.createModelInstance(materialManager, CW2_WHEEL, 2);
-    }
-
-    @Override
-    public BogeySizes.BogeySize getSize() {
-        return BogeySizes.SMALL;
-    }
-
-    /**
-     * @param bogeyData Custom data stored on the bogey able to be used for rendering
-     * @param wheelAngle The angle of the wheel
-     * @param ms The posestack to render to
-     * @param light (Optional) Light used for in-world rendering
-     * @param vb (Optional) Vertex Consumer used for in-world rendering
-     * @param inContraption
-     */
     @Override
     public void render(
             CompoundTag bogeyData,
             float wheelAngle,
+            float partialTick,
             PoseStack ms,
+            MultiBufferSource bufferSource,
             int light,
-            VertexConsumer vb,
+            int overlay,
             boolean inContraption) {
 
-        boolean inInstancedContraption = vb == null;
-        BogeyModelData frame = getTransform(CW2_FRAME, ms, inInstancedContraption);
-        frame.render(ms, light, vb);
+        // 在新版接口中，我们需要手动获取 RenderType
+        // 通常转向架使用剪切或实色渲染
+        RenderType type = RenderType.cutoutMipped();
+        BlockState air = Blocks.AIR.defaultBlockState();
 
-        BogeyModelData[] wheels =
-                getTransform(CW2_WHEEL, ms, inInstancedContraption, 2);
+        // 1. 渲染框架
+        CachedBuffers.partial(CW2_FRAME, air)
+                .light(light)
+                .overlay(overlay)
+                .renderInto(ms, bufferSource.getBuffer(type));
 
+        // 2. 渲染轮对
         for (int side : Iterate.positiveAndNegative) {
-            if (!inInstancedContraption) ms.pushPose();
-            BogeyModelData wheel = wheels[(side + 1) / 2];
-            wheel.translate(0, 0.805, ((double) side) * 1.18d).rotateX(wheelAngle);
-            wheel.render(ms, light, vb);
-            if (!inInstancedContraption) ms.popPose();
+            ms.pushPose();
+
+            // 应用变换逻辑
+            ms.translate(0, 0.805, (double) side * 1.18d);
+            // 绕 X 轴旋转（注意：Create 0.6 推荐使用 Vector3f 或 Axis.XP）
+            ms.mulPose(com.mojang.math.Axis.XP.rotationDegrees(wheelAngle));
+
+            CachedBuffers.partial(CW2_WHEEL, air)
+                    .light(light)
+                    .overlay(overlay)
+                    .renderInto(ms, bufferSource.getBuffer(type));
+
+            ms.popPose();
         }
     }
     public static class Andesite extends CW2BogeyRenderer {
         @Override
-        public void render(
-                CompoundTag bogeyData,
-                float wheelAngle,
-                PoseStack ms,
-                int light,
-                VertexConsumer vb,
-                boolean inContraption) {
-            ms.pushPose();
-            ms.scale(1.2F, 1, 1);
-            super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
-            ms.popPose();
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, boolean inContraption) {
+            poseStack.pushPose();
+            poseStack.scale(1.2F, 1.0F, 1.0F);
+
+            // 必须严格按照 8 个参数的顺序传递
+            super.render(
+                    bogeyData,
+                    wheelAngle,
+                    partialTick,
+                    poseStack,
+                    bufferSource,
+                    packedLight,
+                    packedOverlay,
+                    inContraption
+            );
+
+            poseStack.popPose();
         }
     }
 }

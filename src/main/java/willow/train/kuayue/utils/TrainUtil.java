@@ -3,7 +3,6 @@ package willow.train.kuayue.utils;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TrainStatus;
-import com.simibubi.create.foundation.utility.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -29,8 +28,8 @@ public class TrainUtil {
         }
         if(level == null) return;
 
-        queuedMessages.add(Components.literal(" - ").withStyle(ChatFormatting.GRAY)
-                .append(Components.translatable(msgKey)).withStyle(st -> st.withColor(itsAGoodThing ? 0xD5ECC2 : 0xFFD3B4)));
+        queuedMessages.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
+                .append(Component.translatable(msgKey)).withStyle(st -> st.withColor(itsAGoodThing ? 0xD5ECC2 : 0xFFD3B4)));
         if (queuedMessages.size() > 3)
             queuedMessages.remove(0);
     }

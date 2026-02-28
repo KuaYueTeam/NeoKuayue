@@ -1,8 +1,8 @@
 package willow.train.kuayue.item.animate_controller.sensor;
 
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.foundation.utility.NBTHelper;
 import kasuga.lib.core.base.NbtSerializable;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;

@@ -46,9 +46,14 @@ public class ContraptionTagChangedPacket extends S2CPacket {
         Entity e = level.getEntity(entity);
         if (!(e instanceof AbstractContraptionEntity ace)) return;
         StructureTemplate.StructureBlockInfo info = ace.getContraption().getBlocks().get(localPos);
-        ace.getContraption().getBlocks().put(localPos, new StructureTemplate.StructureBlockInfo(localPos, info.state(), nbt));
-        ace.getContraption().deferInvalidate = true;
-        ace.getContraption().invalidateColliders();
+        Contraption contraption = ace.getContraption();
+        StructureTemplate.StructureBlockInfo newInfo = new StructureTemplate.StructureBlockInfo(localPos, info.state(), nbt);
+
+// 更新数据
+        contraption.getBlocks().put(localPos, newInfo);
+
+// 触发 0.6 的更新流
+        contraption.invalidateColliders();
     }
 
     @Override

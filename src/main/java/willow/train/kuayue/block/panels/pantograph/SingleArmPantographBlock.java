@@ -1,8 +1,9 @@
 package willow.train.kuayue.block.panels.pantograph;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
@@ -52,15 +52,15 @@ public class SingleArmPantographBlock extends Block implements IBE<SingleArmPant
         this.pantographType = pantographType;
         Map<String, PartialModel> map = new HashMap<>();
         map.put(BASE_MODEL, basePath == null ? null :
-                new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + basePath)));
+                PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + basePath)));
         map.put(LARGE_ARM_MODEL, largeArmPath == null ? null :
-                new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + largeArmPath)));
+                PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + largeArmPath)));
         map.put(PULL_ROD_MODEL, pullRodPath == null ? null :
-                new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + pullRodPath)));
+                PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + pullRodPath)));
         map.put(SMALL_ARM_MODEL, smallArmPath == null ? null :
-                new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + smallArmPath)));
+                PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + smallArmPath)));
         map.put(BOW_HEAD_MODEL, bowHeadPath == null ? null :
-                new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + bowHeadPath)));
+                PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + bowHeadPath)));
         this.pantographModel = map;
         this.risenSpeed = risenSpeed;
         this.downPullRodAngle = downPullRodAngle;
@@ -89,7 +89,7 @@ public class SingleArmPantographBlock extends Block implements IBE<SingleArmPant
         if(!pLevel.isClientSide()) {
             pLevel.setBlock(pPos, pState.cycle(OPEN),3);
         }
-        playRotateSound(pLevel, pPos);
+        IWrenchable.playRotateSound(pLevel, pPos);
         return InteractionResult.SUCCESS;
     }
 

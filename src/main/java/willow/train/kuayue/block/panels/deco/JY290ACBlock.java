@@ -70,7 +70,7 @@ public class JY290ACBlock extends Block implements IWrenchable {
             level.setBlock(pos, state.cycle(HINGE),3);
         }
         if (level.getBlockState(context.getClickedPos()) != state)
-            playRotateSound(level, context.getClickedPos());
+            IWrenchable.playRotateSound(level, context.getClickedPos());
         return InteractionResult.SUCCESS;
     }
 }

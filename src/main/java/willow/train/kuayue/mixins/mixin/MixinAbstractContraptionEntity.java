@@ -3,19 +3,16 @@ package willow.train.kuayue.mixins.mixin;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import org.checkerframework.checker.units.qual.A;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -122,7 +119,7 @@ public abstract class MixinAbstractContraptionEntity {
         int seatSize = seatBlock.getSeatSize();
         int index = -1; CompoundTag tag = info.nbt();
         if (passenger.level().isClientSide) {
-            BlockEntity entity = contraption.presentBlockEntities.get(seat);
+            BlockEntity entity = contraption.getBlockEntityClientSide(seat);
             if (entity instanceof SeatBlockEntity seatBlockEntity) {
                 tag = seatBlockEntity.writeSeatData();
             }

@@ -195,8 +195,8 @@ public class AllLocoBogeys {
             .bogey(qjGuideAndesite.getSize(), QJGuideRenderer.Andesite::new, testRegistry.asResource("qj_guide_bogey_a"))
             .bogey(hxd3dAndesite.getSize(), HXD3DRenderer.Andesite::new, testRegistry.asResource("hxd3d_bogey_a"))
             .bogey(hxd3dBackwardAndesite.getSize(), HXD3DRenderer.Andesite.Backward::new, testRegistry.asResource("hxd3d_backward_bogey_a"))
-            .bogey(dfh21Andesite.getSize(), DFH21Renderer.Andesite::new, testRegistry.asResource("dfh21_bogey_a"))
-            .bogey(dfh21BackwardAndesite.getSize(), DFH21Renderer.Andesite.Backward::new, testRegistry.asResource("dfh21_backward_bogey_a"))
+            .bogey(dfh21Andesite.getSize(), DFH21Renderer.Standard.Andesite::new, testRegistry.asResource("dfh21_bogey_a"))
+            .bogey(dfh21BackwardAndesite.getSize(), DFH21Renderer.Standard.Andesite.Backward::new, testRegistry.asResource("dfh21_backward_bogey_a"))
             .translationKey("andesite_loco_group")
             .submit(AllElements.createRegistry);
     public static final BogeyBlockReg<LocoBogeyBlock> df11gBogey =

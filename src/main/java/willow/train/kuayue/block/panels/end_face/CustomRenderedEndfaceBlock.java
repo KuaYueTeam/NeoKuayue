@@ -1,10 +1,11 @@
 package willow.train.kuayue.block.panels.end_face;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.simibubi.create.foundation.block.IBE;
-import com.simibubi.create.foundation.utility.Couple;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.KasugaLib;
 import lombok.NonNull;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -44,17 +45,17 @@ public class CustomRenderedEndfaceBlock extends TrainEndfaceBlock implements IBE
                                       TrainPanelProperties.DoorType doorType,
                                       ResourceLocation left, ResourceLocation right, ResourceLocation frame) {
         super(prop, doorType);
-        this.models = Couple.create(new PartialModel(left), new PartialModel(right));
-        this.frameModel = new PartialModel(frame);
+        this.models = Couple.create(PartialModel.of(left), PartialModel.of(right));
+        this.frameModel = PartialModel.of(frame);
     }
 
     public CustomRenderedEndfaceBlock(BlockBehaviour.Properties properties, TrainPanelProperties.DoorType doorType,
                                       String leftModel, String rightModel, String frameModel) {
         super(properties, doorType);
         this.models = Couple.create(
-                leftModel == null ? null : new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + leftModel)),
-                rightModel == null ? null : new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + rightModel)));
-        this.frameModel = new PartialModel(new ResourceLocation(Kuayue.MODID, "block/" + frameModel));
+                leftModel == null ? null : PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + leftModel)),
+                rightModel == null ? null : PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + rightModel)));
+        this.frameModel = PartialModel.of(new ResourceLocation(Kuayue.MODID, "block/" + frameModel));
     }
 
     @Override

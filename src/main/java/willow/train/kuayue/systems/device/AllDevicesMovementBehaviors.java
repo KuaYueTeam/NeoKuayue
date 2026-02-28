@@ -4,7 +4,6 @@ import kasuga.lib.registrations.create.MovementReg;
 import willow.train.kuayue.initial.AllElements;
 import willow.train.kuayue.systems.device.driver.combustion.InternalCombustionDriveControllerBlock;
 import willow.train.kuayue.systems.device.driver.combustion.InternalCombustionDriveControllerMovementBehavior;
-import willow.train.kuayue.systems.device.driver.seat.DoubleDriverSeatBlock;
 import willow.train.kuayue.systems.device.driver.seat.DoubleDriverSeatBlockMovementBehaviour;
 
 public class AllDevicesMovementBehaviors {

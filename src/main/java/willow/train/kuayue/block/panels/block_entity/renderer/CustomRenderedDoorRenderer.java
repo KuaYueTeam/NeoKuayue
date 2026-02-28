@@ -1,12 +1,13 @@
 package willow.train.kuayue.block.panels.block_entity.renderer;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.Couple;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.render.CachedBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -38,8 +39,8 @@ public class CustomRenderedDoorRenderer implements BlockEntityRenderer<CustomRen
         boolean slide = entity.isSlideDoor();
         boolean leftSide = entity.isLeftSide(state);
 
-        SuperByteBuffer lower = CachedBufferer.partial(models.get(true), state).light(light);
-        SuperByteBuffer upper = CachedBufferer.partial(models.get(false), state).light(light);
+        SuperByteBuffer lower = CachedBuffers.partial(models.get(true), state).light(light);
+        SuperByteBuffer upper = CachedBuffers.partial(models.get(false), state).light(light);
         VertexConsumer consumer = buffer.getBuffer(RenderType.tripwire());
 
         pose.pushPose();

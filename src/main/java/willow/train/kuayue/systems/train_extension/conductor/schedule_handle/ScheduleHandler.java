@@ -1,6 +1,7 @@
 package willow.train.kuayue.systems.train_extension.conductor.schedule_handle;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.api.contraption.storage.item.MountedItemStorageWrapper;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.schedule.Schedule;
@@ -113,11 +114,11 @@ public interface ScheduleHandler {
         }
 
         ItemStack scheduleItem = createScheduleItem(train.runtime.getSchedule());
-        ItemStack remaining = ItemHandlerHelper.insertItem(
-                ((AccessorMountedStorageManager) carriage.storage).getInventory(),
-                scheduleItem,
-                false
+        MountedItemStorageWrapper wrapper = new MountedItemStorageWrapper(
+                ((AccessorMountedStorageManager) carriage.storage).getAllItemStorages()
         );
+
+        ItemStack remaining = ItemHandlerHelper.insertItem(wrapper, scheduleItem, false);
         detachSchedule(train);
 
         if (!remaining.isEmpty()) {

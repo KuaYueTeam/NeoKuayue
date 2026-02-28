@@ -1,113 +1,89 @@
 package willow.train.kuayue.block.bogey.loco.renderer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.create.BogeyDataConstants;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import willow.train.kuayue.initial.AllElements;
 import willow.train.kuayue.initial.create.AllLocoBogeys;
 
-public class QJGuideRenderer extends BogeyRenderer {
+public class QJGuideRenderer implements BogeyRenderer {
 
     private static ResourceLocation asBlockModelResource(String path) {
         return AllElements.testRegistry.asResource("block/" + path);
     }
     public static final PartialModel
-            QJ_GUIDE_FRAME = new PartialModel(asBlockModelResource("bogey/qj/qj_guide_frame")),
-            QJ_GUIDE_WHEEL = new PartialModel(asBlockModelResource("bogey/qj/qj_guide_wheel"));
-    @Override
-    public void initialiseContraptionModelData(
-            MaterialManager materialManager, CarriageBogey carriageBogey) {
-        this.createModelInstance(materialManager, QJ_GUIDE_FRAME);
-        this.createModelInstance(materialManager, QJ_GUIDE_WHEEL, 1);
-    }
+            QJ_GUIDE_FRAME = PartialModel.of(asBlockModelResource("bogey/qj/qj_guide_frame")),
+            QJ_GUIDE_WHEEL = PartialModel.of(asBlockModelResource("bogey/qj/qj_guide_wheel"));
 
-    @Override
-    public BogeySizes.BogeySize getSize() {
-        return AllLocoBogeys.qjGuide.getSize();
-    }
     @Override
     public void render(
-            CompoundTag bogeyData,
-            float wheelAngle,
-            PoseStack ms,
-            int light,
-            VertexConsumer vb,
-            boolean inContraption) {
+            CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, boolean inContraption) {
 
-        Direction direction =
-                bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                        ? NBTHelper.readEnum(
-                        bogeyData,
-                        BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                        Direction.class)
-                        : Direction.NORTH;
+        // 1. 获取基础数据与渲染设置
+        Direction direction = bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
+                ? NBTHelper.readEnum(bogeyData, BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY, Direction.class)
+                : Direction.NORTH;
 
-        boolean inInstancedContraption = vb == null;
+        RenderType type = RenderType.cutoutMipped();
+        BlockState air = Blocks.AIR.defaultBlockState();
 
-      /*  BogeyModelData frame = getTransform(QJ_GUIDE_FRAME, ms, inInstancedContraption);
-        BogeyModelData[] wheels = getTransform(QJ_GUIDE_WHEEL, ms, inInstancedContraption, 1);*/
+        int overlay = OverlayTexture.NO_OVERLAY;
 
-       /* if (direction == Direction.SOUTH || direction == Direction.EAST) {
-            if (inContraption) {
-                frame.translate(0, 0, 0.3).render(ms, light, vb);
+        poseStack.pushPose();
 
-                for (int side = -1; side <0; side++) {
-                    if (!inInstancedContraption) ms.pushPose();
-                    BogeyModelData wheel = wheels[side + 1];
-                    wheel.translate(0, 0.77, -2)
-                            .rotateX(wheelAngle)
-                            .render(ms, light, vb);
-                    if (!inInstancedContraption) ms.popPose();
-                }
-            } else {
-                frame.rotateY(180).translate(0, 0, 0.3).render(ms, light, vb);
+        // 2. 处理整体朝向
+        // 如果组装方向是正向（SOUTH/EAST），需要旋转 180 度来对齐模型
+        if (direction.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
+            poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(180));
+        }
 
-                for (int side = -1; side < 0; side++) {
-                    if (!inInstancedContraption) ms.pushPose();
-                    BogeyModelData wheel = wheels[side + 1];
-                    wheel.translate(0, 0.77, 2)
-                            .rotateX(wheelAngle)
-                            .render(ms, light, vb);
-                    if (!inInstancedContraption) ms.popPose();
-                }
-            }
-        } else {
-            frame.rotateY(180).translate(0, 0, 0.3).render(ms, light, vb);
+        // 3. 渲染导向轮框架 (QJ_GUIDE_FRAME)
+        CachedBuffers.partial(QJ_GUIDE_FRAME, air)
+                .light(packedLight)
+                .overlay(overlay)
+                .renderInto(poseStack, bufferSource.getBuffer(type));
 
-            for (int side = -1; side < 0; side++) {
-                if (!inInstancedContraption) ms.pushPose();
-                BogeyModelData wheel = wheels[side + 1];
-                wheel.translate(0, 0.77, 2)
-                        .rotateX(wheelAngle)
-                        .render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-            }
-        }*/
+        // 4. 渲染轮对 (QJ_GUIDE_WHEEL)
+        // 进轮通常只有一根轴，不需要 Iterate.positiveAndNegative
+        poseStack.pushPose();
+
+        poseStack.translate(0, 0.77, 0);
+        // 轮子滚动：绕 X 轴旋转
+        poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(wheelAngle));
+
+        CachedBuffers.partial(QJ_GUIDE_WHEEL, air)
+                .light(packedLight)
+                .overlay(overlay)
+                .renderInto(poseStack, bufferSource.getBuffer(type));
+
+        poseStack.popPose();
+        poseStack.popPose();
     }
 
 
     public static class Andesite extends QJGuideRenderer {
         @Override
         public void render(
-                CompoundTag bogeyData,
-                float wheelAngle,
-                PoseStack ms,
-                int light,
-                VertexConsumer vb,
-                boolean inContraption) {
-            ms.pushPose();
-            ms.scale(1.2F, 1, 1);
-            super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
-            ms.popPose();
+                CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, boolean inContraption) {
+            poseStack.pushPose();
+            poseStack.scale(1.2F, 1, 1);
+            super.render(bogeyData, wheelAngle, partialTick, poseStack, bufferSource, packedLight,packedOverlay,inContraption);
+            poseStack.popPose();
         }
 
     }

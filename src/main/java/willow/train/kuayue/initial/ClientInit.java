@@ -1,6 +1,7 @@
 package willow.train.kuayue.initial;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.client.render.texture.StaticImageHolder;
 import kasuga.lib.registrations.client.ModelReg;
 import net.minecraft.resources.ResourceLocation;
@@ -107,6 +108,6 @@ public class ClientInit {
     }
 
     private static PartialModel block(String key) {
-        return new PartialModel(AllElements.testRegistry.asResource("block/" + key));
+        return PartialModel.of(AllElements.testRegistry.asResource("block/" + key));
     }
 }

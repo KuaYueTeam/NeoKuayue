@@ -80,7 +80,7 @@ public class TrainSlabBlock extends TrainPanelBlock implements IWrenchable {
         }
 
         if (world.getBlockState(context.getClickedPos()) != state)
-            playRotateSound(world, context.getClickedPos());
+            IWrenchable.playRotateSound(world, context.getClickedPos());
 
         return InteractionResult.SUCCESS;
     }
