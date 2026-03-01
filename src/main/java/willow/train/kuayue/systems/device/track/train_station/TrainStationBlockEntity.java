@@ -27,7 +27,8 @@ public class TrainStationBlockEntity extends SmartBlockEntity implements MenuPro
     public TrackTargetingBehaviour<TrainStation> edgePoint;
 
     public TrainStationBlockEntity(BlockPos blockPos, BlockState state) {
-        super(AllDeviceBlockEntities.STATION_BLOCK_ENTITY.getType(), blockPos, state);
+        //super(AllDeviceBlockEntities.STATION_BLOCK_ENTITY.getType(), blockPos, state);
+        super(null, blockPos, state);
     }
 
     @Override

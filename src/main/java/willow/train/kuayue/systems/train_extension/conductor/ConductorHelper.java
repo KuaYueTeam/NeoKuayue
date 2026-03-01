@@ -36,6 +36,7 @@ import willow.train.kuayue.systems.train_extension.conductor.registry.ConductorC
 import willow.train.kuayue.systems.train_extension.conductor.schedule_handle.ScheduleHandlerProvider;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static willow.train.kuayue.utils.CarriageUtil.*;
 
@@ -824,14 +825,42 @@ public class ConductorHelper {
         if(!context.isClientSide) {
             ScheduleHandlerProvider.get().handleDivide(context);
             divideTrainExtensionData(loco, carriages, context.carriageIndex);
-            TrainExtensionSystem.ConductorCDInfo info = new TrainExtensionSystem.ConductorCDInfo(context.locoTail, context.carriageHead);
-            Kuayue.TRAIN_EXTENSION.conductorsCoolingDown.put(
-                    Couple.create(context.locoTail.getLoc(), context.carriageHead.getLoc()), info
-            );
+
+            handleDivideCooldown(context, loco, carriages);
         }
 
         loco.collectInitiallyOccupiedSignalBlocks();
         carriages.collectInitiallyOccupiedSignalBlocks();
+    }
+
+    private static void handleDivideCooldown(DivideContext context, Train loco, Train carriages) {
+        List<Couple<ConductorLocation>> toRemove = new ArrayList<>();
+        ConcurrentHashMap<Couple<ConductorLocation>, TrainExtensionSystem.ConductorCDInfo> toAdd = new ConcurrentHashMap<>();
+        Kuayue.TRAIN_EXTENSION.conductorsCoolingDown.forEach((couple, info) -> {
+            if (!couple.getFirst().getTrainId().equals(loco.id)) {
+                return;
+            }
+
+            Couple<ConductorLocation> newLoc = Couple.create(
+                    new ConductorLocation(carriages.id, carriages.carriages.size() - 1, false),
+                    couple.getSecond()
+            );
+            Conductable carriageConductor = Kuayue.TRAIN_EXTENSION.get(newLoc.getFirst().getTrainId()).getConductorAt(newLoc.getFirst());
+            Conductable otherConductor = Kuayue.TRAIN_EXTENSION.get(couple.getSecond().getTrainId()).getConductorAt(couple.getSecond());
+            if(carriageConductor == null || otherConductor == null) return;
+            toRemove.add(couple);
+            toAdd.put(
+                    newLoc,
+                    new TrainExtensionSystem.ConductorCDInfo(carriageConductor, otherConductor)
+            );
+        });
+        toRemove.forEach(Kuayue.TRAIN_EXTENSION.conductorsCoolingDown::remove);
+        Kuayue.TRAIN_EXTENSION.conductorsCoolingDown.putAll(toAdd);
+
+        TrainExtensionSystem.ConductorCDInfo info = new TrainExtensionSystem.ConductorCDInfo(context.locoTail, context.carriageHead);
+        Kuayue.TRAIN_EXTENSION.conductorsCoolingDown.put(
+                Couple.create(context.locoTail.getLoc(), context.carriageHead.getLoc()), info
+        );
     }
 
     private static void copyStress(double[] locoStress, double[] cartStress, double[] neoStress) {
