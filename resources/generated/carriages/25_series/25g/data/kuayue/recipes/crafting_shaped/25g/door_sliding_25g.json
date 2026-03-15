@@ -2,7 +2,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    { "tag": "create:train_door" },
+    { "item": "create:train_door" },
     { "item": "kuayue:panel_bottom_25g" }
   ],
   "result": {

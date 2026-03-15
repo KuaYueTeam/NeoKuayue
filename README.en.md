@@ -8,7 +8,6 @@
 ![Minecraft Version](https://img.shields.io/badge/Minecraft%20版本-1.19.2%7C1.20.1-success)
 ![Mod Loader Forge](https://img.shields.io/badge/Loader-Forge-red)
 
-
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/iErPoO30?logo=modrinth&label=Modrinth%20%E4%B8%8B%E8%BD%BD%E9%87%8F)
 ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1458356?logo=curseforge&label=CurseForge%20%E4%B8%8B%E8%BD%BD%E9%87%8F&color=orange)
 
@@ -24,15 +23,17 @@
 </div>
 
 
-其他语言 | Other languages : <a href="README.en.md">English</a>
+其他语言 | Other languages : <a href="README.md">中文</a>
 
-## 介绍
+## Introduction
 
-跨越是一个国铁风格的机械动力附属铁路模组。
+Kuayue is a Create train mod with Chinese railway style.
 
-作为装饰性模组和功能性模组，跨越为机械动力的铁路系统添加了国铁正在使用或已被淘汰的机车、客车、货车、车载和地面设备，并计划根据国铁规范实现一套功能玩法（如调度，驾驶等）。
+As a decorative and functional mod, Kuayue adds locomotives, passenger cars, freight cars, on-board and ground 
+equipment that are currently in use or have been retired by the China Railway to the Create train system, and plans to 
+implement a set of functional gameplay (such as scheduling, driving, etc.) according to the China Railway specifications.
 
-## 截图
+## Screenshots
 
 ![pic](./assets/gallery3.jpg)
 
@@ -46,20 +47,24 @@
 ![pic](./assets/train_food.jpg)
 
 
-## 进度
+## Working Progress
 
-## 开发组
+## Development Team
 
 
-## 特别鸣谢
+## Special Thanks
 
 ![pic](https://contrib.rocks/image?repo=KuaYueTeam/NeoKuayue)
 
-## 许可证
+## LICENCE
 
-本项目的代码使用 MIT 许可证。详见[这里](./LICENSE)
+The code of this project is licensed under the MIT License. See [here](./LICENSE) for details.
 
-本项目的美术资产和配方文件以 CC-BY-SA 协议进行许可，使用本模组制作视频等用途，请在较为显著的位置（如视频本体、简介、评论区；独立游戏、软件请放置于开源授权部分及README底部等）标注本模组，推荐引用 Github 链接。
+
+The art assets and recipe files of this project are licensed under the CC-BY-SA License. 
+If you use this mod to make videos or other purposes, please mark this mod in a prominent position (such as the video 
+itself, introduction, comment section; while for independent games and software, please place it in the open source 
+authorization section and the bottom of the README, etc.), and it is recommended to quote the Github link.
 
 [Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
 

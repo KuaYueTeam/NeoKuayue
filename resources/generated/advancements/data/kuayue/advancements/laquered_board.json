@@ -1,20 +1,20 @@
 {
-  "parent": "kuayue:get_steel",
   "display": {
     "icon": {
-      "item": "kuayue:standard_track"
+      "item": "kuayue:laquered_board_item"
     },
     "title": {
-      "translate": "kuayue.advancement.track"
+      "translate": "kuayue.advancement.laquered_board"
     },
     "description": {
-      "translate": "kuayue.advancement.track.desc"
+      "translate": "kuayue.advancement.laquered_board.desc"
     },
     "frame": "task",
     "show_toast": true,
-    "announce_to_chat": true,
+    "announce_to_chat": false,
     "hidden": false
   },
+  "parent": "kuayue:get_track",
   "criteria": {
     "0": {
       "trigger": "minecraft:inventory_changed",
@@ -22,7 +22,7 @@
         "items": [
           {
             "items": [
-              "kuayue:standard_track"
+              "kuayue:laquered_board_item"
             ]
           }
         ]
