@@ -6,9 +6,10 @@ modId="kuayue"
 version="${file.jarVersion}"
 displayName="KuaYue"
 displayURL="http://fairingstudio.com/KuaYue"
+displayURL="https://www.kycraft.cn/#/"
 logoFile="kuayue.jpg"
 credits="苟利国家生死以，岂因祸福避趋之。"
-authors="柳树怪（创始人，暂时退出）,Carole,可爱金发小耗子,HTony03,radekemia(暂时退出）,shazimingjiang,荒漠,梧桐土豆,露米娅在线吃人,TimeBather,Desert_walker,Aurora4123,LingshijunRenzy,mr.k,HappyKanda,一只6K-062" #optional
+authors="Carole,可爱金发小耗子,HTony03,shazimingjiang,荒漠,梧桐土豆,露米娅在线吃人,TimeBather,Desert_walker,Aurora4123,LingshijunRenzy,mr.k,HappyKanda,一只6K-062,柳树怪（创始人，暂时退出）,radekemia（暂时退出）,yjn024（暂时退出）CGyuwan（暂时退出）" #optional
 # Display Test controls the display for your mod in the server connection screen
 # MATCH_VERSION means that your mod will cause a red X if the versions on client and server differ. This is the default behaviour and should be what you choose if you have server and client elements to your mod.
 # IGNORE_SERVER_VERSION means that your mod will not cause a red X if it's present on the server but not on the client. This is what you should use if you're a server only mod.
