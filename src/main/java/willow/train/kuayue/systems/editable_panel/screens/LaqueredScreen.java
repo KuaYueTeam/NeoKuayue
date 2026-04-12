@@ -634,6 +634,8 @@ public class LaqueredScreen
                 colorBarHeight
         );
         rightColorBoard.setColor(SimpleColor.fromRGBAInt(color));
+        // 添加半透明黑色背景覆盖整个屏幕
+        GuiComponent.fill(pose, 0, 0, sW, sH, 0x80000000);
         // 渲染背景
         if (showBg) {
             imageMask.renderToGui();
@@ -641,8 +643,6 @@ public class LaqueredScreen
             leftColorBoard.renderToGui();
             logoIm.renderToGui();
         }
-        // 添加半透明黑色背景覆盖整个屏幕
-        GuiComponent.fill(pose, 0, 0, sW, sH, 0x80000000);
     }
 
     /**
