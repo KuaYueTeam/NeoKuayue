@@ -11,9 +11,9 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.extensions.IForgeMenuType;
 import org.jetbrains.annotations.Nullable;
 import willow.train.kuayue.Kuayue;
+import willow.train.kuayue.block.panels.base.TrainPanelProperties;
 import willow.train.kuayue.block.panels.block_entity.EditablePanelEntity;
 import willow.train.kuayue.initial.AllMenuScreens;
 
@@ -125,82 +125,23 @@ public class EditablePanelEditMenu extends AbstractContainerMenu {
             return false;
         }
 
+        if (this.editablePanelEntity == null) {
+            return false;
+        }
+
         CompoundTag dataTag = nbt.getCompound("data");
-        
-        // 白名单检查
-        String[] allowedFields = {
-            "color", "data0", "data1", "data2", "data3", "data4", 
-            "revert", "offset_x", "offset_y"
-        };
-
-        for (String key : dataTag.getAllKeys()) {
-            boolean isAllowed = false;
-            for (String allowedField : allowedFields) {
-                if (key.equals(allowedField)) {
-                    isAllowed = true;
-                    break;
-                }
-            }
-            if (!isAllowed) {
-                Kuayue.LOGGER.warn("Invalid field found in panel NBT: {}", key);
-                return false;
-            }
+        TrainPanelProperties.EditType editType = this.editablePanelEntity.getEditType();
+        SignType signType = EditableTypeConstants.getSignTypeByEditType(editType);
+        if (signType == null) {
+            Kuayue.LOGGER.warn("No SignType validator found for edit type: {}", editType);
+            return false;
         }
 
-        if (dataTag.contains("color")) {
-            if (!dataTag.contains("color", CompoundTag.TAG_INT)) {
-                return false;
-            }
-            int color = dataTag.getInt("color");
-            if (color < 0 || color > 0xFFFFFF) {
-                return false;
-            }
+        boolean valid = signType.validateNbt(dataTag);
+        if (!valid) {
+            Kuayue.LOGGER.warn("Invalid data payload for edit type {}", editType);
         }
-
-        for (int i = 0; i <= 4; i++) {
-            String fieldName = "data" + i;
-            if (dataTag.contains(fieldName)) {
-                if (!dataTag.contains(fieldName, CompoundTag.TAG_STRING)) {
-                    return false;
-                }
-                String value = dataTag.getString(fieldName);
-                if (value.length() > 100) {
-                    return false;
-                }
-            }
-        }
-        
-        if (dataTag.contains("revert")) {
-            if (!dataTag.contains("revert", CompoundTag.TAG_BYTE)) {
-                return false;
-            }
-            byte revert = dataTag.getByte("revert");
-            if (revert != 0 && revert != 1) {
-                return false;
-            }
-        }
-        
-        if (dataTag.contains("offset_x")) {
-            if (!dataTag.contains("offset_x", CompoundTag.TAG_FLOAT)) {
-                return false;
-            }
-            float offsetX = dataTag.getFloat("offset_x");
-            if (Math.abs(offsetX) > 10.0f) {
-                return false;
-            }
-        }
-        
-        if (dataTag.contains("offset_y")) {
-            if (!dataTag.contains("offset_y", CompoundTag.TAG_FLOAT)) {
-                return false;
-            }
-            float offsetY = dataTag.getFloat("offset_y");
-            if (Math.abs(offsetY) > 10.0f) {
-                return false;
-            }
-        }
-
-        return true;
+        return valid;
     }
 
     private boolean canPlayerEditPanel(ServerPlayer player, BlockPos pos, ServerLevel level) {

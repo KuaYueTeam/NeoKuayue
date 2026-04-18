@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import willow.train.kuayue.block.panels.base.TrainPanelProperties;
 import willow.train.kuayue.block.panels.block_entity.EditablePanelEntity;
 import willow.train.kuayue.systems.editable_panel.interfaces.DefaultTextsLambda;
+import willow.train.kuayue.systems.editable_panel.interfaces.SignNbtValidator;
 import willow.train.kuayue.systems.editable_panel.interfaces.SignRenderLambda;
 import willow.train.kuayue.systems.editable_panel.screens.CustomScreen;
 
@@ -26,17 +27,20 @@ public class SignType {
     private final Supplier<DefaultTextsLambda> defaultTextSupplier;
 
     private final CustomScreenSupplier<EditablePanelEditMenu, CustomScreen<EditablePanelEditMenu, EditablePanelEntity>> screenMethodsSupplier;
+    private final SignNbtValidator nbtValidator;
 
     public SignType(String locationKey,
                     TrainPanelProperties.EditType editType,
                     Supplier<Supplier<SignRenderLambda>> lambdaSupplier,
                     Supplier<DefaultTextsLambda> defaultTextSupplier,
-                    CustomScreenSupplier<EditablePanelEditMenu, CustomScreen<EditablePanelEditMenu, EditablePanelEntity>> screenMethodsSupplier) {
+                    CustomScreenSupplier<EditablePanelEditMenu, CustomScreen<EditablePanelEditMenu, EditablePanelEntity>> screenMethodsSupplier,
+                    SignNbtValidator nbtValidator) {
         this.location = new ResourceLocation(locationKey);
         this.editType = editType;
         this.lambdaSupplier = lambdaSupplier;
         this.defaultTextSupplier = defaultTextSupplier;
         this.screenMethodsSupplier = screenMethodsSupplier;
+        this.nbtValidator = nbtValidator;
     }
 
     public Supplier<SignRenderLambda> getLambdaSupplier() {
@@ -63,6 +67,10 @@ public class SignType {
 
     public CustomScreenSupplier<EditablePanelEditMenu, CustomScreen<EditablePanelEditMenu, EditablePanelEntity>> getScreenMethods() {
         return this.screenMethodsSupplier;
+    }
+
+    public boolean validateNbt(CompoundTag dataTag) {
+        return this.nbtValidator != null && this.nbtValidator.validate(dataTag);
     }
 
     public interface CustomScreenSupplier<F extends AbstractContainerMenu, T extends CustomScreen<F, ? extends BlockEntity>> {
