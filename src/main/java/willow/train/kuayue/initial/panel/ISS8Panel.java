@@ -184,7 +184,7 @@ public class ISS8Panel {
             new PanelRegistration<TrainPanelBlock>("240km_monument")
                     .block(p -> new TrainPanelBlock(p, new Vec2(0, 0), new Vec2(1, 1)))
                     .materialAndColor(MapColor.COLOR_GREEN)
-                    .tab(AllElements.neoKuayueCarriageTab )
+                    .tab(AllElements.neoKuayueLocoTab )
                     .noOcclusion().strengthAndTool(1.5f, 3f)
                     .submit(AllElements.testRegistry);
     public static void invoke(){}

@@ -24,7 +24,8 @@ public class StationEntryBlock extends Block implements IBE<StationEntryBlockEnt
 
     @Override
     public BlockEntityType<StationEntryBlockEntity> getBlockEntityType() {
-        return AllDeviceBlockEntities.STATION_ENTRY_BLOCK_ENTITY.getType();
+        //return AllDeviceBlockEntities.STATION_ENTRY_BLOCK_ENTITY.getType();
+        return null;
     }
 
     @Override

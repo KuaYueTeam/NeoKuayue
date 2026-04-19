@@ -16,7 +16,8 @@ public class StationEntryBlockEntity extends SmartBlockEntity{
     private TrackTargetingBehaviour<StationEntry> edgePoint;
 
     public StationEntryBlockEntity(BlockPos blockPos, BlockState state) {
-        super(AllDeviceBlockEntities.STATION_ENTRY_BLOCK_ENTITY.getType(), blockPos, state);
+        //super(AllDeviceBlockEntities.STATION_ENTRY_BLOCK_ENTITY.getType(), blockPos, state);
+        super(null, blockPos, state);
     }
 
     @Override

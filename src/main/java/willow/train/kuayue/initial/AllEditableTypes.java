@@ -37,21 +37,24 @@ public class AllEditableTypes {
                     TrainPanelProperties.EditType.TYPE,
                     () -> () -> EditableTypeConstants.CARRIAGE_TYPE_RENDER,
                     () -> EditableTypeConstants.CARRIAGE_TYPE_SIGN_MESSAGES,
-                    () -> TypeScreen::new);
+                    () -> TypeScreen::new,
+                    EditableTypeConstants.CARRIAGE_TYPE_NBT_VALIDATOR);
 
     public static final SignType CARRIAGE_SPEED_SIGN = EditableTypeConstants
             .signLambdaRegister("carriage_speed_sign",
                     TrainPanelProperties.EditType.SPEED,
                     () -> () -> EditableTypeConstants.TRAIN_SPEED_SIGN,
                     () -> EditableTypeConstants.TRAIN_SPEED_SIGN_MESSAGES,
-                    () -> SpeedScreen::new);
+                    () -> SpeedScreen::new,
+                    EditableTypeConstants.TRAIN_SPEED_NBT_VALIDATOR);
 
     public static final SignType CARRIAGE_NO_SIGN = EditableTypeConstants
             .signLambdaRegister("carriage_no_sign",
                     TrainPanelProperties.EditType.NUM,
                     () -> () -> EditableTypeConstants.CARRIAGE_NO_SIGN,
                     () -> EditableTypeConstants.CARRIAGE_NO_SIGN_MESSAGES,
-                    () -> SpeedScreen::new);
+                    () -> SpeedScreen::new,
+                    EditableTypeConstants.CARRIAGE_NO_SIGN_NBT_VALIDATOR);
 
     /*
     public static final SignType CARRIAGE_NO_SIGN = EditableTypeConstants
@@ -67,7 +70,8 @@ public class AllEditableTypes {
                     TrainPanelProperties.EditType.LAQUERED,
                     () -> () -> EditableTypeConstants.LAQUERED_BOARD_SIGN,
                     () -> EditableTypeConstants.LAQUERED_BOARD_MESSAGES,
-                    () -> LaqueredScreen::new);
+                    () -> LaqueredScreen::new,
+                    EditableTypeConstants.LAQUERED_BOARD_NBT_VALIDATOR);
 /*
     public static final SignType TRAIN_SPEED_SIGN = EditableTypeConstants
             .signLambdaRegister("train_speed_sign",

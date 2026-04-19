@@ -30,7 +30,8 @@ public class TrainStationBlock extends Block implements IBE<TrainStationBlockEnt
 
     @Override
     public BlockEntityType<? extends TrainStationBlockEntity> getBlockEntityType() {
-        return AllDeviceBlockEntities.STATION_BLOCK_ENTITY.getType();
+        //return AllDeviceBlockEntities.STATION_BLOCK_ENTITY.getType();
+        return null;
     }
 
     @Override

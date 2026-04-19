@@ -237,7 +237,7 @@ public class I5Panel {
             new SlabRegistration<HingeSlabBlock>("df5_carport_cabin")
                     .block(p -> new HingeSlabBlock(p, false))
                     .materialAndColor(MapColor.COLOR_BLUE)
-                    .tab(AllElements.neoKuayueCarriageTab )
+                    .tab(AllElements.neoKuayueLocoTab )
                     .noOcclusion().strengthAndTool(1.5f, 3f)
                     .submit(AllElements.testRegistry);
 
