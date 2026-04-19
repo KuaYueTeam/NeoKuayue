@@ -321,7 +321,7 @@ public class EditableTypeConstants {
         float leftTopTextBaseLine = -5.2f;
         leftTopTextAutoCenter(leftTopTextBaseLine, leftTopFontLength, poseStack, leftTopWidth);
         leftTop.setColor(BLACK);
-        leftTop.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, 1);
+        leftTop.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, packedLight);
         poseStack.popPose();
 
         MultiBufferSource rightTopBuffer = bufferSource.getBuffer();
@@ -331,7 +331,7 @@ public class EditableTypeConstants {
         float rightTopTextBaseLine = 1.5f;
         rightTopTextAutoCenter(rightTopTextBaseLine, rightTopFontLength, poseStack, rightTopWidth);
         rightTop.setColor(BLACK);
-        rightTop.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, 1);
+        rightTop.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, packedLight);
         poseStack.popPose();
 
         // 英文区域，始发地
@@ -341,7 +341,7 @@ public class EditableTypeConstants {
         float leftBottomTextHalfWidth = (float) (leftBottomWidth / 2);
         leftBottomTextAutoCenter(leftTopTextBaseLine, leftBottomEngFontLength, poseStack, leftBottomWidth);
         leftBottom.setColor(WHITE);
-        leftBottom.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, 1);
+        leftBottom.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, packedLight);
         poseStack.popPose();
 
         // 英文区域，目的地
@@ -350,7 +350,7 @@ public class EditableTypeConstants {
         rightBottomTextAutoCenter(rightTopTextBaseLine, rightBottomEngFontLength, poseStack, rightBottomWidth);
         rightBottom.setColor(WHITE);
 
-        rightBottom.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, 1);
+        rightBottom.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, packedLight);
         poseStack.popPose();
 
 
@@ -369,7 +369,7 @@ public class EditableTypeConstants {
             poseStack.scale(k / (font.width(trainNumber.getText())), 0.038f, 1.0f);
         }
         trainNumber.setColor(BLACK);
-        trainNumber.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, 1);
+        trainNumber.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, packedLight);
         poseStack.popPose();
 
 //        leftTrainLevel
@@ -378,7 +378,7 @@ public class EditableTypeConstants {
         poseStack.translate(-0.2685 - leftTrainLevelFontLength / 2, -5.75f, 0.049f);
         poseStack.scale(0.05f, 0.055f, 1.0f);
         leftTrainLevel.setColor(BLACK);
-        leftTrainLevel.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, 1);
+        leftTrainLevel.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, packedLight);
         poseStack.popPose();
 
 //                rightTrainLevel
@@ -387,7 +387,7 @@ public class EditableTypeConstants {
         poseStack.translate(1.5 - rightTrainLevelFontLength / 2, -5.75f, 0.049f);
         poseStack.scale(0.05f, 0.055f, 1.0f);
         rightTrainLevel.setColor(BLACK);
-        rightTrainLevel.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, 1);
+        rightTrainLevel.renderToWorld(poseStack, font, bufferSource.getBuffer(), false, packedLight);
         poseStack.popPose();
 
         // 结束渲染
