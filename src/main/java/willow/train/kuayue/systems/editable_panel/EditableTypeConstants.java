@@ -243,7 +243,7 @@ public class EditableTypeConstants {
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
 
         // 调整到水牌表面位置
-        poseStack.translate(0.0d, -0.3d, -0.40d);
+        poseStack.translate(0.0d, -0.3d, -0.406d);
 
         // 应用自定义偏移
         poseStack.translate(nbt.getFloat("offset_x"), nbt.getFloat("offset_y"), 0);
@@ -310,6 +310,7 @@ public class EditableTypeConstants {
 
         MultiBufferSource leftTopBuffer = bufferSource.getBuffer();
         poseStack.scale(baseScale, -baseScale, baseScale);
+        poseStack.translate(0,0,-0.2f);
         // 每个中文 9 字符
         float leftTopTextHalfWidth = (float) (leftTopWidth / 2);
         poseStack.pushPose();
