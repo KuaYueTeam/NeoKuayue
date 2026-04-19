@@ -38,7 +38,6 @@ public class LaqueredScreen
         extends CustomScreen<EditablePanelEditMenu, EditablePanelEntity> {
 
     private int color;
-    public boolean revert;
     public Label titleLabel;
     public ImageButton mirrorBtn, cancelBtn, confirmBtn;
     public EditBar editBar;
@@ -91,9 +90,8 @@ public class LaqueredScreen
     private static SimpleColor colorBarColor = SimpleColor.BLACK;
 
     /**
-     * @param pMenu
-     * @param pPlayerInventory
-     * @param pTitle
+     * @param editablePanelEditMenuAbstractContainerScreen parent screen wrapper
+     * @param compoundTag initial panel nbt snapshot
      */
     public LaqueredScreen(AbstractContainerScreen<EditablePanelEditMenu> editablePanelEditMenuAbstractContainerScreen, CompoundTag compoundTag) {
         super(editablePanelEditMenuAbstractContainerScreen, compoundTag);
@@ -146,7 +144,7 @@ public class LaqueredScreen
         values[5] = nbt.getString("left_train_level");
         values[6] = nbt.getString("right_train_level");
 
-        innerInit(values, color, font, revert);
+        innerInit(values, color, font);
 
         // 初始化颜色编辑器组件
         colorEditorInit();
@@ -190,7 +188,7 @@ public class LaqueredScreen
         });
     }
 
-    private void innerInit(String[] values, int color, Font font, boolean revert) {
+    private void innerInit(String[] values, int color, Font font) {
         // 设置文本缩放因子
         float textScaleFactor = 11f;
         float textScaleFactorForEnglish = 16f;
@@ -419,10 +417,37 @@ public class LaqueredScreen
         titleLabel.setPosition((guiScaledWidth / 2) - (width / 2), bgImageYStarter - 20);
         addWidget(titleLabel);
 
-        mirrorBtn = new ImageButton(mirrorBtnImage, (16), offsetButtonY, 16, 16, Component.empty(), b -> {
-            revert = !revert;
+        mirrorBtn = new ImageButton(mirrorBtnImage, (int) bgImageXStarter + 50, offsetButtonY, 16, 16, Component.empty(), b -> {
+            if (editBar != null && editBar.visible) {
+                if (editingBox != null) {
+                    editingBox.setValue(editBar.getText());
+                    editingBox = null;
+                }
+                editBar.visible = false;
+                editBar.setFocused(false);
+            }
+
+            TransparentEditBox[] boxes = new TransparentEditBox[7];
+            int counter = 0;
+            for (Widget widget : getWidgets()) {
+                if (widget instanceof TransparentEditBox box && counter < boxes.length) {
+                    boxes[counter++] = box;
+                }
+            }
+            if (counter < 4) {
+                return;
+            }
+
+            String leftTop = boxes[0].getValue();
+            String leftBottom = boxes[1].getValue();
+            boxes[0].setValue(boxes[2].getValue());
+            boxes[1].setValue(boxes[3].getValue());
+            boxes[2].setValue(leftTop);
+            boxes[3].setValue(leftBottom);
+
             refresh();
         });
+        addWidget(mirrorBtn);
 
         offsetEditor = new OffsetEditor((int) (bgImageXStarter + (16 * 2)), offsetButtonY, Component.literal("offset"),
                 -.5f, .5f, -.5f, .5f, 0f, 0f);
@@ -495,7 +520,7 @@ public class LaqueredScreen
         Font font = Minecraft.getInstance().font;
         CompoundTag nbt = getNbt();
         int color = getScreen().getMenu().getEditablePanelEntity().getColor();
-        innerInit(values, color, font, revert);
+        innerInit(values, color, font);
 
         addWidget(cancelBtn);
         addWidget(confirmBtn);
