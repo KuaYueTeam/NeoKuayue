@@ -84,7 +84,7 @@ public class TransparentEditBox extends EditBox {
             }
             String textBeforeCursor = cursorInBox ? displayedText.substring(0, headToCursor) : displayedText;
             if (!displayedText.isEmpty()) {
-                lengthBeforeCursor = guiGraphics.drawString(accessor.getFont(), accessor.getFormatter().apply(textBeforeCursor, accessor.getDisplayPos()), startX, startY, textColor);
+                lengthBeforeCursor = guiGraphics.drawString(accessor.getFont(), accessor.getFormatter().apply(textBeforeCursor, accessor.getDisplayPos()), startX, startY, textColor, false);
             }
 
             boolean cursorBeforeEnd = accessor.getCursorPos() < accessor.getValue().length() || accessor.getValue().length() >= accessor.getMaxLength();
@@ -97,18 +97,18 @@ public class TransparentEditBox extends EditBox {
             }
 
             if (!displayedText.isEmpty() && cursorInBox && headToCursor < displayedText.length()) {
-                guiGraphics.drawString(accessor.getFont(), accessor.getFormatter().apply(displayedText.substring(headToCursor), accessor.getCursorPos()), lengthBeforeCursor, startY, textColor);
+                guiGraphics.drawString(accessor.getFont(), accessor.getFormatter().apply(displayedText.substring(headToCursor), accessor.getCursorPos()), lengthBeforeCursor, startY, textColor, false);
             }
 
             if (!cursorBeforeEnd && accessor.getSuggestion() != null) {
-                guiGraphics.drawString(accessor.getFont(), accessor.getSuggestion(), (positionAfterCursor - 1), startY, -8355712);
+                guiGraphics.drawString(accessor.getFont(), accessor.getSuggestion(), (positionAfterCursor - 1), startY, -8355712, false);
             }
 
             if (shouldRenderCursor) {
                 if (cursorBeforeEnd) {
                     guiGraphics.fill(positionAfterCursor, startY - 1, positionAfterCursor + 1, startY + 1 + 9, -3092272);
                 } else {
-                    guiGraphics.drawString(accessor.getFont(), "_", positionAfterCursor, startY, textColor);
+                    guiGraphics.drawString(accessor.getFont(), "_", positionAfterCursor, startY, textColor, false);
                 }
             }
             if (headToHighlight != headToCursor) {

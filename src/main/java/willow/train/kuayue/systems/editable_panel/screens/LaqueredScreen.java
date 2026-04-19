@@ -641,10 +641,7 @@ public class LaqueredScreen
 
         leftColorBoard.rectangle(
 
-                new Vector3f(leftColorBarXStarter,
-
-                        colorBarHeightStart,
-                        1),  // 使用与 values[0] 相同的原点
+                new Vector3f(leftColorBarXStarter, colorBarHeightStart, 0f),  // 使用与 values[0] 相同的原点
                 ImageMask.Axis.X,
                 ImageMask.Axis.Y,
                 true,
@@ -657,7 +654,7 @@ public class LaqueredScreen
         );
         ImageMask rightColorBoard = rightLaqueredColorBoard.get();
         rightColorBoard.rectangle(
-                new Vector3f(rightColorBarXStarter, colorBarHeightStart, 1),  // 使用与 values[0] 相同的原点
+                new Vector3f(rightColorBarXStarter, colorBarHeightStart, 0f),  // 使用与 values[0] 相同的原点
                 ImageMask.Axis.X,
                 ImageMask.Axis.Y,
                 true,
