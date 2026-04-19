@@ -9,10 +9,10 @@ import willow.train.kuayue.systems.overhead_line.block.support.OverheadLineSuppo
 import willow.train.kuayue.systems.overhead_line.item.OverheadLineItem;
 
 public class OverheadLineSupportBlockTest {
-    public static ItemReg<OverheadLineItem> ITEM =
-            new ItemReg<OverheadLineItem>("test_overhead_line")
-                    .itemType(OverheadLineItem::new)
-                    .tab(AllElements.neoKuayueDeviceTab)
-                    .submit(AllElements.testRegistry);
-    public static void invoke(){}
+//    public static ItemReg<OverheadLineItem> ITEM =
+//            new ItemReg<OverheadLineItem>("test_overhead_line")
+//                    .itemType(OverheadLineItem::new)
+//                    .tab(AllElements.neoKuayueDeviceTab)
+//                    .submit(AllElements.testRegistry);
+//    public static void invoke(){}
 }

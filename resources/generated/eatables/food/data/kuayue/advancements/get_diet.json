@@ -19,9 +19,13 @@
     "0": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": {
-          "items": ["kuayue:train_diet_1"]
-        }
+        "items": [
+          {
+            "items": [
+              "kuayue:train_diet_1"
+            ]
+          }
+        ]
       }
     }
   },

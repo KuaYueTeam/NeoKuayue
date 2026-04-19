@@ -26,6 +26,7 @@ import willow.train.kuayue.initial.AllTags;
 import willow.train.kuayue.initial.ClientInit;
 import willow.train.kuayue.initial.item.EditablePanelItem;
 import willow.train.kuayue.systems.editable_panel.interfaces.DefaultTextsLambda;
+import willow.train.kuayue.systems.editable_panel.interfaces.SignNbtValidator;
 import willow.train.kuayue.systems.editable_panel.interfaces.SignRenderLambda;
 import willow.train.kuayue.systems.editable_panel.screens.CustomScreen;
 import willow.train.kuayue.systems.editable_panel.widget.Label;
@@ -34,6 +35,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class EditableTypeConstants {
@@ -241,7 +243,7 @@ public class EditableTypeConstants {
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
 
         // 调整到水牌表面位置
-        poseStack.translate(0.0d, -0.3d, -0.40d);
+        poseStack.translate(0.0d, -0.3d, -0.406d);
 
         // 应用自定义偏移
         poseStack.translate(nbt.getFloat("offset_x"), nbt.getFloat("offset_y"), 0);
@@ -308,6 +310,7 @@ public class EditableTypeConstants {
 
         MultiBufferSource leftTopBuffer = bufferSource.getBuffer();
         poseStack.scale(baseScale, -baseScale, baseScale);
+        poseStack.translate(0,0,-0.2f);
         // 每个中文 9 字符
         float leftTopTextHalfWidth = (float) (leftTopWidth / 2);
         poseStack.pushPose();
@@ -571,6 +574,99 @@ public class EditableTypeConstants {
         }
     };
 
+    public static final SignNbtValidator CARRIAGE_TYPE_NBT_VALIDATOR = dataTag -> {
+        Set<String> allowedFields = Set.of(
+                "color", "data0", "data1", "data2", "data3", "data4", "revert", "offset_x", "offset_y"
+        );
+        if (!hasOnlyAllowedFields(dataTag, allowedFields)) return false;
+        if (!isValidColor(dataTag)) return false;
+        for (int i = 0; i <= 4; i++) {
+            if (!isValidStringField(dataTag, "data" + i, 100)) return false;
+        }
+        if (!isValidRevert(dataTag)) return false;
+        return isValidOffset(dataTag);
+    };
+
+    public static final SignNbtValidator TRAIN_SPEED_NBT_VALIDATOR = dataTag -> {
+        Set<String> allowedFields = Set.of("color", "content", "offset_x", "offset_y");
+        if (!hasOnlyAllowedFields(dataTag, allowedFields)) return false;
+        if (!isValidColor(dataTag)) return false;
+        if (!isValidStringField(dataTag, "content", 100)) return false;
+        return isValidOffset(dataTag);
+    };
+
+    public static final SignNbtValidator CARRIAGE_NO_SIGN_NBT_VALIDATOR = TRAIN_SPEED_NBT_VALIDATOR;
+
+    public static final SignNbtValidator LAQUERED_BOARD_NBT_VALIDATOR = dataTag -> {
+        Set<String> allowedFields = Set.of(
+                "color", "offset_x", "offset_y",
+                "left_top", "right_top", "left_bottom", "right_bottom",
+                "image_type", "train_number", "left_train_level", "right_train_level", "alpha"
+        );
+        if (!hasOnlyAllowedFields(dataTag, allowedFields)) return false;
+        if (!isValidColor(dataTag)) return false;
+        if (!isValidOffset(dataTag)) return false;
+        if (!isValidStringField(dataTag, "left_top", 100)) return false;
+        if (!isValidStringField(dataTag, "right_top", 100)) return false;
+        if (!isValidStringField(dataTag, "left_bottom", 100)) return false;
+        if (!isValidStringField(dataTag, "right_bottom", 100)) return false;
+        if (!isValidStringField(dataTag, "image_type", 100)) return false;
+        if (!isValidStringField(dataTag, "train_number", 100)) return false;
+        if (!isValidStringField(dataTag, "left_train_level", 100)) return false;
+        if (!isValidStringField(dataTag, "right_train_level", 100)) return false;
+        return isValidAlpha(dataTag);
+    };
+
+    private static boolean hasOnlyAllowedFields(CompoundTag dataTag, Set<String> allowedFields) {
+        for (String key : dataTag.getAllKeys()) {
+            if (!allowedFields.contains(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isValidColor(CompoundTag dataTag) {
+        if (!dataTag.contains("color")) return true;
+        if (!dataTag.contains("color", CompoundTag.TAG_INT)) return false;
+        int color = dataTag.getInt("color");
+        return color >= 0 && color <= 0xFFFFFF;
+    }
+
+    private static boolean isValidStringField(CompoundTag dataTag, String key, int maxLength) {
+        if (!dataTag.contains(key)) return true;
+        if (!dataTag.contains(key, CompoundTag.TAG_STRING)) return false;
+        return dataTag.getString(key).length() <= maxLength;
+    }
+
+    private static boolean isValidRevert(CompoundTag dataTag) {
+        if (!dataTag.contains("revert")) return true;
+        if (!dataTag.contains("revert", CompoundTag.TAG_BYTE)) return false;
+        byte revert = dataTag.getByte("revert");
+        return revert == 0 || revert == 1;
+    }
+
+    private static boolean isValidOffset(CompoundTag dataTag) {
+        if (dataTag.contains("offset_x")) {
+            if (!dataTag.contains("offset_x", CompoundTag.TAG_FLOAT)) return false;
+            float offsetX = dataTag.getFloat("offset_x");
+            if (!Float.isFinite(offsetX) || Math.abs(offsetX) > 10.0f) return false;
+        }
+        if (dataTag.contains("offset_y")) {
+            if (!dataTag.contains("offset_y", CompoundTag.TAG_FLOAT)) return false;
+            float offsetY = dataTag.getFloat("offset_y");
+            if (!Float.isFinite(offsetY) || Math.abs(offsetY) > 10.0f) return false;
+        }
+        return true;
+    }
+
+    private static boolean isValidAlpha(CompoundTag dataTag) {
+        if (!dataTag.contains("alpha")) return true;
+        if (!dataTag.contains("alpha", CompoundTag.TAG_FLOAT)) return false;
+        float alpha = dataTag.getFloat("alpha");
+        return Float.isFinite(alpha) && alpha >= 0.0f && alpha <= 1.0f;
+    }
+
 //    TODO 各 Screen类中方法实现类，CarriageTypeSign被挪到Screen类中。
 /*
     public static final IEditScreenMethods CARRIAGE_NO_SIGN_METHODS = new IEditScreenMethods() {
@@ -655,9 +751,11 @@ public class EditableTypeConstants {
                                               TrainPanelProperties.EditType editType,
                                               Supplier<Supplier<SignRenderLambda>> supplier,
                                               Supplier<DefaultTextsLambda> defaultTextSupplier,
-                                              Supplier<SignType.CustomScreenSupplier<EditablePanelEditMenu, CustomScreen<EditablePanelEditMenu, EditablePanelEntity>>> screenMethodsSupplier) {
+                                              Supplier<SignType.CustomScreenSupplier<EditablePanelEditMenu, CustomScreen<EditablePanelEditMenu, EditablePanelEntity>>> screenMethodsSupplier,
+                                              SignNbtValidator nbtValidator) {
 
-        SignType signType = new SignType(locationKey, editType, supplier, defaultTextSupplier, Envs.isClient() ? screenMethodsSupplier.get() : null);
+        SignType signType = new SignType(locationKey, editType, supplier, defaultTextSupplier,
+                Envs.isClient() ? screenMethodsSupplier.get() : null, nbtValidator);
 
         EditableTypeConstants.getSignTypeMap().put(new ResourceLocation(locationKey), signType);
 

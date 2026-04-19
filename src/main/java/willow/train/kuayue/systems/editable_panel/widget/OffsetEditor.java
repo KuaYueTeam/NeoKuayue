@@ -234,6 +234,10 @@ public class OffsetEditor extends AbstractWidget {
 
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (!this.visible) {
+            return false;
+        }
+
         if (Screen.hasShiftDown()) {
             if (cacheX < 0 || cacheY < 0) {
                 cacheX = pMouseX;

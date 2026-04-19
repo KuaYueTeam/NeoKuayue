@@ -1,6 +1,5 @@
 package willow.train.kuayue.systems.device.driver.combustion;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -12,6 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -20,9 +20,8 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import willow.train.kuayue.block.panels.TrainPanelBlock;
-import willow.train.kuayue.block.panels.base.TrainPanelProperties;
 import willow.train.kuayue.systems.device.AllDeviceBlockEntities;
 
 public class InternalCombustionDriveControllerBlock extends Block implements IBE<InternalCombustionDriveControllerBlockEntity>, IWrenchable {
@@ -89,5 +88,16 @@ public class InternalCombustionDriveControllerBlock extends Block implements IBE
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState()
                 .setValue(FACING, pContext.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public @NotNull BlockState rotate(BlockState pState, Rotation pRotation) {
+        Rotation opposite = Rotation.NONE;
+        switch (pRotation) {
+            case CLOCKWISE_90 ->  opposite = Rotation.COUNTERCLOCKWISE_90;
+            case COUNTERCLOCKWISE_90 ->   opposite = Rotation.CLOCKWISE_90;
+            case CLOCKWISE_180 -> opposite = Rotation.CLOCKWISE_180;
+        }
+        return pState.setValue(FACING, opposite.rotate(pState.getValue(FACING)));
     }
 }
