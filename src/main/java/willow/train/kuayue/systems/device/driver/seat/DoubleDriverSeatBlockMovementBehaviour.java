@@ -1,11 +1,12 @@
 package willow.train.kuayue.systems.device.driver.seat;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -31,7 +32,7 @@ public class DoubleDriverSeatBlockMovementBehaviour implements MovementBehaviour
     }
 
     @Override
-    public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, 
+    public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
             ContraptionMatrices matrices, MultiBufferSource buffer) {
         PoseStack ms = matrices.getModelViewProjection();
         ms.pushPose();
@@ -44,12 +45,10 @@ public class DoubleDriverSeatBlockMovementBehaviour implements MovementBehaviour
             context.state,
             matrices.getModelViewProjection(),
             buffer,
-            BlockEntityRenderHelper.getCombinedLight(
-                context.world, 
-                getLightPos(matrices.getLight(), context.localPos), 
-                renderWorld, 
-                context.localPos
-            ),
+                LevelRenderer.getLightColor(
+                        context.world,
+                        BlockPos.containing(context.position)
+                ),
             OverlayTexture.NO_OVERLAY
         );
         

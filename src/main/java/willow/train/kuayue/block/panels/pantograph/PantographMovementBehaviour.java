@@ -1,7 +1,7 @@
 package willow.train.kuayue.block.panels.pantograph;
 
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
@@ -67,7 +67,7 @@ public class PantographMovementBehaviour implements MovementBehaviour {
         if(locator == null || locator.getSecond() == null)
             return;
 
-        BlockEntity blockEntity = context.contraption.presentBlockEntities.get(context.localPos);
+        BlockEntity blockEntity = context.contraption.getBlockEntityClientSide(context.localPos);
 
         if(blockEntity == null && (context.state.getBlock() instanceof EntityBlock entityBlock)) {
             blockEntity = entityBlock.newBlockEntity(context.localPos, context.state);
@@ -169,10 +169,6 @@ public class PantographMovementBehaviour implements MovementBehaviour {
 
 
 
-    @Override
-    public boolean renderAsNormalBlockEntity() {
-        return true;
-    }
 
     public void writeData(AbstractContraptionEntity contraptionEntity, BlockPos localPos, CompoundTag tag) {
         AllPackets.INTERACTION.getChannel().send(

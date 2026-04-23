@@ -4,7 +4,7 @@ import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.data.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -81,9 +81,14 @@ public abstract class MixinTrain implements ScheduleTracker {
 //        ExtensionHelper.gentlyCrash(train, speedAfterCrash.getSecond());
 //    }
 
-    @Redirect(method = "collideWithOtherTrains", at = @At(
-            value = "INVOKE", target = "Lcom/simibubi/create/content/trains/entity/Train;findCollidingTrain(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/resources/ResourceKey;)Lcom/simibubi/create/foundation/utility/Pair;"),
-    remap = false)
+    @Redirect(
+            method = "collideWithOtherTrains",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/simibubi/create/content/trains/entity/Train;findCollidingTrain(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/resources/ResourceKey;)Lnet/createmod/catnip/data/Pair;"
+            ),
+            remap = false
+    )
     public Pair<Train, Vec3> doFindCollidingTrain(Train instance, Level otherLeading, Vec3 otherTrailing, Vec3 otherDimension, ResourceKey<Level> start2) {
         Pair<Train, Vec3> pair = findCollidingTrain(otherLeading, otherTrailing, otherDimension, start2);
         if (pair == null) return null;

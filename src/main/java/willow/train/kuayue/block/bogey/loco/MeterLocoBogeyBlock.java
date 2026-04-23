@@ -2,7 +2,6 @@ package willow.train.kuayue.block.bogey.loco;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
@@ -34,8 +33,7 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public class MeterLocoBogeyBlock extends AbstractBogeyBlock<MeterLocoBogeyEntity>
         implements IBE<MeterLocoBogeyEntity>,
-        ProperWaterloggedBlock,
-        ISpecialBlockItemRequirement {
+        ProperWaterloggedBlock{
 
     public MeterLocoBogeyBlock(Properties pProperties, BogeySizes.BogeySize size) {
         super(pProperties, size);

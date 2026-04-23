@@ -1,20 +1,18 @@
 package willow.train.kuayue.block.panels.door;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.simibubi.create.foundation.block.IBE;
-import com.simibubi.create.foundation.utility.Couple;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.base.UnModeledBlockProperty;
+import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -47,9 +44,9 @@ public class DoubleDoorBlock extends TrainEndfaceBlock implements IBE<DoubleDoor
         super(pProperties, beginPos, endPos, doorType);
         this.registerDefaultState(getStateDefinition().any().setValue(POWERED, false));
         this.models = Couple.create(
-                leftModel == null ? null : new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + leftModel)),
-                rightModel == null ? null : new PartialModel(new ResourceLocation(Kuayue.MODID,"block/" + rightModel)));
-        this.frameModel = new PartialModel(new ResourceLocation(Kuayue.MODID, "block/" + frameModel));
+                leftModel == null ? null : PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + leftModel)),
+                rightModel == null ? null : PartialModel.of(new ResourceLocation(Kuayue.MODID,"block/" + rightModel)));
+        this.frameModel = PartialModel.of(new ResourceLocation(Kuayue.MODID, "block/" + frameModel));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package willow.train.kuayue.behaviour;
 
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,10 +20,6 @@ public class ChimneyMovementBehaviour implements MovementBehaviour {
 
     protected boolean isStopped = true;
 
-    @Override
-    public boolean renderAsNormalBlockEntity() {
-        return true;
-    }
 
     @Override
     public void startMoving(MovementContext context) {

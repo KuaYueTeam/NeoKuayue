@@ -43,8 +43,8 @@ public class ContraptionNbtUpdatePacket extends S2CPacket {
                         return;
                     var newBlockData = new StructureTemplate.StructureBlockInfo(blockPos, blockData.state(), nbt);
                     blocks.put(blockPos, newBlockData);
-                    if(contraption.presentBlockEntities.get(blockPos) != null){
-                        contraption.presentBlockEntities.get(blockPos).load(nbt);
+                    if(contraption.getBlockEntityClientSide(blockPos) != null){
+                        contraption.getBlockEntityClientSide(blockPos).load(nbt);
                     }
                 }
             }

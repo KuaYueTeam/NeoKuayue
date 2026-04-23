@@ -2,22 +2,25 @@ package willow.train.kuayue.utils;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.railwayteam.railways.content.fuel.psi.PortableFuelInterfaceBlock;
+import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
+import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorage;
+import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
 import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.contraptions.actors.psi.PortableFluidInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
-import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlock;
 import com.simibubi.create.content.trains.entity.*;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
+import net.createmod.catnip.data.Couple;
+import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.math.BlockFace;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -68,7 +71,7 @@ public class CarriageUtil {
         Multimap<BlockPos, StructureTemplate.StructureBlockInfo> capturedMultiblocks;
         Map<BlockPos, Entity> initialPassengers;
 
-        Map<BlockPos, MountedStorage> storageItems;
+        Map<BlockPos, MountedItemStorage> storageItems;
         Map<BlockPos, MountedFluidStorage> storageFluids;
     }
 
@@ -194,11 +197,17 @@ public class CarriageUtil {
         MountedStorageManager manager = carriage.storage;
         if (manager != null) {
             AccessorMountedStorageManager managerAccess = (AccessorMountedStorageManager) manager;
-            managerAccess.setStorage(result.storageItems);
-            managerAccess.setFluidStorage(result.storageFluids);
-            manager.createHandlers();
-            ((AccessorTrainCargoManager) manager).invokeChangeDetected();
-            carriage.storage.resetIdleCargoTracker();
+            managerAccess.invokeReset();
+            managerAccess.getItemsBuilder().putAll(result.storageItems);
+            managerAccess.getFluidsBuilder().putAll(result.storageFluids);
+            managerAccess.invokeInitialize();
+            if (manager instanceof TrainCargoManager cargoManager) {
+                ((AccessorTrainCargoManager) cargoManager).invokeChangeDetected();
+            }
+
+            if (manager instanceof TrainCargoManager cargoManager) {
+                ((AccessorTrainCargoManager) cargoManager).invokeChangeDetected();
+            }
         }
     }
 
@@ -208,7 +217,6 @@ public class CarriageUtil {
         if (carriage.storage == null) {
             carriage.storage = new TrainCargoManager();
         }
-        carriage.storage.createHandlers();
         ((AccessorTrainCargoManager) carriage.storage).invokeChangeDetected();
         carriage.storage.resetIdleCargoTracker();
         cce.syncCarriage();
@@ -216,6 +224,26 @@ public class CarriageUtil {
         if (context.isClientSide) {
             updateClientRenderData(cc, cce, context);
         }
+    }
+    private static Map<BlockPos, MountedItemStorage> rebuildItemMap(AccessorMountedStorageManager access, RemapContext context) {
+        Map<BlockPos, MountedItemStorage> newItems = new HashMap<>();
+        // 从旧的不可变 Map 中读出所有存储
+        access.getAllItemStorages().forEach((oldPos, storage) -> {
+            // 计算新坐标
+            BlockPos newPos = context.apply(oldPos);
+            newItems.put(newPos, storage);
+        });
+        return newItems;
+    }
+    private static Map<BlockPos, MountedFluidStorage> rebuildFluidMap(AccessorMountedStorageManager access, RemapContext context) {
+        Map<BlockPos, MountedFluidStorage> newFluids = new HashMap<>();
+        // 0.6 的流体存储通常挂在 fluidsWrapper 字段下
+        access.getFluidsWrapper().storages.forEach((oldPos, storage) -> {
+            // 使用你的流体控制器映射表获取新坐标
+            BlockPos newPos = context.fluidTankControllerTransform.getOrDefault(oldPos, context.apply(oldPos));
+            newFluids.put(newPos, storage);
+        });
+        return newFluids;
     }
 
     private static HashMap<BlockPos, StructureTemplate.StructureBlockInfo> remapBlocks(CarriageContraption cc, RemapContext context) {
@@ -360,40 +388,83 @@ public class CarriageUtil {
         return newInitialPassengers;
     }
 
-    private static Map<BlockPos, MountedStorage> remapStorageItems(AccessorMountedStorageManager managerAccess, RemapContext context) {
-        Map<BlockPos, MountedStorage> newStorage = new HashMap<>();
-        managerAccess.getStorage().forEach((k, v) -> {
+    private static Map<BlockPos, MountedItemStorage> remapStorageItems(AccessorMountedStorageManager managerAccess, RemapContext context) {
+        Map<BlockPos, MountedItemStorage> newStorage = new HashMap<>();
+        managerAccess.getAllItemStorages().forEach((k, v) -> {
             BlockPos newPos = context.apply(k);
             newStorage.put(newPos, v);
         });
         return newStorage;
     }
-
     private static Map<BlockPos, MountedFluidStorage> remapStorageFluids(AccessorMountedStorageManager managerAccess, RemapContext context) {
-        Map<BlockPos, MountedFluidStorage> newFluidStorage = new HashMap<>();
-        managerAccess.getFluidStorage().forEach((k, v) -> {
-            BlockPos newPos = context.fluidTankControllerTransform.get(k);
-            newFluidStorage.put(newPos, v);
+        Map<BlockPos, MountedFluidStorage> newStorage = new HashMap<>();
+
+        // 从包装器里拿存储清单
+        managerAccess.getFluidsWrapper().storages.forEach((k, v) -> {
+            BlockPos newPos = context.fluidTankControllerTransform.getOrDefault(k, context.apply(k));
+            newStorage.put(newPos, v);
         });
-        return newFluidStorage;
+
+        return newStorage;
     }
 
     private static void updateClientRenderData(CarriageContraption cc, CarriageContraptionEntity cce, RemapContext context) {
-        cc.presentBlockEntities.forEach((k, v) -> {
-            if(v instanceof FluidTankBlockEntity ft && ft.isController()) {
-                updateFluidTankRenderData(ft, k, cc, context);
+        // 1. 直接操作 blocks，这是 0.6 唯一确定存在的数据源
+        Map<BlockPos, StructureTemplate.StructureBlockInfo> blocks = cc.getBlocks();
+        Map<BlockPos, StructureTemplate.StructureBlockInfo> newNBTBlocks = new HashMap<>();
+
+        blocks.forEach((pos, info) -> {
+            if (info.nbt() != null && info.nbt().contains("TankContent")) {
+                // 这是一个流体坦克
+                CompoundTag nbt = info.nbt().copy();
+                int width = nbt.getInt("Size") - 1;
+
+                // 计算这个坦克对应的重映射后的 Controller 坐标
+                BlockPos oldController = NbtUtils.readBlockPos(nbt.getCompound("Controller"));
+                BlockPos newController = context.fluidTankControllerTransform.get(oldController);
+
+                if (newController != null) {
+                    // 更新 NBT 里的控制器坐标引用
+                    nbt.put("Controller", NbtUtils.writeBlockPos(newController));
+
+                    // 创建带有新 NBT 的 info
+                    StructureTemplate.StructureBlockInfo newInfo = new StructureTemplate.StructureBlockInfo(info.pos(), info.state(), nbt);
+                    newNBTBlocks.put(pos, newInfo);
+                }
             }
         });
 
-        MountedStorageManager storage = ((AccessorContraption) cc).getStorage();
-        Map<BlockPos, MountedFluidStorage> newFluidStorage = new HashMap<>();
-        ((AccessorMountedStorageManager) storage).getFluidStorage().forEach((k,v) -> {
-            BlockPos newPos = context.fluidTankControllerTransform.get(k);
-            newFluidStorage.put(newPos, v);
-        });
-        ((AccessorMountedStorageManager) storage).setFluidStorage(newFluidStorage);
+        // 把改好的 NBT 塞回 cc
+        newNBTBlocks.forEach((pos, info) -> blocks.put(pos, info));
 
+        // 2. 这里的 storage 同样使用 Builder 模式重载（避开直接 set）
+        MountedStorageManager storage = cc.getStorage();
+        if (storage instanceof TrainCargoManager cargoManager) {
+            AccessorMountedStorageManager access = (AccessorMountedStorageManager) (Object) cargoManager;
+            access.invokeReset();
+            // 重新填充你的 result.storageItems 和 result.storageFluids
+            access.getItemsBuilder().putAll(rebuildItemMap(access, context));
+            access.getFluidsBuilder().putAll(rebuildFluidMap(access, context));
+            access.invokeInitialize();
+        }
+
+        // 3. 关键：强制 Contraption 彻底丢弃旧模型和旧 BE，根据 blocks 里的新 NBT 重生
         reloadContraptionRender(cc, cce);
+    }
+
+    private static void reloadContraptionRender(CarriageContraption cc, CarriageContraptionEntity cce) {
+        CompoundTag tag = cc.writeNBT(false);
+        cc.readNBT(cce.level(), tag, false);
+        cce.syncCarriage();
+        cc.getBlocks().forEach((pos, info) -> {
+            if (info.state().getBlock() instanceof PortableFuelInterfaceBlock) {
+                BlockEntity be = cc.getBlockEntityClientSide(pos);
+                if (be instanceof PortableFluidInterfaceBlockEntity pfi) {
+                    ((AccessorPortableFluidInterfaceBlockEntity) pfi).invokeStopTransferring();
+                    pfi.startTransferringTo(cc, 0);
+                }
+            }
+        });
     }
 
     private static void updateFluidTankRenderData(FluidTankBlockEntity ft, BlockPos pos, CarriageContraption cc, RemapContext context) {
@@ -408,25 +479,7 @@ public class CarriageUtil {
         if(info == null || info.nbt() == null) return;
         info.nbt().put("TankContent", tankContent);
     }
-
-    private static void reloadContraptionRender(CarriageContraption cc, CarriageContraptionEntity cce) {
-        CompoundTag tag = cc.writeNBT(false);
-        cc.modelData.clear();
-        cc.presentBlockEntities.clear();
-        cc.maybeInstancedBlockEntities.clear();
-        cc.specialRenderedBlockEntities.clear();
-
-        cc.readNBT(cce.level(), tag, false);
-        ContraptionRenderDispatcher.invalidate(cc);
-
-        ((AccessorContraption) cc).getStorage().bindTanks(cc.presentBlockEntities);
-        for (BlockEntity be : cc.presentBlockEntities.values()) {
-            if(be instanceof PortableFluidInterfaceBlockEntity pfi) {
-                ((AccessorPortableFluidInterfaceBlockEntity) pfi).invokeStopTransferring();
-                pfi.startTransferringTo(cc, 0);
-            }
-        }
-    }
+    
 
     public static boolean isDoubleEnded(List<Carriage> carriages) {
         for(Carriage carriage : carriages) {

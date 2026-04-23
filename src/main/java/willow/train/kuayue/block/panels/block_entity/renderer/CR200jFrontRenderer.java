@@ -1,11 +1,12 @@
 package willow.train.kuayue.block.panels.block_entity.renderer;
 
-import com.jozufozu.flywheel.core.PartialModel;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.createmod.catnip.render.CachedBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -43,10 +44,10 @@ public class CR200jFrontRenderer implements BlockEntityRenderer<CR200jFrontBlock
         boolean windShield = entity.isWindShieldActive();
         VertexConsumer consumer = pBufferSource.getBuffer(RenderType.solid());
 
-        SuperByteBuffer fairing_left = CachedBufferer.partial(FAIRING_LEFT, blockState);
-        SuperByteBuffer fairing_right = CachedBufferer.partial(FAIRING_RIGHT, blockState);
-        SuperByteBuffer wind_shield_root = CachedBufferer.partial(WIND_SHIELD_ROOT, blockState);
-        SuperByteBuffer wind_shield = CachedBufferer.partial(WIND_SHIELD, blockState);
+        SuperByteBuffer fairing_left = CachedBuffers.partial(FAIRING_LEFT, blockState);
+        SuperByteBuffer fairing_right = CachedBuffers.partial(FAIRING_RIGHT, blockState);
+        SuperByteBuffer wind_shield_root = CachedBuffers.partial(WIND_SHIELD_ROOT, blockState);
+        SuperByteBuffer wind_shield = CachedBuffers.partial(WIND_SHIELD, blockState);
         float f = -blockState.getValue(CustomRenderedEndfaceBlock.FACING).getOpposite().toYRot();
 
         pose.pushPose();
@@ -67,8 +68,8 @@ public class CR200jFrontRenderer implements BlockEntityRenderer<CR200jFrontBlock
         double offset = 0, rotation = 50;
         fairing_left.translate(0, 0, - entity.counterFairing * offset);
         fairing_right.translate(0, 0, - entity.counterFairing * offset);
-        fairing_left.rotateY(rotation * entity.counterFairing);
-        fairing_right.rotateY(- rotation * entity.counterFairing);
+        fairing_left.rotateY((float)rotation * entity.counterFairing);
+        fairing_right.rotateY((float)- rotation * entity.counterFairing);
         fairing_left.renderInto(pose, consumer);
         fairing_right.renderInto(pose, consumer);
         pose.popPose();
@@ -94,9 +95,9 @@ public class CR200jFrontRenderer implements BlockEntityRenderer<CR200jFrontBlock
         }
         double px = Math.min(1, (Math.max(entity.counterWindShield, 0)));
         double angle = 2 * rotate_angle * (px - .5f);
-        wind_shield_root.rotateY(angle);
+        wind_shield_root.rotateY((float)angle);
         wind_shield.translate(Math.sin(Math.toRadians(angle)) * radius, -.05,Math.cos(Math.toRadians(angle)) * radius);
-        wind_shield.rotateY(2 * rotate_angle_2 * (px - .5f));
+        wind_shield.rotateY((float) (2 * rotate_angle_2 * (px - .5f)));
         wind_shield_root.renderInto(pose, consumer);
         wind_shield.renderInto(pose, consumer);
         pose.popPose();

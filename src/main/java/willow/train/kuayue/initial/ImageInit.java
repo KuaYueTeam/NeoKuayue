@@ -31,26 +31,26 @@ public class ImageInit {
 
     private static void putImageIn(BogeyStyle style) throws URISyntaxException, IOException {
 
-        Map<String, InputStream> streamMap = ResourceUtil.getFileStream("textures/gui/bogey_style/" + style.name.toDebugFileName(), false);
+        Map<String, InputStream> streamMap = ResourceUtil.getFileStream("textures/gui/bogey_style/" + style.id.toDebugFileName(), false);
 
         for(BogeySizes.BogeySize size : style.validSizes()) {
 
             // 跳过所有反向的，因为反向的和正向的贴图一样
-            if(size.location().toDebugFileName().endsWith("_backward"))
+            if(size.id().toDebugFileName().endsWith("_backward"))
                 continue;
 
-            if(!streamMap.containsKey(size.location().toDebugFileName() + ".png"))
+            if(!streamMap.containsKey(size.id().toDebugFileName() + ".png"))
                 continue;
 
             ResourceLocation location = new ResourceLocation(Kuayue.MODID, "textures/gui/bogey_style/" +
-                    style.name.toDebugFileName() + "/" + size.location().toDebugFileName() + ".png");
+                    style.id.toDebugFileName() + "/" + size.id().toDebugFileName() + ".png");
 
             images.put(
-                    style.name.toDebugFileName() + "." + size.location().toDebugFileName(),
-                    new ImageRegex(location, streamMap.get(size.location().toDebugFileName() + ".png"), true)
+                    style.id.toDebugFileName() + "." + size.id().toDebugFileName(),
+                    new ImageRegex(location, streamMap.get(size.id().toDebugFileName() + ".png"), true)
             );
 
-            streamMap.get(size.location().toDebugFileName() + ".png").close();
+            streamMap.get(size.id().toDebugFileName() + ".png").close();
         }
     }
 

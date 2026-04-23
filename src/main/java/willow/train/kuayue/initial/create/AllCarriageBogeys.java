@@ -127,8 +127,8 @@ public class AllCarriageBogeys {
             .bogey(mkz.getSize(), MKZRenderer::new, testRegistry.asResource("mkz_bogey"))
             .bogey(tkz2.getSize(), TKZ2Renderer::new, testRegistry.asResource("tkz2_bogey"))
             .bogey(tkz1.getSize(), TKZ1Renderer::new, testRegistry.asResource("tkz1_bogey"))
-            .bogey(tkz2Motor.getSize(), TKZ2Renderer.Motor::new, testRegistry.asResource("tkz2_motor_bogey"))
-            .bogey(tkz2MotorBackward.getSize(), TKZ2Renderer.MotorBackward::new, testRegistry.asResource("tkz2_motor_backward_bogey"))
+            .bogey(tkz2Motor.getSize(), () -> new TKZ2Renderer.Motor(false), testRegistry.asResource("tkz2_motor_bogey"))
+            .bogey(tkz2MotorBackward.getSize(), () -> new TKZ2Renderer.Motor(true), testRegistry.asResource("tkz2_motor_backward_bogey"))
             .translationKey("meter_carriage_group")
             .submit(testRegistry);
 

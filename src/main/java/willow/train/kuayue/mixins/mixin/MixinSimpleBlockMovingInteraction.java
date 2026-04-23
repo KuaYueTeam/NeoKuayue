@@ -35,7 +35,7 @@ public abstract class MixinSimpleBlockMovingInteraction {
         if (contraptionEntity.getContraption().getBlocks() == null) return;
         StructureTemplate.StructureBlockInfo info = contraptionEntity.getContraption().getBlocks().getOrDefault(localPos, null);
         if (info == null) return;
-        BlockEntity be = contraptionEntity.getContraption().presentBlockEntities.getOrDefault(localPos, null);
+        BlockEntity be = contraptionEntity.getContraption().getBlockEntityClientSide(localPos);
         if (be instanceof IContraptionMovementBlockEntity icmbe) {
             icmbe.update(info, player, localPos, contraptionEntity);
         }

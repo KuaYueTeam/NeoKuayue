@@ -1,216 +1,113 @@
 package willow.train.kuayue.block.bogey.loco.renderer;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import kasuga.lib.core.create.BogeyDataConstants;
+import net.createmod.catnip.nbt.NBTHelper;
+import net.createmod.catnip.render.CachedBuffers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
 import willow.train.kuayue.initial.AllElements;
 import willow.train.kuayue.initial.create.AllLocoBogeys;
 
-public class SS3Renderer extends BogeyRenderer {
+public class SS3Renderer implements BogeyRenderer {
 
     private static ResourceLocation asBlockModelResource(String path) {
         return AllElements.testRegistry.asResource("block/" + path);
     }
+
     public static final PartialModel
-            SS3_FRAME = new PartialModel(asBlockModelResource("bogey/ss3/ss3_frame")),
-            SS3_WHEEL = new PartialModel(asBlockModelResource("bogey/ss3/ss3_wheel"));
-    @Override
-    public void initialiseContraptionModelData(
-            MaterialManager materialManager, CarriageBogey carriageBogey) {
-        this.createModelInstance(materialManager, SS3_FRAME);
-        this.createModelInstance(materialManager, SS3_WHEEL, 3);
-    }
+            SS3_FRAME = PartialModel.of(asBlockModelResource("bogey/ss3/ss3_frame")),
+            SS3_WHEEL = PartialModel.of(asBlockModelResource("bogey/ss3/ss3_wheel"));
+
+    // SS3 非对称轴距偏移
+    private static final double[] OFFSETS = {-2.11, 1.96, -0.01};
 
     @Override
-    public BogeySizes.BogeySize getSize() {
-        return AllLocoBogeys.ss3.getSize();
+    public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                       MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+        renderSS3(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, false, 1.0f);
     }
 
-    @Override
-    public void render(
-            CompoundTag bogeyData,
-            float wheelAngle,
-            PoseStack ms,
-            int light,
-            VertexConsumer vb,
-            boolean inContraption) {
+    // 核心渲染逻辑：整合所有变体
+    protected void renderSS3(CompoundTag bogeyData, float wheelAngle, PoseStack ms,
+                             MultiBufferSource bufferSource, int light, int overlay,
+                             boolean inContraption, boolean backward, float scaleX) {
 
-        Direction direction =
-                bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                        ? NBTHelper.readEnum(
-                        bogeyData,
-                        BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                        Direction.class)
-                        : Direction.NORTH;
+        var buffer = bufferSource.getBuffer(RenderType.cutoutMipped());
+        var air = Blocks.AIR.defaultBlockState();
 
-        boolean inInstancedContraption = vb == null;
-        double[] offsets = {-2.11, 1.96, -0.01};//单个轮对偏移
-        BogeyModelData frame = getTransform(SS3_FRAME, ms, inInstancedContraption);
-        BogeyModelData[] wheels = getTransform(SS3_WHEEL, ms, inInstancedContraption, 3);
+        Direction direction = bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
+                ? NBTHelper.readEnum(bogeyData, BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY, Direction.class)
+                : Direction.NORTH;
 
-        if (direction == Direction.SOUTH || direction == Direction.EAST) {
-            if (inContraption) {
-                frame.translate(0, 0.012, 0).render(ms, light, vb);
-                for (int side = -1; side < 2; side++) {
-                    if (!inInstancedContraption) ms.pushPose();
-                    BogeyModelData wheel = wheels[side + 1];
-                    int index = side + 1;
-                    double zOffset =  offsets[index];
-                    wheel.translate(0, 0.88, zOffset)
-                            .rotateX(wheelAngle)
-                            .render(ms, light, vb);
-                    if (!inInstancedContraption) ms.popPose();
-                }
-            } else {
-                frame.rotateY(180).translate(0, 0.012, 0).render(ms, light, vb);
+        boolean isPositive = direction.getAxisDirection() == Direction.AxisDirection.POSITIVE;
 
-                for (int side = -1; side < 2; side++) {
-                    if (!inInstancedContraption) ms.pushPose();
-                    BogeyModelData wheel = wheels[side + 1];
-                    int index = side + 1;
-                    double zOffset =  offsets[index];
-                    wheel.translate(0, 0.88, zOffset)
-                            .rotateX(wheelAngle)
-                            .render(ms, light, vb);
-                    if (!inInstancedContraption) ms.popPose();
-                }
-            }
-        } else {
-            frame.rotateY(180).translate(0, 0.012, 0).render(ms, light, vb);
+        // 核心异或逻辑判定翻转
+        // SS3 原代码逻辑中方向和组装状态的判定决定了 frame 是否 rotateY(180)
+        boolean shouldFlip = (isPositive ^ backward ^ !inContraption);
+        float yaw = shouldFlip ? 180 : 0;
+        float angleMultiplier = (backward ^ shouldFlip) ? -1 : 1;
 
-            for (int side = -1; side < 2; side++) {
-                if (!inInstancedContraption) ms.pushPose();
-                BogeyModelData wheel = wheels[side + 1];
-                int index = side + 1;
-                double zOffset =  offsets[index];
-                wheel.translate(0, 0.88, zOffset)
-                        .rotateX(wheelAngle)
-                        .render(ms, light, vb);
-                if (!inInstancedContraption) ms.popPose();
-            }
+        ms.pushPose();
 
-        }
-    }
+        // 处理 Andesite 变体的拉伸
+        if (scaleX != 1.0f) ms.scale(scaleX, 1.0f, 1.0f);
 
-    public static class Backward extends BogeyRenderer {
+        // 整体转向架偏转
+        ms.mulPose(Axis.YP.rotationDegrees(yaw));
 
-        @Override
-        public void render(
-                CompoundTag bogeyData,
-                float wheelAngle,
-                PoseStack ms,
-                int light,
-                VertexConsumer vb,
-                boolean inContraption) {
+        // --- 1. 渲染架体 ---
+        ms.pushPose();
+        ms.translate(0, 0.012, 0);
+        CachedBuffers.partial(SS3_FRAME, air).light(light).overlay(overlay).renderInto(ms, buffer);
+        ms.popPose();
 
-            Direction direction =
-                    bogeyData.contains(BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY)
-                            ? NBTHelper.readEnum(
-                            bogeyData,
-                            BogeyDataConstants.BOGEY_ASSEMBLY_DIRECTION_KEY,
-                            Direction.class)
-                            : Direction.NORTH;
-
-            wheelAngle = -wheelAngle;
-            boolean inInstancedContraption = vb == null;
-            double[] offsets = {-0.01, 1.96, -2.11};//单个轮对偏移
-
-            BogeyModelData frame = getTransform(SS3_FRAME, ms, inInstancedContraption);
-            BogeyModelData[] wheels = getTransform(SS3_WHEEL, ms, inInstancedContraption, 3);
-
-            if (direction == Direction.SOUTH || direction == Direction.EAST) {
-                if (inContraption) {
-                    frame.rotateY(180).translate(0, 0.012, 0).render(ms, light, vb);
-
-                    for (int side = -1; side < 2; side++) {
-                        if (!inInstancedContraption) ms.pushPose();
-                        BogeyModelData wheel = wheels[side + 1];
-                        int index = side + 1;
-                        double zOffset =  offsets[index];
-                        wheel.translate(0, 0.88, zOffset)
-                                .rotateX(wheelAngle)
-                                .render(ms, light, vb);
-                        if (!inInstancedContraption) ms.popPose();
-                    }
-                } else {
-                    frame.translate(0, 0.012, 0).render(ms, light, vb);
-
-                    for (int side = -1; side < 2; side++) {
-                        if (!inInstancedContraption) ms.pushPose();
-                        BogeyModelData wheel = wheels[side + 1];
-                        int index = side + 1;
-                        double zOffset =  offsets[index];
-                        wheel.translate(0, 0.88, zOffset)
-                                .rotateX(wheelAngle)
-                                .render(ms, light, vb);
-                        if (!inInstancedContraption) ms.popPose();
-                    }
-                }
-            } else {
-                frame.translate(0, 0.012, 0).render(ms, light, vb);
-
-                for (int side = -1; side < 2; side++) {
-                    if (!inInstancedContraption) ms.pushPose();
-                    BogeyModelData wheel = wheels[side + 1];
-                    int index = side + 1;
-                    double zOffset =  offsets[index];
-                    wheel.translate(0, 0.88, zOffset)
-                            .rotateX(wheelAngle)
-                            .render(ms, light, vb);
-                    if (!inInstancedContraption) ms.popPose();
-                }
-            }
-        }
-
-        @Override
-        public BogeySizes.BogeySize getSize() {
-            return AllLocoBogeys.ss3BackwardAndesite.getSize();
-        }
-
-        @Override
-        public void initialiseContraptionModelData(
-                MaterialManager materialManager, CarriageBogey carriageBogey) {
-            this.createModelInstance(materialManager, SS3_FRAME);
-            this.createModelInstance(materialManager, SS3_WHEEL, 3);
-        }
-    }
-    public static class Andesite extends SS3Renderer {
-        @Override
-        public void render(
-                CompoundTag bogeyData,
-                float wheelAngle,
-                PoseStack ms,
-                int light,
-                VertexConsumer vb,
-                boolean inContraption) {
+        // --- 2. 渲染三个轮对 ---
+        // 注意：SS3 是非对称的，通过 OFFSETS 数组定义位置
+        for (int i = 0; i < 3; i++) {
             ms.pushPose();
-            ms.scale(1.2F, 1, 1);
-            super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
+            double zOffset = OFFSETS[i];
+            ms.translate(0, 0.88, zOffset);
+            ms.mulPose(Axis.XP.rotationDegrees(wheelAngle * angleMultiplier));
+            CachedBuffers.partial(SS3_WHEEL, air).light(light).overlay(overlay).renderInto(ms, buffer);
             ms.popPose();
         }
 
-        public static class Backward extends SS3Renderer.Backward {
+        ms.popPose();
+    }
+
+
+    // --- 子类变体：反向渲染器 ---
+    public static class Backward extends SS3Renderer {
+        @Override
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+            super.renderSS3(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, true, 1.0f);
+        }
+    }
+
+    // --- 子类变体：Andesite 渲染器 (支持拉伸) ---
+    public static class Andesite extends SS3Renderer {
+        @Override
+        public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                           MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+            super.renderSS3(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, false, 1.2f);
+        }
+
+        public static class Backward extends SS3Renderer {
             @Override
-            public void render(
-                    CompoundTag bogeyData,
-                    float wheelAngle,
-                    PoseStack ms,
-                    int light,
-                    VertexConsumer vb,
-                    boolean inContraption) {
-                ms.pushPose();
-                ms.scale(1.2F, 1, 1);
-                super.render(bogeyData, wheelAngle, ms, light, vb, inContraption);
-                ms.popPose();
+            public void render(CompoundTag bogeyData, float wheelAngle, float partialTick, PoseStack ms,
+                               MultiBufferSource bufferSource, int light, int overlay, boolean inContraption) {
+                super.renderSS3(bogeyData, wheelAngle, ms, bufferSource, light, overlay, inContraption, true, 1.2f);
             }
         }
     }
