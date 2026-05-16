@@ -73,4 +73,13 @@ public class JY290ACBlock extends Block implements IWrenchable {
             playRotateSound(level, context.getClickedPos());
         return InteractionResult.SUCCESS;
     }
+        public @NotNull BlockState rotate(BlockState pState, Rotation pRotation) {
+        Rotation opposite = Rotation.NONE;
+        switch (pRotation) {
+            case CLOCKWISE_90 ->  opposite = Rotation.COUNTERCLOCKWISE_90;
+            case COUNTERCLOCKWISE_90 ->   opposite = Rotation.CLOCKWISE_90;
+            case CLOCKWISE_180 -> opposite = Rotation.CLOCKWISE_180;
+        }
+        return pState.setValue(FACING, opposite.rotate(pState.getValue(FACING)));
+    }
 }

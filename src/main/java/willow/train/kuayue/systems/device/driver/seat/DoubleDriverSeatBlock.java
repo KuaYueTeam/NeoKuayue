@@ -160,4 +160,13 @@ public class DoubleDriverSeatBlock extends M1SeatBlock implements IContraptionSe
         info = new StructureTemplate.StructureBlockInfo(blockPos, state, info.nbt);
         contraption.entity.setBlock(blockPos, info);
     }
+        public @NotNull BlockState rotate(BlockState pState, Rotation pRotation) {
+        Rotation opposite = Rotation.NONE;
+        switch (pRotation) {
+            case CLOCKWISE_90 ->  opposite = Rotation.COUNTERCLOCKWISE_90;
+            case COUNTERCLOCKWISE_90 ->   opposite = Rotation.CLOCKWISE_90;
+            case CLOCKWISE_180 -> opposite = Rotation.CLOCKWISE_180;
+        }
+        return pState.setValue(FACING, opposite.rotate(pState.getValue(FACING)));
+    }
 }
